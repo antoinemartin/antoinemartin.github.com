@@ -19,3 +19,5 @@ On the server side, although I master the J2EE platform, my preference goes to O
 python and Django. 
 
 Entrepreneur, Team builder and technical mentor, I Love to build teams and make things happen.
+
+I'm the owner of [Openance](http://www.openance.com).
