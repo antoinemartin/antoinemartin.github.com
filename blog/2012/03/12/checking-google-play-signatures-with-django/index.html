@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Checking Google Play signatures with Django - Geek Quickies</title>
+  <meta name="author" content="Antoine Martin">
+
+  
+  <meta name="description" content="Google play, formerly known as the Android Market, provides in-app billing in several countries.
+In the Security and Design page,
+Google states the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Geek Quickies" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29953512-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Geek Quickies</a></h1>
+  
+    <h2>Stories from the cloudvergence.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:antoinemartin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Checking Google Play Signatures With Django</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-12T07:43:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
+In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
+Google states the following:</p>
+
+<blockquote><p>If practical, you should perform signature verification on a remote server and not on a device.
+Implementing the verification process on a server makes it difficult for attackers to break the verification process by
+reverse engineering your .apk file. If you do offload security processing to a remote server, be sure that the device-server handshake is secure.</p></blockquote>
+
+<p>The signature verification here refers to the signature sent back by the Billing Service to the
+<code>GET_PURCHASE_INFORMATION</code>request. The signature is against the JSON payload containing the purchase information. We&#8217;llget back later
+on the authentication of the dialog with the server.</p>
+
+<!-- more -->
+
+
+<p>The JSON payload looks like the following (It has been indented for readability):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;nonce&quot;</span><span class="o">:</span><span class="mi">7822246098812800204</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;orders&quot;</span><span class="o">:</span><span class="p">[</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="s2">&quot;notificationId&quot;</span><span class="o">:</span><span class="s2">&quot;-915368186294557970&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;orderId&quot;</span><span class="o">:</span><span class="s2">&quot;971056902421676&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;packageName&quot;</span><span class="o">:</span><span class="s2">&quot;com.xxx.yyy&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;productId&quot;</span><span class="o">:</span><span class="s2">&quot;com.xxx.yyy.product&quot;</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;purchaseTime&quot;</span><span class="o">:</span><span class="mi">1331562686000</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;purchaseState&quot;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>      <span class="s2">&quot;developerPayload&quot;</span><span class="o">:</span><span class="s2">&quot;WEHJSU&quot;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>  <span class="p">]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And we we receive a signature in <code>Base64</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">rKf9B38gLbJaLiyRbQVJNr0i0IvJxBgi3EmsLoZLkFedZvn642s4</span><span class="o">+</span><span class="nx">fz3jYCk6IVWWFSqtBH2Z8ChONJkHWrkDUCK79uSBPLN5s4x4AsRHgQ8aw3sRQLAoEDMFA1ym1gkfYfDz</span><span class="o">+</span><span class="mi">6</span><span class="nx">sxP2Rgg1U</span><span class="o">/</span><span class="nx">qpHIEHWPDbJAdP7zcM1iz2kEWbYvFwKP3NNWExNB4gWH3IFtPR0l</span><span class="o">/</span><span class="nx">KLjKBoqpX5zVukmUeaZW0Skx10eFROa4VhqA5JrbZZQwK0jc6FCYi3u6c1ryIw6W5tcdIv1PFOKpE7VMq67yyD</span><span class="o">+</span><span class="nx">IEXc</span><span class="o">+</span><span class="nx">nl29FN5ByGhkj</span><span class="o">/</span><span class="nx">khNY1KLXcszCCa7ygSYw7mQI</span><span class="o">+</span><span class="nx">omLdyMz6aL3hg</span><span class="o">==</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The payload is signed with the Private key associated with you Google Play account. You can grab your public key in
+<a href="https://play.google.com/apps/publish/Home#ProfileEditorPlace:">your developer console page</a>.</p>
+
+<p>There are several crypto solutions available in python. In our example, we use <a href="https://www.dlitz.net/software/pycrypto/">pycrypto</a>.
+It can easily be installed in your Django virtual environment with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pip install pycrypto
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, the following method allows checking of the payload singature:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">Crypto.Signature</span> <span class="kn">import</span> <span class="n">PKCS1_v1_5</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">Crypto.Hash</span> <span class="kn">import</span> <span class="n">SHA</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">Crypto.PublicKey</span> <span class="kn">import</span> <span class="n">RSA</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">base64</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">PUBLIC_KEY</span><span class="o">=</span><span class="s">&#39;&lt;Put here your public key&gt;&#39;</span>
+</span><span class='line'><span class="n">VERIFY_KEY</span><span class="o">=</span> <span class="n">RSA</span><span class="o">.</span><span class="n">importKey</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">decodestring</span><span class="p">(</span><span class="n">PUBLIC_KEY</span><span class="p">))</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="nf">verify_signature</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">signature</span><span class="p">):</span>
+</span><span class='line'>    <span class="sd">&#39;&#39;&#39;Verify that signature is the result of signing message&#39;&#39;&#39;</span>
+</span><span class='line'>    <span class="c"># Get the hash of the message</span>
+</span><span class='line'>    <span class="n">h</span> <span class="o">=</span> <span class="n">SHA</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span><span class='line'>    <span class="c"># Create a verifier</span>
+</span><span class='line'>    <span class="n">verifier</span> <span class="o">=</span> <span class="n">PKCS1_v1_5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">VERIFY_KEY</span><span class="p">)</span>
+</span><span class='line'>    <span class="c"># decode the signature</span>
+</span><span class='line'>    <span class="n">signature</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">decodestring</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span>
+</span><span class='line'>    <span class="c"># verify</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">verifier</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In a next post, we&#8217;ll se how to make sure on the Android application side that the responses to our
+requests are really coming from our server.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Antoine Martin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-12T07:43:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>Android</a>, <a class='category' href='/blog/categories/django/'>Django</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/" data-via="antoinemartin" data-counturl="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/" title="Next Post: Start a virtualenv Django shell from the Linux Desktop">Start a virtualenv Django shell from the Linux Desktop &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/">Start a virtualenv Django shell from the Linux Desktop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/12/checking-google-play-signatures-with-django/">Checking Google Play signatures with Django</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("antoinemartin", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/antoinemartin" class="twitter-follow-button" data-show-count="false">Follow @antoinemartin</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/antoine@openance.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Antoine Martin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'geekquickies';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/';
+        var disqus_url = 'http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>
+            http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/
+        </loc>
+        <lastmod>2012-03-13T07:01:21+01:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/
+        </loc>
+        <lastmod>2012-03-13T08:42:31+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://antoinemartin.github.com/</loc>
+        <lastmod>2012-03-13T08:42:31+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://antoinemartin.github.com/blog/archives/</loc>
+        <lastmod>2012-03-13T08:42:31+01:00</lastmod>
+    </url>
+    <url>
+        <loc>http://antoinemartin.github.com/about/</loc>
+        <lastmod>2012-03-12T07:40:03+01:00</lastmod>
+    </url>
+</urlset>

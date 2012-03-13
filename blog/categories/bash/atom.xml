@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Bash | Geek Quickies]]></title>
+  <link href="http://antoinemartin.github.com/blog/categories/bash/atom.xml" rel="self"/>
+  <link href="http://antoinemartin.github.com/"/>
+  <updated>2012-03-13T08:42:31+01:00</updated>
+  <id>http://antoinemartin.github.com/</id>
+  <author>
+    <name><![CDATA[Antoine Martin]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Start a virtualenv Django shell from the Linux Desktop]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/"/>
+    <updated>2012-03-13T07:58:00+01:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop</id>
+    <content type="html"><![CDATA[<p>If you are tired to fire a terminal window, <code>cd</code> to your project directory and activate your python <code>virtualenv</code>
+to get to your Django project, you will find here some tips to improve things a little bit.</p>
+
+<!-- more -->
+
+
+<p>This tip is divided in two parts :</p>
+
+<ol>
+<li>First we create a shell startup script that <em>activates</em> the <code>virtualenv</code>, bash completion and <code>cd</code> in the project directory.</li>
+<li>Then we create a <a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html">Linux Desktop Entry</a> file
+That spawns a console in our environment.</li>
+</ol>
+
+
+<p>Here you have the startup script:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Django startup script (.consolerc)</span> <a href='/downloads/code/.consolerc'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/bash</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># The layout of the development environment is assumed to be:</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># &lt;pyton virtual env&gt;/</span>
+</span><span class='line'><span class="c">#   src/</span>
+</span><span class='line'><span class="c">#     &lt;project name&gt;/</span>
+</span><span class='line'><span class="c">#       .consolerc (this file)</span>
+</span><span class='line'><span class="c">#       setup.py</span>
+</span><span class='line'><span class="c">#       ...</span>
+</span><span class='line'><span class="c">#       &lt;project name&gt;/</span>
+</span><span class='line'><span class="c">#         manage.py</span>
+</span><span class='line'><span class="c">#         settings.py</span>
+</span><span class='line'><span class="c">#         ...</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Run the standard bash rc file</span>
+</span><span class='line'><span class="nb">source</span> ~/.bashrc
+</span><span class='line'>
+</span><span class='line'><span class="c"># Get the current source file name</span>
+</span><span class='line'><span class="nv">current</span><span class="o">=</span><span class="s2">&quot;${BASH_SOURCE[0]}&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Retrieve the source directory</span>
+</span><span class='line'><span class="nv">DJANGO_SOURCE_DIR</span><span class="o">=</span><span class="s2">&quot;$(dirname &quot;</span><span class="k">$(</span>readlink -f <span class="s2">&quot;$current&quot;</span><span class="k">)</span><span class="s2">&quot;)&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Get the Django related directories</span>
+</span><span class='line'><span class="nv">DJANGO_PROJECT_NAME</span><span class="o">=</span><span class="s2">&quot;$(basename &quot;</span><span class="nv">$DJANGO_SOURCE_DIR</span><span class="s2">&quot;)&quot;</span>
+</span><span class='line'><span class="nv">DJANGO_ENV_DIR</span><span class="o">=</span><span class="k">$(</span>readlink -f <span class="s2">&quot;${DJANGO_SOURCE_DIR}/../../&quot;</span><span class="k">)</span>
+</span><span class='line'><span class="nv">DJANGO_PROJECT_DIR</span><span class="o">=</span><span class="s2">&quot;${DJANGO_SOURCE_DIR}/${DJANGO_PROJECT_NAME}&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Activate the environment</span>
+</span><span class='line'><span class="nb">source</span> <span class="s2">&quot;${DJANGO_ENV_DIR}/bin/activate&quot;</span>
+</span><span class='line'><span class="nb">cd</span> <span class="s2">&quot;$DJANGO_PROJECT_DIR&quot;</span>
+</span><span class='line'><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;$PATH:$(pwd)&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Retrieve the Django bash completion file (only once) and execute it. </span>
+</span><span class='line'><span class="c"># This is potentially insecure.</span>
+</span><span class='line'><span class="nv">DJANGO_BASH_COMPLETION</span><span class="o">=</span><span class="s2">&quot;${DJANGO_SOURCE_DIR}/.django_bash_completion&quot;</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[</span> ! -f <span class="s2">&quot;$DJANGO_BASH_COMPLETION&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span>curl http://code.djangoproject.com/svn/django/trunk/extras/django_bash_completion -o <span class="s2">&quot;$DJANGO_BASH_COMPLETION&quot;</span> 2&gt;/dev/null
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="nb">source</span> <span class="s2">&quot;$DJANGO_BASH_COMPLETION&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Miscellaneous</span>
+</span><span class='line'><span class="nb">alias </span><span class="nv">runserver</span><span class="o">=</span><span class="s1">&#39;cd $DJANGO_PROJECT_DIR;manage.py runserver 0.0.0.0:8000&#39;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The comment at the beginning explains how the project directory layout is assumed to be. That is the only assumption that makes the
+script. In consequence, it is reusable <em>as is</em> in any other project.</p>
+
+<p>Here is the <code>.desktop</code> file that runs a terminal console with our script:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Django desktop file (Django.desktop)</span> <a href='/downloads/code/Django.desktop'>download</a></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>Desktop Entry<span class="o">]</span>
+</span><span class='line'><span class="nv">Exec</span><span class="o">=</span>/bin/bash --rcfile .consolerc
+</span><span class='line'>GenericName<span class="o">[</span>fr<span class="o">]=</span>MyProject Django
+</span><span class='line'><span class="nv">GenericName</span><span class="o">=</span>MyProject Django
+</span><span class='line'><span class="nv">Icon</span><span class="o">=</span>/home/antoine/images/django-icon_0.png
+</span><span class='line'><span class="nv">MimeType</span><span class="o">=</span>
+</span><span class='line'>Name<span class="o">[</span>fr<span class="o">]=</span>MyProject Django
+</span><span class='line'><span class="nv">Name</span><span class="o">=</span>MyProject Django
+</span><span class='line'><span class="nv">Path</span><span class="o">=</span>/home/antoine/src/django/my_project/src/my_project/
+</span><span class='line'><span class="nv">StartupNotify</span><span class="o">=</span><span class="nb">true</span>
+</span><span class='line'><span class="nv">Terminal</span><span class="o">=</span><span class="nb">true</span>
+</span><span class='line'><span class="nv">TerminalOptions</span><span class="o">=</span>
+</span><span class='line'><span class="nv">Type</span><span class="o">=</span>Application
+</span><span class='line'><span class="nv">Categories</span><span class="o">=</span>Development
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The command runs in a terminal because of <code>Terminal=true</code>. You can see that apart from <code>Name</code> and <code>GenericName</code>, the only
+line specific to the project is</p>
+
+<p><code>
+Path=/home/antoine/src/django/my_project/src/my_project/
+</code></p>
+
+<p>It defines the project path, making it easy to reuse. The execution of our init script is done through:</p>
+
+<p><code>
+Exec=/bin/bash --rcfile .consolerc
+</code></p>
+
+<p>The <code>Icon</code> is the familiar Django icon :</p>
+
+<p><img src="/images/django-icon_0.png"></p>
+
+<p>I personally put the <code>.desktop</code> file in <code>$HOME/Desktop</code>, but it also can reside in <code>$HOME/.local/share/applications</code>. In that
+case, the entry will be available in the menu. I've tested this under KDE, but it should work also with Gnome.</p>
+]]></content>
+  </entry>
+  
+</feed>
