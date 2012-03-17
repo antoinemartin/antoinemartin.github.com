@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Geek Quickies</title>
+  <title>Get the height of the status bar in Android - Geek Quickies</title>
   <meta name="author" content="Antoine Martin">
 
   
@@ -19,7 +19,7 @@ need to make some computations inside your code. In these &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://antoinemartin.github.com">
+  <link rel="canonical" href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,15 +77,12 @@ need to make some computations inside your code. In these &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/">Get the Height of the Status Bar in Android</a></h1>
+      <h1 class="entry-title">Get the Height of the Status Bar in Android</h1>
     
     
       <p class="meta">
@@ -108,7 +105,7 @@ need to make some computations inside your code. In these &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>Sometimes in Android, the flexible layout system is not flexible enough and you
+<div class="entry-content"><p>Sometimes in Android, the flexible layout system is not flexible enough and you
 need to make some computations inside your code. In these computations, you may
 need to subtract the size of the status bar. Stackoverflow gives you
 <a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">some answers</a>,
@@ -150,64 +147,16 @@ however compute it at runtime with the following code:</p>
 
 <p>Hope it helps.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/">Start a Virtualenv Django Shell From the Linux Desktop</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Antoine Martin</span></span>
 
-<time datetime="2012-03-13T07:58:00+01:00" pubdate data-updated="true">Mar 13<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you are tired to fire a terminal window, <code>cd</code> to your project directory and activate your python <code>virtualenv</code>
-to get to your Django project, you will find here some tips to improve things a little bit.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/12/checking-google-play-signatures-with-django/">Checking Google Play Signatures With Django</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -219,42 +168,40 @@ to get to your Django project, you will find here some tips to improve things a 
   
 
 
-<time datetime="2012-03-12T07:43:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2012</time>
-        
-      </p>
+<time datetime="2012-03-17T09:09:00+01:00" pubdate data-updated="true">Mar 17<span>th</span>, 2012</time>
+      
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/" data-via="antoinemartin" data-counturl="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/" title="Previous Post: Start a virtualenv Django shell from the Linux Desktop">&laquo; Start a virtualenv Django shell from the Linux Desktop</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
-In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
-Google states the following:</p>
-
-<blockquote><p>If practical, you should perform signature verification on a remote server and not on a device.
-Implementing the verification process on a server makes it difficult for attackers to break the verification process by
-reverse engineering your .apk file. If you do offload security processing to a remote server, be sure that the device-server handshake is secure.</p></blockquote>
-
-<p>The signature verification here refers to the signature sent back by the Billing Service to the
-<code>GET_PURCHASE_INFORMATION</code>request. The signature is against the JSON payload containing the purchase information. We&#8217;llget back later
-on the authentication of the dialog with the server.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/12/checking-google-play-signatures-with-django/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -280,7 +227,7 @@ on the authentication of the dialog with the server.</p>
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -309,6 +256,7 @@ on the authentication of the dialog with the server.</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -323,7 +271,10 @@ on the authentication of the dialog with the server.</p>
       var disqus_shortname = 'geekquickies';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/';
+        var disqus_url = 'http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

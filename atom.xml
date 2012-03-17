@@ -4,7 +4,7 @@
   <title><![CDATA[Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-03-13T09:05:47+01:00</updated>
+  <updated>2012-03-17T09:29:02+01:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Get the height of the status bar in Android]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
+    <updated>2012-03-17T09:09:00+01:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
+    <content type="html"><![CDATA[<p>Sometimes in Android, the flexible layout system is not flexible enough and you
+need to make some computations inside your code. In these computations, you may
+need to subtract the size of the status bar. Stackoverflow gives you
+<a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">some answers</a>,
+but they all rely on the fact that te status bar is shown at the time you make
+your computation. If you are in full screen mode, by having called for instance:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">getWindow</span><span class="o">().</span><span class="na">setFlags</span><span class="o">(</span><span class="n">WindowManager</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">FLAG_FULLSCREEN</span><span class="o">,</span> <span class="n">WindowManager</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">FLAG_FULLSCREEN</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It doesn&#8217;t work.</p>
+
+<p>The height of the status bar is contained in a dimension resource called
+<code>status_bar_height</code>. It&#8217;s not part of the public resources, so you can&#8217;t access
+it directly from your code with <code>android.R.dimen.status_bar_height</code>. You can
+however compute it at runtime with the following code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">getStatusBarHeight</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>  <span class="kt">int</span> <span class="n">resourceId</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getIdentifier</span><span class="o">(</span><span class="s">&quot;status_bar_height&quot;</span><span class="o">,</span> <span class="s">&quot;dimen&quot;</span><span class="o">,</span> <span class="s">&quot;android&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="o">(</span><span class="n">resourceId</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getDimensionPixelSize</span><span class="o">(</span><span class="n">resourceId</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You need to put this method in a <code>ContextWrapper</code> class.</p>
+
+<p>Hope it helps.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Start a virtualenv Django shell from the Linux Desktop]]></title>
