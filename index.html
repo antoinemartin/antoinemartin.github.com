@@ -122,35 +122,12 @@ your computation. If you are in full screen mode, by having called for instance:
 
 <p>It doesn&#8217;t work.</p>
 
-<p>The height of the status bar is contained in a dimension resource called
-<code>status_bar_height</code>. It&#8217;s not part of the public resources, so you can&#8217;t access
-it directly from your code with <code>android.R.dimen.status_bar_height</code>. You can
-however compute it at runtime with the following code:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">getStatusBarHeight</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">resourceId</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getIdentifier</span><span class="o">(</span><span class="s">&quot;status_bar_height&quot;</span><span class="o">,</span> <span class="s">&quot;dimen&quot;</span><span class="o">,</span> <span class="s">&quot;android&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="k">if</span> <span class="o">(</span><span class="n">resourceId</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getDimensionPixelSize</span><span class="o">(</span><span class="n">resourceId</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You need to put this method in a <code>ContextWrapper</code> class.</p>
-
-<p>Hope it helps.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/">Read on &rarr;</a>
+    </footer>
   
 
 

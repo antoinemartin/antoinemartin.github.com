@@ -4,7 +4,7 @@
   <title><![CDATA[Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-03-17T09:29:02+01:00</updated>
+  <updated>2012-03-17T09:32:57+01:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -31,6 +31,9 @@ your computation. If you are in full screen mode, by having called for instance:
 
 
 <p>It doesn&#8217;t work.</p>
+
+<!-- more -->
+
 
 <p>The height of the status bar is contained in a dimension resource called
 <code>status_bar_height</code>. It&#8217;s not part of the public resources, so you can&#8217;t access
