@@ -19,6 +19,8 @@ getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.L
 
 It doesn't work.
 
+<!-- more -->
+
 The height of the status bar is contained in a dimension resource called
 `status_bar_height`. It's not part of the public resources, so you can't access 
 it directly from your code with `android.R.dimen.status_bar_height`. You can
