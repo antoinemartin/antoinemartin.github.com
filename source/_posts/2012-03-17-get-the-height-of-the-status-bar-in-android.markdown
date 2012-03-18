@@ -4,6 +4,7 @@ title: "Get the height of the status bar in Android"
 date: 2012-03-17 09:09
 comments: true
 categories: 
+- Android
 ---
 
 Sometimes in Android, the flexible layout system is not flexible enough and you

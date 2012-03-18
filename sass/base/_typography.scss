@@ -1,7 +1,7 @@
 $blockquote: $type-border !default;
-$sans: "PT Sans", "Helvetica Neue", Arial, sans-serif !default;
+$sans: "Open Sans", "Helvetica Neue", Arial, sans-serif !default;
 $serif: "PT Serif", Georgia, Times, "Times New Roman", serif !default;
-$mono: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace !default;
+$mono: "PT Mono", Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace !default;
 $heading-font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif !default;
 $header-title-font-family: $heading-font-family !default;
 $header-subtitle-font-family: $heading-font-family !default;
@@ -27,9 +27,9 @@ body > header h2 {
 }
 
 body {
-  line-height: 1.5em;
+  line-height: 1.3em;
   color: $text-color;
-  @extend .serif;
+  @extend .sans;
 }
 h1 {
   font-size: 2.2em;
@@ -37,8 +37,8 @@ h1 {
 }
 
 @media only screen and (min-width: 992px) {
-  body { font-size: 1em; }
-  h1 { font-size: 2.6em; line-height: 1.2em; }
+  body { font-size: 0.95em; }
+  h1 { font-size: 2.2em; line-height: 1.2em; }
 }
 
 #{headings()}{
@@ -109,8 +109,8 @@ blockquote {
   $bq-margin: 1.2em;
   font-style: italic;
   position: relative;
-  font-size: 1.2em;
-  line-height: 1.5em;
+  font-size: 1.1em;
+  line-height: 1.3em;
   padding-left: 1em;
   border-left: 4px solid rgba($text-color-light, .5);
   cite {
