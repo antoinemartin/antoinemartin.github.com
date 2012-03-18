@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-03-17T18:23:32+01:00</updated>
+  <updated>2012-03-18T11:24:13+01:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Get the height of the status bar in Android]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
+    <updated>2012-03-17T09:09:00+01:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
+    <content type="html"><![CDATA[<p>Sometimes in Android, the flexible layout system is not flexible enough and you
+need to make some computations inside your code. In these computations, you may
+need to subtract the size of the status bar. Stackoverflow gives you
+<a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">some answers</a>,
+but they all rely on the fact that te status bar is shown at the time you make
+your computation. If you are in full screen mode, by having called for instance:</p>
+
+<p><code>java
+getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+</code></p>
+
+<p>It doesn't work.</p>
+
+<!-- more -->
+
+
+<p>The height of the status bar is contained in a dimension resource called
+<code>status_bar_height</code>. It's not part of the public resources, so you can't access
+it directly from your code with <code>android.R.dimen.status_bar_height</code>. You can
+however compute it at runtime with the following code:</p>
+
+<p>``` java</p>
+
+<pre><code>public int getStatusBarHeight() {
+    int result = 0;
+    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId &gt; 0) {
+        result = getResources().getDimensionPixelSize(resourceId);
+    }
+    return result;
+}
+</code></pre>
+
+<p>```</p>
+
+<p>You need to put this method in a <code>ContextWrapper</code> class.</p>
+
+<p>Hope it helps.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Checking Google Play signatures with Django]]></title>
