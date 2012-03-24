@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Android | Geek Quickies]]></title>
-  <link href="http://antoinemartin.github.com/blog/categories/android/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Eclipse | Geek Quickies]]></title>
+  <link href="http://antoinemartin.github.com/blog/categories/eclipse/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
   <updated>2012-03-24T10:09:33+01:00</updated>
   <id>http://antoinemartin.github.com/</id>
@@ -205,143 +205,6 @@ the log code for deeper debugging levels will be removed by DCE (Dead Code
 Elimination).</p>
 
 <p>Now, there's no more excuses to have sloppy logs in your Android code !</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Get the height of the status bar in Android]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
-    <updated>2012-03-17T09:09:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
-    <content type="html"><![CDATA[<p>Sometimes in Android, the flexible layout system is not flexible enough and you
-need to make some computations inside your code. In these computations, you may
-need to subtract the size of the status bar. Stackoverflow gives you
-<a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">some answers</a>,
-but they all rely on the fact that te status bar is shown at the time you make
-your computation. If you are in full screen mode, by having called for instance:</p>
-
-<p><code>java
-getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-</code></p>
-
-<p>It doesn't work.</p>
-
-<!-- more -->
-
-
-<p>The height of the status bar is contained in a dimension resource called
-<code>status_bar_height</code>. It's not part of the public resources, so you can't access
-it directly from your code with <code>android.R.dimen.status_bar_height</code>. You can
-however compute it at runtime with the following code:</p>
-
-<p>``` java</p>
-
-<pre><code>public int getStatusBarHeight() {
-    int result = 0;
-    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-    if (resourceId &gt; 0) {
-        result = getResources().getDimensionPixelSize(resourceId);
-    }
-    return result;
-}
-</code></pre>
-
-<p>```</p>
-
-<p>You need to put this method in a <code>ContextWrapper</code> class.</p>
-
-<p>Hope it helps.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Checking Google Play signatures with Django]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/"/>
-    <updated>2012-03-12T07:43:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django</id>
-    <content type="html"><![CDATA[<p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
-In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
-Google states the following:</p>
-
-<blockquote><p>If practical, you should perform signature verification on a remote server and not on a device.
-Implementing the verification process on a server makes it difficult for attackers to break the verification process by
-reverse engineering your .apk file. If you do offload security processing to a remote server, be sure that the device-server handshake is secure.</p></blockquote>
-
-<p>The signature verification here refers to the signature sent back by the Billing Service to the
-<code>GET_PURCHASE_INFORMATION</code>request. The signature is against the JSON payload containing the purchase information. We'llget back later
-on the authentication of the dialog with the server.</p>
-
-<!-- more -->
-
-
-<p>The JSON payload looks like the following (It has been indented for readability):</p>
-
-<p>``` js
-{
-  "nonce":7822246098812800204,
-  "orders":[</p>
-
-<pre><code>{
-  "notificationId":"-915368186294557970",
-  "orderId":"971056902421676",
-  "packageName":"com.xxx.yyy",
-  "productId":"com.xxx.yyy.product",
-  "purchaseTime":1331562686000,
-  "purchaseState":1,
-  "developerPayload":"WEHJSU"
-}
-</code></pre>
-
-<p>  ]
-}
-```</p>
-
-<p>And we we receive a signature in <code>Base64</code>:</p>
-
-<p>```
-rKf9B38gLbJaLiyRbQVJNr0i0IvJxBgi3EmsLoZLkFedZvn642s4+fz3jYCk6IVWWFSqtBH2Z8ChONJkHWrkDUCK79uSBPLN5s4x4AsRHgQ8aw3sRQLAoEDMFA1ym1gkfYfDz+6sxP2Rgg1U/qpHIEHWPDbJAdP7zcM1iz2kEWbYvFwKP3NNWExNB4gWH3IFtPR0l/KLjKBoqpX5zVukmUeaZW0Skx10eFROa4VhqA5JrbZZQwK0jc6FCYi3u6c1ryIw6W5tcdIv1PFOKpE7VMq67yyD+IEXc+nl29FN5ByGhkj/khNY1KLXcszCCa7ygSYw7mQI+omLdyMz6aL3hg==</p>
-
-<p>```</p>
-
-<p>The payload is signed with the Private key associated with you Google Play account. You can grab your public key in
-<a href="https://play.google.com/apps/publish/Home#ProfileEditorPlace:">your developer console page</a>.</p>
-
-<p>There are several crypto solutions available in python. In our example, we use <a href="https://www.dlitz.net/software/pycrypto/">pycrypto</a>.
-It can easily be installed in your Django virtual environment with:</p>
-
-<p><code>sh
-pip install pycrypto
-</code></p>
-
-<p>Then, the following method allows checking of the payload singature:</p>
-
-<p>``` python</p>
-
-<p>from Crypto.Signature import PKCS1_v1_5
-from Crypto.Hash import SHA
-from Crypto.PublicKey import RSA
-import base64</p>
-
-<p>PUBLIC_KEY='<Put here your public key>'
-VERIFY_KEY= RSA.importKey(base64.decodestring(PUBLIC_KEY))</p>
-
-<p>def verify_signature(message, signature):</p>
-
-<pre><code>'''Verify that signature is the result of signing message''' 
-# Get the hash of the message
-h = SHA.new(message)
-# Create a verifier
-verifier = PKCS1_v1_5.new(VERIFY_KEY)
-# decode the signature
-signature = base64.decodestring(signature)
-# verify
-return verifier.verify(h, signature)
-</code></pre>
-
-<p>```</p>
-
-<p>In a next post, we'll se how to make sure on the Android application side that the responses to our
-requests are really coming from our server.</p>
 ]]></content>
   </entry>
   
