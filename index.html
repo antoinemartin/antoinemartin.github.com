@@ -9,8 +9,9 @@
   <meta name="author" content="Antoine Martin">
 
   
-  <meta name="description" content="Adding logs to your Android source code is sometimes the only way to really
-understand what happens , especially in asynchronous situations. If you &hellip;">
+  <meta name="description" content="Windows is probably not the best production environment for
+Django but sometimes one doesn&#8217;t have the
+choice. In that case, a few options &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +80,68 @@ understand what happens , especially in asynchronous situations. If you &hellip;
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django Under Windows With IIS Using FastCGI</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-27T14:12:00+02:00" pubdate data-updated="true">Jun 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Windows is probably not the best production environment for
+<a href="https://www.djangoproject.com/">Django</a> but sometimes one doesn&#8217;t have the
+choice. In that case, a few options aleardy exist, most notably the one
+developed by <a href="http://www.helicontech.com/">helicontech</a> that relies on
+Microsoft&#8217;s <a href="http://www.microsoft.com/web/downloads/platform.aspx">Web Platform Installer</a>.
+This solution, which is described <a href="http://www.microsoft.com/web/downloads/platform.aspx">here</a>,
+relies on the installation of a specific native Handler developed by
+Helicontech.</p>
+
+<p>This handler manages the communication between IIS and the Django application
+through the <a href="http://www.fastcgi.com">FastCGI protocol</a> with the help of a
+little python script that bridges FastCGI to WSGI. This script is derived from
+the Allan Saddi <a href="http://trac.saddi.com/flup">flup package</a> that is already used
+by Django in the <code>manage.py runfcgi</code> command. The flup package doesn&#8217;t work
+under Windows and Helicontech has made the necessary adaptations to make it
+work with its handler.</p>
+
+<p>Since its version 7, IIS does however support FastCGI natively, so the use of a
+specific handler to support Django is not needed. This post describes how to
+configure and run a Django application with the native FastCGI IIS handler. For
+that, I have myself adapted the Helicontech FastCGI to WSGI script to make it a
+<a href="https://gist.github.com/3004168">Django management command</a>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -314,6 +377,10 @@ on the authentication of the dialog with the server.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django under Windows with IIS using FastCGI</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/">Using Eclipse templates to ease Android logging</a>

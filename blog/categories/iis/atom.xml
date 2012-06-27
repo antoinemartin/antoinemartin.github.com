@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: IIS | Geek Quickies]]></title>
+  <link href="http://antoinemartin.github.com/blog/categories/iis/atom.xml" rel="self"/>
+  <link href="http://antoinemartin.github.com/"/>
+  <updated>2012-06-27T18:47:26+02:00</updated>
+  <id>http://antoinemartin.github.com/</id>
+  <author>
+    <name><![CDATA[Antoine Martin]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running Django under Windows with IIS using FastCGI]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
+    <updated>2012-06-27T14:12:00+02:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
+    <content type="html"><![CDATA[<p>Windows is probably not the best production environment for
+<a href="https://www.djangoproject.com/">Django</a> but sometimes one doesn't have the
+choice. In that case, a few options aleardy exist, most notably the one
+developed by <a href="http://www.helicontech.com/">helicontech</a> that relies on
+Microsoft's <a href="http://www.microsoft.com/web/downloads/platform.aspx">Web Platform Installer</a>.
+This solution, which is described <a href="http://www.microsoft.com/web/downloads/platform.aspx">here</a>,
+relies on the installation of a specific native Handler developed by
+Helicontech.</p>
+
+<p>This handler manages the communication between IIS and the Django application
+through the <a href="http://www.fastcgi.com">FastCGI protocol</a> with the help of a
+little python script that bridges FastCGI to WSGI. This script is derived from
+the Allan Saddi <a href="http://trac.saddi.com/flup">flup package</a> that is already used
+by Django in the <code>manage.py runfcgi</code> command. The flup package doesn't work
+under Windows and Helicontech has made the necessary adaptations to make it
+work with its handler.</p>
+
+<p>Since its version 7, IIS does however support FastCGI natively, so the use of a
+specific handler to support Django is not needed. This post describes how to
+configure and run a Django application with the native FastCGI IIS handler. For
+that, I have myself adapted the Helicontech FastCGI to WSGI script to make it a
+<a href="https://gist.github.com/3004168">Django management command</a>.</p>
+
+<!-- more -->
+
+
+<h2>Python installation</h2>
+
+<p>But before that, to run Django you will need to have python on your server. If
+like me for some reason it is uneasy for you to run a software installer on your
+server, a good choice is to use <a href="http://www.portablepython.com/">Portable Python</a>.
+With it, you can install and configure your python environment on your
+development or staging server and install it in your production server(s)
+by just copying over the <code>python</code> folder. You can even have different python
+environments with differents configurations on the same server. To use the
+portable python installation in copied in <code>d:\python</code> from a command line
+window, juste type:</p>
+
+<p><code>
+set path=d:\python\app\scripts;d:\python\app;%path%
+</code></p>
+
+<p>And then python and its commands are available from the command line:</p>
+
+<p><img src="/images/django/command.png" width="600"></p>
+
+<p>Another advantage of Portable Python is that it comes already bundled with
+<a href="http://sourceforge.net/projects/pywin32/">The Python for Windows extensions</a>
+(a.k.a. pywin32) and Django.</p>
+
+<h2>Adding FastCGI to the project</h2>
+
+<p>In our example, the Django project will be named <code>esplayer</code> and will be
+installed in <code>d:\sites\esplayer</code>. Please note that this configuration has
+been tested on Windows 2008 Server R2.</p>
+
+<p>Take the <a href="https://gist.github.com/3004168">fcgi.py</a> file and copy it in the
+<code>management\commands</code> directory of one of your project applications so that
+the <code>manage.py help fcgi</code> command returns you:</p>
+
+<p><img src="/images/django/fcgi.png" width="600"></p>
+
+<h2>Configure the FastCGI application on IIS</h2>
+
+<p>The next step is to configure the FastCGI Application on IIS. FastCGI is
+available whenever you have installed the CGI feature on your IIS installation.
+Run the server manager and go to the IIS role and configuration. Select your
+website. You should see a FastCGI Settings icon:</p>
+
+<p><img src="/images/django/fastcgi_settings.png" width="600"></p>
+
+<p>Double click on it and select the <em>Add application</em> action. Enter the following
+parameters:</p>
+
+<p><img src="/images/django/fcgi_configuration.png" width="400"></p>
+
+<ul>
+<li>In <code>Full Path</code>, enter the path to your python executable.</li>
+<li>In <code>Arguments</code>, enter the command line for running our fcgi command, i.e. <code>d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings</code>.
+The <code>pythonpath</code> and <code>settings</code> arguments are needed to be path independent
+(more on this later).</li>
+</ul>
+
+
+<p>The other arguments are optional but you should review them to enter sensible
+values. The <code>Monitor changes to file</code> setting is particularly interesting. It
+will allow you to specify the path of a file that will trigger a restart of the
+application whenever it is modified. You can enter the path to the
+<code>settings.py</code> of your project. I personally prefer to specify a file that I
+explicitely update via a <code>touch</code> command.</p>
+
+<h2>Create the website and configure it to use the FastCGI application</h2>
+
+<p>Once we have our FastCGI application configured, we need a web site to make use
+of it. For it, we create a website pointing to our Django project:</p>
+
+<p><img src="/images/django/website_configuration.png" width="400"></p>
+
+<p>To make the website use our FastCGI application, we create the following
+<code>web.config</code> file in the root of our project (here
+d:\sites\esplayer\esplayer):</p>
+
+<p>``` xml
+&lt;?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  &lt;system.webServer></p>
+
+<pre><code>&lt;handlers&gt;
+  &lt;clear/&gt;
+  &lt;add name="FastCGI" path="*" verb="*" modules="FastCgiModule" scriptProcessor="D:\python\App\python.exe|d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings" resourceType="Unspecified" requireAccess="Script" /&gt;
+&lt;/handlers&gt;
+</code></pre>
+
+<p>  &lt;/system.webServer>
+</configuration>
+```</p>
+
+<p>We first clear all the request handlers and then specify that every request
+(<code>path="*"</code> and <code>verb="*"</code>) should be managed by the <code>FastCgiModule</code>
+module. The <code>scriptProcessor</code> attribute reproduces the <code>Full Path</code> and the
+<code>Arguments</code> of our FastCGI application separated by <code>|</code>. It allows the
+module to identify the FastCGI application to which the requests will be routed.</p>
+
+<h2>Static files</h2>
+
+<p>With the preceding <code>web.config</code> configuration, all the requests are routed
+to the Django application. However, we want the static files of our application
+to be managed by IIS itself. To do that, we first configure Django to collect
+the static files in the <code>static</code> subdirectory of our project. For that, we
+have the following configuration in our <code>settings.py</code> file:</p>
+
+<p>```python
+SITE_ROOT = os.path.abspath(os.path.dirname(<strong>file</strong>))
+...
+STATIC_URL = '/static/'
+...
+STATIC_ROOT = os.path.join( SITE_ROOT, 'static')
+SITE_STATIC_ROOT = os.path.join( SITE_ROOT, 'local_static')</p>
+
+<h1>Additional locations of static files</h1>
+
+<p>STATICFILES_DIRS = (</p>
+
+<pre><code># Don't forget to use absolute paths, not relative paths.
+('', SITE_STATIC_ROOT),
+</code></pre>
+
+<p>)
+..</p>
+
+<p>```</p>
+
+<p>The project wide defined static files are located in the <code>local_static</code>
+directory. All the static files are collected in the <code>static</code> directory by
+running the following command:</p>
+
+<p><code>
+python manage.py collecstatic
+</code></p>
+
+<p>In the <code>local_static</code> directory we put the following <code>web.config</code> file:</p>
+
+<p>```xml
+&lt;?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  &lt;system.webServer></p>
+
+<pre><code>&lt;!-- this configuration overrides the FastCGI handler to let IIS serve the static files --&gt;
+&lt;handlers&gt;
+  &lt;clear/&gt;
+  &lt;add name="StaticFile" path="*" verb="*" modules="StaticFileModule" resourceType="File" requireAccess="Read" /&gt;
+&lt;/handlers&gt;
+</code></pre>
+
+<p>  &lt;/system.webServer>
+</configuration></p>
+
+<p>```</p>
+
+<p>Which basically inverts the <code>web.config</code> file or the root of the project by
+clearing all the handlers and serving all requests only as static files. When
+collected, this file will go in the <code>static</code> directory and will instruct IIS
+that all requests below the path <code>/static</code> should be served as static files.</p>
+
+<h2>Testing and troubleshooting</h2>
+
+<p>After the configuration, the website should be available through IIS. If this
+is not the case, you will probably get a <code>500</code> Error:</p>
+
+<p><img src="/images/django/500_error.png" width="400"></p>
+
+<p>The first thing to do is to check that the website is available outside of IIS
+by running it with the command:</p>
+
+<p><code>sh
+python manage.py runserver 0.0.0.0:8000
+</code></p>
+
+<p>And accessing it on <code>http://localhost:8000</code>. If the application works as a
+standalone Django application, the most common cause of error is a
+misconfiguration of either the FastCGI application or the root <code>web.config</code>
+file. You need to be sure that the The <code>scriptProcessor</code> attribute
+of the <code>web.config</code> matches <code>Full Path</code> and the <code>Arguments</code> of the FastCGI
+application.</p>
+
+<p>To troubleshoot further, the <code>fcgi.py</code> command provides several settings to
+be put in the <code>settings.py</code> file : <code>FCGI_LOG</code> (default
+<code>False</code>), when <code>True</code>, instructs the command to create a log file in the
+path pointed by <code>FCGI_LOG_PATH</code>. If <code>FCGI_LOG_PATH</code> is not
+defined, the log file will be created in the project root directory. The file
+name name pattern of the log file will be <code>fcgi_AAMMDD_HHMMSS_XXXX.log</code>, in
+which <code>AAMMDD</code> is the date, <code>HHMMSS</code> the time and <code>XXXX</code> the FastCGI
+application process number. If <code>DEBUG</code> is set to <code>True</code> in the settings, the
+log file will contain the Django debug logs. The <code>FCGI_DEBUG</code> setting (default
+<code>False</code>), when set to <code>True</code>, will output in the log file information about
+the FCGI protocol transfers between IIS and the Django application.</p>
+
+<h2>Easing the FastCGI configuration</h2>
+
+<p>It is somewhat painful to have to specify the <code>pythonpath</code> and <code>settings</code>
+parameters both in the FastCGI configuration and in the <code>web.config</code> file. To
+avoid entering them each time, I have created a <code>manage.py</code> script in the
+<code>scripts</code> subdirectory of the project root that <em>auto configures</em> itself.
+Here is the source of the file:</p>
+
+<p>```python</p>
+
+<h1>!/usr/bin/python</h1>
+
+<h1>-<em>- coding: utf-8 -</em>-</h1>
+
+<p>import os,sys
+from os.path import abspath, dirname</p>
+
+<h1>the base path is my parent directory</h1>
+
+<p>base_path = dirname(dirname(abspath(<strong>file</strong>)))</p>
+
+<p>from django.core.handlers.modpython import handler</p>
+
+<h1>Add the parent directory to the path to be able to import settings</h1>
+
+<p>sys.path.append(base_path)
+sys.path.append(dirname(base_path))</p>
+
+<h1>Now we can import our settings and setup the environment</h1>
+
+<p>try:</p>
+
+<pre><code>import settings # Assumed to be in the same directory.
+</code></pre>
+
+<p>except ImportError:</p>
+
+<pre><code>import sys
+sys.stderr.write("Error: Can't find the file 'settings.py' in the directory containing %r. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n" % __file__)
+sys.exit(1)
+</code></pre>
+
+<p>from django.core.management import setup_environ
+setup_environ(settings)</p>
+
+<p>from django.core.management import execute_manager</p>
+
+<p>if <strong>name</strong> == "<strong>main</strong>":</p>
+
+<pre><code>execute_manager(settings)
+</code></pre>
+
+<p>```</p>
+
+<p>With this script, the <code>Arguments</code> setting of the FastCGI application becomes
+<code>d:\sites\esplayer\esplayer\scripts\manage.py fcgi</code> and the
+<code>scriptProcessor</code> attribute in the <code>web.config</code> file becomes</p>
+
+<p><code>
+scriptProcessor="D:\python\App\python.exe|d:\sites\esplayer\esplayer\script\manage.py fcgi"
+</code></p>
+
+<h2>What next</h2>
+
+<p>Once this configuration is done on a project and a server, replicating it
+across multiple servers is easy as the only configuration not part of the
+project is the one of the FastCGI application. Most configuration files are
+ported from server to server with the source code of the project.</p>
+
+<p>However, the first creation and configuration could benefit from having some
+management commands dedicated to it. These would be part, along with the
+<a href="https://gist.github.com/3004168">fcgi.py</a> command, of a specific Django
+application that could be added to any project.</p>
+
+<p>Furthermore, some of you may have noted that having the website point to the
+root of the Django project is not mandatory. Thus the Django project itself
+could be part of the python installation itself and deployed by running a Django
+management command.</p>
+]]></content>
+  </entry>
+  
+</feed>
