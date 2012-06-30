@@ -4,7 +4,7 @@
   <title><![CDATA[Category: IIS | Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/blog/categories/iis/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-06-27T18:47:26+02:00</updated>
+  <updated>2012-06-30T17:17:43+02:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -201,6 +201,28 @@ python manage.py collecstatic
 clearing all the handlers and serving all requests only as static files. When
 collected, this file will go in the <code>static</code> directory and will instruct IIS
 that all requests below the path <code>/static</code> should be served as static files.</p>
+
+<h2>Website creation automation</h2>
+
+<p>The website creation that is described in the previous sections can be automated
+with the following script that must be run as an administrator:</p>
+
+<p><code>
+%windir%\system32\inetsrv\appcmd.exe set config -section:system.webServer/fastCgi /+"[fullPath='d:\python\app\python.exe',arguments='d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings',maxInstances='4',idleTimeout='1800',activityTimeout='30',requestTimeout='90',instanceMaxRequests='100000',protocol='NamedPipe',flushNamedPipe='False',monitorChangesTo='d:\sites\esplayer\esplayer\web.config']" /commit:apphost
+%windir%\system32\inetsrv\appcmd.exe add apppool /name:esplayer
+%windir%\system32\inetsrv\appcmd.exe add site /name:esplayer /bindings:http://*:80 /physicalPath:d:\sites\esplayer\esplayer
+%windir%\system32\inetsrv\appcmd.exe set app "esplayer/" /applicationPool:esplayer
+</code></p>
+
+<p>The four commands run in the script do the following actions:</p>
+
+<ul>
+<li>Create the FastCGI application.</li>
+<li>Create the site application pool.</li>
+<li>Create the website.</li>
+<li>Add the created website to the application pool.</li>
+</ul>
+
 
 <h2>Testing and troubleshooting</h2>
 

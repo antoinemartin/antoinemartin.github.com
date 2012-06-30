@@ -4,7 +4,7 @@
   <title><![CDATA[Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-06-27T18:47:26+02:00</updated>
+  <updated>2012-06-30T17:17:43+02:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -222,6 +222,32 @@ running the following command:</p>
 clearing all the handlers and serving all requests only as static files. When
 collected, this file will go in the <code>static</code> directory and will instruct IIS
 that all requests below the path <code>/static</code> should be served as static files.</p>
+
+<h2>Website creation automation</h2>
+
+<p>The website creation that is described in the previous sections can be automated
+with the following script that must be run as an administrator:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>%windir%\system32\inetsrv\appcmd.exe set config -section:system.webServer/fastCgi /+&quot;[fullPath=&#39;d:\python\app\python.exe&#39;,arguments=&#39;d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings&#39;,maxInstances=&#39;4&#39;,idleTimeout=&#39;1800&#39;,activityTimeout=&#39;30&#39;,requestTimeout=&#39;90&#39;,instanceMaxRequests=&#39;100000&#39;,protocol=&#39;NamedPipe&#39;,flushNamedPipe=&#39;False&#39;,monitorChangesTo=&#39;d:\sites\esplayer\esplayer\web.config&#39;]&quot; /commit:apphost
+</span><span class='line'>%windir%\system32\inetsrv\appcmd.exe add apppool /name:esplayer
+</span><span class='line'>%windir%\system32\inetsrv\appcmd.exe add site /name:esplayer /bindings:http://*:80 /physicalPath:d:\sites\esplayer\esplayer
+</span><span class='line'>%windir%\system32\inetsrv\appcmd.exe set app &quot;esplayer/&quot; /applicationPool:esplayer
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The four commands run in the script do the following actions:</p>
+
+<ul>
+<li>Create the FastCGI application.</li>
+<li>Create the site application pool.</li>
+<li>Create the website.</li>
+<li>Add the created website to the application pool.</li>
+</ul>
+
 
 <h2>Testing and troubleshooting</h2>
 
