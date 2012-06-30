@@ -180,6 +180,25 @@ clearing all the handlers and serving all requests only as static files. When
 collected, this file will go in the ``static`` directory and will instruct IIS
 that all requests below the path ``/static`` should be served as static files.
 
+## Website creation automation
+
+The website creation that is described in the previous sections can be automated 
+with the following script that must be run as an administrator:
+
+```
+%windir%\system32\inetsrv\appcmd.exe set config -section:system.webServer/fastCgi /+"[fullPath='d:\python\app\python.exe',arguments='d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings',maxInstances='4',idleTimeout='1800',activityTimeout='30',requestTimeout='90',instanceMaxRequests='100000',protocol='NamedPipe',flushNamedPipe='False',monitorChangesTo='d:\sites\esplayer\esplayer\web.config']" /commit:apphost
+%windir%\system32\inetsrv\appcmd.exe add apppool /name:esplayer
+%windir%\system32\inetsrv\appcmd.exe add site /name:esplayer /bindings:http://*:80 /physicalPath:d:\sites\esplayer\esplayer
+%windir%\system32\inetsrv\appcmd.exe set app "esplayer/" /applicationPool:esplayer
+```
+
+The four commands run in the script do the following actions:
+
+- Create the FastCGI application.
+- Create the site application pool.
+- Create the website.
+- Add the created website to the application pool.
+
 ## Testing and troubleshooting
 
 After the configuration, the website should be available through IIS. If this
