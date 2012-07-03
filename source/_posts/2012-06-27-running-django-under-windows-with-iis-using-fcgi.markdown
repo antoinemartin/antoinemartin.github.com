@@ -10,6 +10,10 @@ categories:
 - FCGI
 ---
 
+__Update__: The configuration process described in this post can be achieved
+with only one management command if you install the
+[django-windows-tools application](https://github.com/antoinemartin/django-windows-tools).
+
 Windows is probably not the best production environment for 
 [Django](https://www.djangoproject.com/) but sometimes one doesn't have the
 choice. In that case, a few options aleardy exist, most notably the one
