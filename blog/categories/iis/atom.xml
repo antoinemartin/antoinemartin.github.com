@@ -4,7 +4,7 @@
   <title><![CDATA[Category: IIS | Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/blog/categories/iis/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-06-30T17:17:43+02:00</updated>
+  <updated>2012-07-03T20:16:44+02:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -18,7 +18,11 @@
     <link href="http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
     <updated>2012-06-27T14:12:00+02:00</updated>
     <id>http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
-    <content type="html"><![CDATA[<p>Windows is probably not the best production environment for
+    <content type="html"><![CDATA[<p><strong>Update</strong>: The configuration process described in this post can be achieved
+with only one management command if you install the
+<a href="https://github.com/antoinemartin/django-windows-tools">django-windows-tools application</a>.</p>
+
+<p>Windows is probably not the best production environment for
 <a href="https://www.djangoproject.com/">Django</a> but sometimes one doesn't have the
 choice. In that case, a few options aleardy exist, most notably the one
 developed by <a href="http://www.helicontech.com/">helicontech</a> that relies on
