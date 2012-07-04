@@ -1,0 +1,704 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Django on Windows: run Celery as a Service - Geek Quickies</title>
+  <meta name="author" content="Antoine Martin">
+
+  
+  <meta name="description" content="In my previous post,
+I showed how to set up a Django project on a Windows Server to be served behind
+IIS. After setting up the server, the next thing &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/GeekQuickies" rel="alternate" title="Geek Quickies" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Mono:400" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29953512-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Geek Quickies</a></h1>
+  
+    <h2>Stories from the cloudvergence.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/GeekQuickies" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:antoinemartin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Django on Windows: Run Celery as a Service</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-04T12:21:00+02:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In my <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">previous post</a>,
+I showed how to set up a Django project on a Windows Server to be served behind
+IIS. After setting up the server, the next thing we want with a Django
+application is to be able to run background and scheduled tasks, and
+<a href="http://celeryproject.org/">Celery</a> is the perfect tool for that.</p>
+
+<!-- more -->
+
+
+<p>On Windows, background processes are mostly run as Windows Services.
+Fortunately, <a href="http://sourceforge.net/projects/pywin32/">Python for Windows Extensions</a>
+(a.k.a pywin32) provides facilities to create a Windows Service.</p>
+
+<p>I have packaged the related code for this post and the previous one in a
+project called <a href="https://github.com/antoinemartin/django-windows-tools">django-windows-tools</a>
+available on github and the cheese shop. To make it available for your
+application, simply install it with the command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pip install django-windows-tools
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configuring your project</h2>
+
+<p>To run Celery for your project, you need to install Celery and choose a Broker
+for passing messages between the Django application and the Celery worker
+processes.</p>
+
+<p>Installation of celery is easy:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>pip install django-celery
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you add it to your <code>settings.py</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;djcelery&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">djcelery</span>
+</span><span class='line'><span class="n">djcelery</span><span class="o">.</span><span class="n">setup_loader</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can choose among <a href="http://docs.celeryproject.org/en/latest/getting-started/brokers/index.html">several message brokers</a>.
+I personnaly use a <a href="https://github.com/MSOpenTech/Redis">Windows port of Redis</a>
+installed as a <a href="https://github.com/kcherenkov/redis-windows-service">Windows Service</a>.
+The advantage of Redis is that it can also be used as an in-memory database. In
+case you&#8217;re interested, you can find <a href="/downloads/redis.zip">here</a> a binay copy
+of my installation.</p>
+
+<p>The configuration of Redis as Celery&#8217;s broker also occurs in the <code>settings.py</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c"># Redis configuration</span>
+</span><span class='line'><span class="n">REDIS_PORT</span><span class="o">=</span><span class="mi">6379</span>
+</span><span class='line'><span class="n">REDIS_HOST</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span>
+</span><span class='line'><span class="n">REDIS_DB</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">REDIS_CONNECT_RETRY</span> <span class="o">=</span> <span class="bp">True</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Broker configuration</span>
+</span><span class='line'><span class="n">BROKER_HOST</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span>
+</span><span class='line'><span class="n">BROKER_BACKEND</span><span class="o">=</span><span class="s">&quot;redis&quot;</span>
+</span><span class='line'><span class="n">BROKER_USER</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</span><span class='line'><span class="n">BROKER_PASSWORD</span> <span class="o">=</span><span class="s">&quot;&quot;</span>
+</span><span class='line'><span class="n">BROKER_VHOST</span> <span class="o">=</span> <span class="s">&quot;0&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c"># Celery Redis configuration</span>
+</span><span class='line'><span class="n">CELERY_SEND_EVENTS</span><span class="o">=</span><span class="bp">True</span>
+</span><span class='line'><span class="n">CELERY_RESULT_BACKEND</span><span class="o">=</span><span class="s">&#39;redis&#39;</span>
+</span><span class='line'><span class="n">CELERY_REDIS_HOST</span><span class="o">=</span><span class="s">&#39;127.0.0.1&#39;</span>
+</span><span class='line'><span class="n">CELERY_REDIS_PORT</span><span class="o">=</span><span class="mi">6379</span>
+</span><span class='line'><span class="n">CELERY_REDIS_DB</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">CELERY_TASK_RESULT_EXPIRES</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span class='line'><span class="n">CELERYBEAT_SCHEDULER</span><span class="o">=</span><span class="s">&quot;djcelery.schedulers.DatabaseScheduler&quot;</span>
+</span><span class='line'><span class="n">CELERY_ALWAYS_EAGER</span><span class="o">=</span><span class="bp">False</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally, you add the <code>django_windows_tools</code> application to your project:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span>
+</span><span class='line'>    <span class="s">&#39;django_windows_tools&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After the configuration, a <code>python manage.py syncdb</code> will ensure that the
+database of your project is up to date.</p>
+
+<h2>Enabling the service</h2>
+
+<p>The installed service is going to allow us to run in the backround arbitrary
+management commands related to our project.</p>
+
+<p>With the application installed, on the root of your project, type the following
+command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">winservice_install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/django/winservice_install.png" width="600"></p>
+
+<p>It will create two files in the root directory of your project .<code>service.py</code>
+will help you install, run and remove the Windows Service. It&#8217;s much like
+<code>manage.py</code> for the service. <code>service.ini</code> contains the list of management
+commands that will be run by the Windows Service.</p>
+
+<h2>Configuring the service</h2>
+
+<p>A look at the <code>service.ini</code> file gives us the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">services</span><span class="p">]</span>
+</span><span class='line'><span class="c"># Services to be run on all machines</span>
+</span><span class='line'><span class="n">run</span><span class="o">=</span><span class="n">celeryd</span>
+</span><span class='line'><span class="n">clean</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">BEATSERVER</span><span class="p">]</span>
+</span><span class='line'><span class="c"># There should be only one machine with the celerybeat service</span>
+</span><span class='line'><span class="n">run</span><span class="o">=</span><span class="n">celeryd</span> <span class="n">celerybeat</span>
+</span><span class='line'><span class="n">clean</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">beat</span><span class="o">.</span><span class="n">log</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">celeryd</span><span class="p">]</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">celeryd</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=-</span><span class="n">f</span> <span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">l</span> <span class="n">info</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">celerybeat</span><span class="p">]</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">celerybeat</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=-</span><span class="n">f</span> <span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">beat</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">l</span> <span class="n">info</span> <span class="o">--</span><span class="n">pidfile</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">runserver</span><span class="p">]</span>
+</span><span class='line'><span class="c"># Runs the debug server and listen on port 8000</span>
+</span><span class='line'><span class="c"># This one is just an example to show that any manage command can be used</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">runserver</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=--</span><span class="n">noreload</span> <span class="o">--</span><span class="n">insecure</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">8000</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">log</span><span class="p">]</span>
+</span><span class='line'><span class="n">filename</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">service</span><span class="o">.</span><span class="n">log</span>
+</span><span class='line'><span class="n">level</span><span class="o">=</span><span class="n">INFO</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>services</code> section contains :</p>
+
+<ul>
+<li>The list of background commands to run in the <code>run</code> directive.</li>
+<li>The list of files to delete when refreshed or stopped in the <code>clean</code>
+directive.</li>
+</ul>
+
+
+<p>Here the <code>run</code> directive contains only one command: <code>celeryd</code>. If we look
+at the corresponding section of the <code>ini</code> file, we find:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">celeryd</span><span class="p">]</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">celeryd</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=-</span><span class="n">f</span> <span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">l</span> <span class="n">info</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>command</code> specifies the <code>manage.py</code> command to run and <code>parameters</code>
+specifies the parameters to the command.</p>
+
+<p>So here the configurations tells us that the service, when started, will run a
+python process equivalent to the command line:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'>  <span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">celeryd</span> <span class="o">-</span><span class="n">f</span> <span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">l</span> <span class="n">info</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that the <code>d:\logs\celery.log</code> will be deleted between runs.</p>
+
+<p>The <code>log</code> sections defines a log file and logging level for the service
+process itself:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">log</span><span class="p">]</span>
+</span><span class='line'><span class="n">filename</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">service</span><span class="o">.</span><span class="n">log</span>
+</span><span class='line'><span class="n">level</span><span class="o">=</span><span class="n">INFO</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Installing and removing the service</h2>
+
+<p>You need to have administrator privileges to install the service in the
+Windows Registry so that it&#8217;s started each time the machine boots. You do
+that with the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">service</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">startup</span><span class="o">=</span><span class="n">auto</span> <span class="n">install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/django/winservice_install.png" width="600"></p>
+
+<p>The <code>--startup=auto</code> parameter will allow the service to start automatically
+when the server boots. You can check it has been installed:</p>
+
+<p><img src="/images/django/winservice_service.png"></p>
+
+<p>It can be removed with the following commands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">service</span><span class="o">.</span><span class="n">py</span> <span class="n">remove</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Please ensure that the Server Manager is not running when you run this command,
+because in that case a complete removal of the service will need a server
+restart.</p>
+
+<h2>Starting and stopping the service</h2>
+
+<p>The service can be manually started and stopped with the following commands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">service</span><span class="o">.</span><span class="n">py</span> <span class="n">start</span>
+</span><span class='line'><span class="n">D</span><span class="p">:</span>\<span class="n">sites</span>\<span class="n">mydjangoapp</span><span class="o">&gt;</span> <span class="n">python</span> <span class="n">service</span><span class="o">.</span><span class="n">py</span> <span class="n">stop</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If everything went fine, the python processes should be there:</p>
+
+<p><img src="/images/django/winservice_process.png"></p>
+
+<p>Along with the log files :</p>
+
+<p><img src="/images/django/winservice_logs.png"></p>
+
+<h2>Running the Beat service</h2>
+
+<p>If you deploy your Django project on several servers, you probably want to have
+Celery worker processes on each deployed machine but only one unique Beat process
+for executing scheduled tasks. You can customize the <code>services</code> section of the
+<code>service.ini</code> configuration file on that specific machine, but this is
+incovenient if you are sharing files between machines, for instance.</p>
+
+<p>The service provides the ability to have several <code>services</code> sections in the
+same configuration file for different host servers. The Windows Service will try
+to find the section which name matches the name of the current server and will
+fallback to the <code>services</code> section if it does not find it. This allows you to
+have a different behaviour for the service on different machines.
+In the preceding configuration, you have one section, named <code>BEATSERVER</code> :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">BEATSERVER</span><span class="p">]</span>
+</span><span class='line'><span class="c"># There should be only one machine with the celerybeat service</span>
+</span><span class='line'><span class="n">run</span><span class="o">=</span><span class="n">celeryd</span> <span class="n">celerybeat</span>
+</span><span class='line'><span class="n">clean</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">beat</span><span class="o">.</span><span class="n">log</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>which adds the <code>celerybeat</code> command to the <code>celeryd</code> command. With this
+configuration file, the service run on a machine named <code>BEATSERVER</code> will run
+the Celery beat service.</p>
+
+<p>The <code>winservice_install</code> facility provides a convenient option for choosing
+the current machine as the <em>Beat</em> machine. Let&#8217;s try that :</p>
+
+<p><img src="/images/django/winservice_beat.png" width="600"></p>
+
+<p>The new <code>service.py</code> file will contain a section with the name of the current
+machine:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">WS2008R2X64</span><span class="p">]</span>
+</span><span class='line'><span class="c"># There should be only one machine with the celerybeat service</span>
+</span><span class='line'><span class="n">run</span><span class="o">=</span><span class="n">celeryd</span> <span class="n">celerybeat</span>
+</span><span class='line'><span class="n">clean</span><span class="o">=</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celerybeat</span><span class="o">.</span><span class="n">pid</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">beat</span><span class="o">.</span><span class="n">log</span><span class="p">;</span><span class="n">d</span><span class="p">:</span>\<span class="n">logs</span>\<span class="n">celery</span><span class="o">.</span><span class="n">log</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, when run, the service will start a new python process:</p>
+
+<p><img src="/images/django/winservice_process_beat.png"></p>
+
+<p>And new log files for the beat service will be present:</p>
+
+<p><img src="/images/django/winservice_log_beat.png"></p>
+
+<h2>Changes to the configuration</h2>
+
+<p>The Windows Service monitor changes to the <code>service.ini</code> configuration
+file. In case it is modified, the service does the following:</p>
+
+<ul>
+<li>Stop the background processes.</li>
+<li>Reread the configuration file.</li>
+<li>Start the background processes.</li>
+</ul>
+
+
+<p>You may have seen in the <code>service.ini</code> file the <code>runserver</code> section:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">runserver</span><span class="p">]</span>
+</span><span class='line'><span class="c"># Runs the debug server and listen on port 8000</span>
+</span><span class='line'><span class="c"># This one is just an example to show that any manage command can be used</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">runserver</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=--</span><span class="n">noreload</span> <span class="o">--</span><span class="n">insecure</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">8000</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It allows running the runserver command in a separate process. I you edit the
+<code>service.ini</code> file and add <code>runserver</code> to the <code>run</code> directive:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">WS2008R2X64</span><span class="p">]</span>
+</span><span class='line'><span class="c"># There should be only one machine with the celerybeat service</span>
+</span><span class='line'><span class="n">run</span><span class="o">=</span><span class="n">celeryd</span> <span class="n">celerybeat</span> <span class="n">runserver</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As soon as you save the file, you can make your browser point to
+<code>http://localhost:8000</code> and will obtain:</p>
+
+<p><img src="/images/django/winservice_runserver.png"></p>
+
+<h2>Running arbitrary commands</h2>
+
+<p>As shown in the preceding section, virtually any Django management command can
+be run by the service at startup or each time the <code>service.ini</code> file is
+modified. You could imagine having a section:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="p">[</span><span class="n">collectstatic</span><span class="p">]</span>
+</span><span class='line'><span class="n">command</span><span class="o">=</span><span class="n">collectstatic</span>
+</span><span class='line'><span class="n">parameters</span><span class="o">=--</span><span class="n">noinput</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Antoine Martin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-04T12:21:00+02:00" pubdate data-updated="true">Jul 4<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/celery/'>Celery</a>, <a class='category' href='/blog/categories/django/'>Django</a>, <a class='category' href='/blog/categories/iis/'>IIS</a>, <a class='category' href='/blog/categories/windows/'>Windows</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/" data-via="antoinemartin" data-counturl="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/" title="Previous Post: Running Django under Windows with IIS using FastCGI">&laquo; Running Django under Windows with IIS using FastCGI</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/">Django on Windows: run Celery as a Service</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django under Windows with IIS using FastCGI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/">Using Eclipse templates to ease Android logging</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/">Get the height of the status bar in Android</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/">Start a virtualenv Django shell from the Linux Desktop</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("antoinemartin", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/antoinemartin" class="twitter-follow-button" data-show-count="false">Follow @antoinemartin</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/antoine@openance.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Antoine Martin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'geekquickies';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/';
+        var disqus_url = 'http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

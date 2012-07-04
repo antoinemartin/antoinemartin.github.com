@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Windows | Geek Quickies]]></title>
   <link href="http://antoinemartin.github.com/blog/categories/windows/atom.xml" rel="self"/>
   <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-07-03T20:16:44+02:00</updated>
+  <updated>2012-07-04T19:53:06+02:00</updated>
   <id>http://antoinemartin.github.com/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,366 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Django on Windows: run Celery as a Service]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/"/>
+    <updated>2012-07-04T12:21:00+02:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service</id>
+    <content type="html"><![CDATA[<p>In my <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">previous post</a>,
+I showed how to set up a Django project on a Windows Server to be served behind
+IIS. After setting up the server, the next thing we want with a Django
+application is to be able to run background and scheduled tasks, and
+<a href="http://celeryproject.org/">Celery</a> is the perfect tool for that.</p>
+
+<!-- more -->
+
+
+<p>On Windows, background processes are mostly run as Windows Services.
+Fortunately, <a href="http://sourceforge.net/projects/pywin32/">Python for Windows Extensions</a>
+(a.k.a pywin32) provides facilities to create a Windows Service.</p>
+
+<p>I have packaged the related code for this post and the previous one in a
+project called <a href="https://github.com/antoinemartin/django-windows-tools">django-windows-tools</a>
+available on github and the cheese shop. To make it available for your
+application, simply install it with the command:</p>
+
+<p><code>sh
+pip install django-windows-tools
+</code></p>
+
+<h2>Configuring your project</h2>
+
+<p>To run Celery for your project, you need to install Celery and choose a Broker
+for passing messages between the Django application and the Celery worker
+processes.</p>
+
+<p>Installation of celery is easy:</p>
+
+<p><code>
+pip install django-celery
+</code></p>
+
+<p>Then you add it to your <code>settings.py</code>:</p>
+
+<p>```python
+INSTALLED_APPS += (</p>
+
+<pre><code>'djcelery',
+</code></pre>
+
+<p>)</p>
+
+<p>import djcelery
+djcelery.setup_loader()
+```</p>
+
+<p>You can choose among <a href="http://docs.celeryproject.org/en/latest/getting-started/brokers/index.html">several message brokers</a>.
+I personnaly use a <a href="https://github.com/MSOpenTech/Redis">Windows port of Redis</a>
+installed as a <a href="https://github.com/kcherenkov/redis-windows-service">Windows Service</a>.
+The advantage of Redis is that it can also be used as an in-memory database. In
+case you're interested, you can find <a href="/downloads/redis.zip">here</a> a binay copy
+of my installation.</p>
+
+<p>The configuration of Redis as Celery's broker also occurs in the <code>settings.py</code>:</p>
+
+<p>```python</p>
+
+<h1>Redis configuration</h1>
+
+<p>REDIS_PORT=6379
+REDIS_HOST = "127.0.0.1"
+REDIS_DB = 0
+REDIS_CONNECT_RETRY = True</p>
+
+<h1>Broker configuration</h1>
+
+<p>BROKER_HOST = "127.0.0.1"
+BROKER_BACKEND="redis"
+BROKER_USER = ""
+BROKER_PASSWORD =""
+BROKER_VHOST = "0"</p>
+
+<h1>Celery Redis configuration</h1>
+
+<p>CELERY_SEND_EVENTS=True
+CELERY_RESULT_BACKEND='redis'
+CELERY_REDIS_HOST='127.0.0.1'
+CELERY_REDIS_PORT=6379
+CELERY_REDIS_DB = 0
+CELERY_TASK_RESULT_EXPIRES = 10
+CELERYBEAT_SCHEDULER="djcelery.schedulers.DatabaseScheduler"
+CELERY_ALWAYS_EAGER=False
+```</p>
+
+<p>Finally, you add the <code>django_windows_tools</code> application to your project:</p>
+
+<p>```python
+INSTALLED_APPS += (</p>
+
+<pre><code>'django_windows_tools',
+</code></pre>
+
+<p>)
+```</p>
+
+<p>After the configuration, a <code>python manage.py syncdb</code> will ensure that the
+database of your project is up to date.</p>
+
+<h2>Enabling the service</h2>
+
+<p>The installed service is going to allow us to run in the backround arbitrary
+management commands related to our project.</p>
+
+<p>With the application installed, on the root of your project, type the following
+command:</p>
+
+<p><code>
+D:\sites\mydjangoapp&gt; python winservice_install
+</code></p>
+
+<p><img src="/images/django/winservice_install.png" width="600"></p>
+
+<p>It will create two files in the root directory of your project .<code>service.py</code>
+will help you install, run and remove the Windows Service. It's much like
+<code>manage.py</code> for the service. <code>service.ini</code> contains the list of management
+commands that will be run by the Windows Service.</p>
+
+<h2>Configuring the service</h2>
+
+<p>A look at the <code>service.ini</code> file gives us the following:</p>
+
+<p>```</p>
+
+<pre><code>[services]
+# Services to be run on all machines
+run=celeryd
+clean=d:\logs\celery.log
+
+[BEATSERVER]
+# There should be only one machine with the celerybeat service
+run=celeryd celerybeat
+clean=d:\logs\celerybeat.pid;d:\logs\beat.log;d:\logs\celery.log
+
+[celeryd]
+command=celeryd
+parameters=-f d:\logs\celery.log -l info
+
+[celerybeat]
+command=celerybeat
+parameters=-f d:\logs\beat.log -l info --pidfile=d:\logs\celerybeat.pid
+
+[runserver]
+# Runs the debug server and listen on port 8000
+# This one is just an example to show that any manage command can be used
+command=runserver
+parameters=--noreload --insecure 0.0.0.0:8000
+
+[log]
+filename=d:\logs\service.log
+level=INFO
+</code></pre>
+
+<p>```</p>
+
+<p>The <code>services</code> section contains :</p>
+
+<ul>
+<li>The list of background commands to run in the <code>run</code> directive.</li>
+<li>The list of files to delete when refreshed or stopped in the <code>clean</code>
+directive.</li>
+</ul>
+
+
+<p>Here the <code>run</code> directive contains only one command: <code>celeryd</code>. If we look
+at the corresponding section of the <code>ini</code> file, we find:</p>
+
+<p>```</p>
+
+<pre><code>[celeryd]
+command=celeryd
+parameters=-f d:\logs\celery.log -l info
+</code></pre>
+
+<p>```</p>
+
+<p><code>command</code> specifies the <code>manage.py</code> command to run and <code>parameters</code>
+specifies the parameters to the command.</p>
+
+<p>So here the configurations tells us that the service, when started, will run a
+python process equivalent to the command line:</p>
+
+<p><code>
+  D:\sites\mydjangoapp&gt; python manage.py celeryd -f d:\logs\celery.log -l info
+</code></p>
+
+<p>And that the <code>d:\logs\celery.log</code> will be deleted between runs.</p>
+
+<p>The <code>log</code> sections defines a log file and logging level for the service
+process itself:</p>
+
+<p>```</p>
+
+<pre><code>[log]
+filename=d:\logs\service.log
+level=INFO
+</code></pre>
+
+<p>```</p>
+
+<h2>Installing and removing the service</h2>
+
+<p>You need to have administrator privileges to install the service in the
+Windows Registry so that it's started each time the machine boots. You do
+that with the following command:</p>
+
+<p><code>
+D:\sites\mydjangoapp&gt; python service.py --startup=auto install
+</code></p>
+
+<p><img src="/images/django/winservice_install.png" width="600"></p>
+
+<p>The <code>--startup=auto</code> parameter will allow the service to start automatically
+when the server boots. You can check it has been installed:</p>
+
+<p><img src="/images/django/winservice_service.png"></p>
+
+<p>It can be removed with the following commands:</p>
+
+<p><code>
+D:\sites\mydjangoapp&gt; python service.py remove
+</code></p>
+
+<p>Please ensure that the Server Manager is not running when you run this command,
+because in that case a complete removal of the service will need a server
+restart.</p>
+
+<h2>Starting and stopping the service</h2>
+
+<p>The service can be manually started and stopped with the following commands:</p>
+
+<p><code>
+D:\sites\mydjangoapp&gt; python service.py start
+D:\sites\mydjangoapp&gt; python service.py stop
+</code></p>
+
+<p>If everything went fine, the python processes should be there:</p>
+
+<p><img src="/images/django/winservice_process.png"></p>
+
+<p>Along with the log files :</p>
+
+<p><img src="/images/django/winservice_logs.png"></p>
+
+<h2>Running the Beat service</h2>
+
+<p>If you deploy your Django project on several servers, you probably want to have
+Celery worker processes on each deployed machine but only one unique Beat process
+for executing scheduled tasks. You can customize the <code>services</code> section of the
+<code>service.ini</code> configuration file on that specific machine, but this is
+incovenient if you are sharing files between machines, for instance.</p>
+
+<p>The service provides the ability to have several <code>services</code> sections in the
+same configuration file for different host servers. The Windows Service will try
+to find the section which name matches the name of the current server and will
+fallback to the <code>services</code> section if it does not find it. This allows you to
+have a different behaviour for the service on different machines.
+In the preceding configuration, you have one section, named <code>BEATSERVER</code> :</p>
+
+<p>```</p>
+
+<pre><code>[BEATSERVER]
+# There should be only one machine with the celerybeat service
+run=celeryd celerybeat
+clean=d:\logs\celerybeat.pid;d:\logs\beat.log;d:\logs\celery.log
+</code></pre>
+
+<p>```</p>
+
+<p>which adds the <code>celerybeat</code> command to the <code>celeryd</code> command. With this
+configuration file, the service run on a machine named <code>BEATSERVER</code> will run
+the Celery beat service.</p>
+
+<p>The <code>winservice_install</code> facility provides a convenient option for choosing
+the current machine as the <em>Beat</em> machine. Let's try that :</p>
+
+<p><img src="/images/django/winservice_beat.png" width="600"></p>
+
+<p>The new <code>service.py</code> file will contain a section with the name of the current
+machine:</p>
+
+<p>```
+[WS2008R2X64]</p>
+
+<h1>There should be only one machine with the celerybeat service</h1>
+
+<p>run=celeryd celerybeat
+clean=d:\logs\celerybeat.pid;d:\logs\beat.log;d:\logs\celery.log
+```</p>
+
+<p>Now, when run, the service will start a new python process:</p>
+
+<p><img src="/images/django/winservice_process_beat.png"></p>
+
+<p>And new log files for the beat service will be present:</p>
+
+<p><img src="/images/django/winservice_log_beat.png"></p>
+
+<h2>Changes to the configuration</h2>
+
+<p>The Windows Service monitor changes to the <code>service.ini</code> configuration
+file. In case it is modified, the service does the following:</p>
+
+<ul>
+<li>Stop the background processes.</li>
+<li>Reread the configuration file.</li>
+<li>Start the background processes.</li>
+</ul>
+
+
+<p>You may have seen in the <code>service.ini</code> file the <code>runserver</code> section:</p>
+
+<p>```</p>
+
+<pre><code>[runserver]
+# Runs the debug server and listen on port 8000
+# This one is just an example to show that any manage command can be used
+command=runserver
+parameters=--noreload --insecure 0.0.0.0:8000
+</code></pre>
+
+<p>```</p>
+
+<p>It allows running the runserver command in a separate process. I you edit the
+<code>service.ini</code> file and add <code>runserver</code> to the <code>run</code> directive:</p>
+
+<p>```
+[WS2008R2X64]</p>
+
+<h1>There should be only one machine with the celerybeat service</h1>
+
+<p>run=celeryd celerybeat runserver
+...
+```</p>
+
+<p>As soon as you save the file, you can make your browser point to
+<code>http://localhost:8000</code> and will obtain:</p>
+
+<p><img src="/images/django/winservice_runserver.png"></p>
+
+<h2>Running arbitrary commands</h2>
+
+<p>As shown in the preceding section, virtually any Django management command can
+be run by the service at startup or each time the <code>service.ini</code> file is
+modified. You could imagine having a section:</p>
+
+<p><code>
+[collectstatic]
+command=collectstatic
+parameters=--noinput
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Running Django under Windows with IIS using FastCGI]]></title>
