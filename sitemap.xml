@@ -37,12 +37,18 @@
         <lastmod>2012-07-04T19:52:14+02:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/
+        </loc>
+        <lastmod>2012-07-07T12:10:38+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://antoinemartin.github.com/</loc>
-        <lastmod>2012-07-04T19:52:14+02:00</lastmod>
+        <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
         <loc>http://antoinemartin.github.com/blog/archives/</loc>
-        <lastmod>2012-07-04T19:52:14+02:00</lastmod>
+        <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
         <loc>http://antoinemartin.github.com/about/</loc>

@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Installing Redmine on CentOS 6.2 wiht MySQL and Apache - Geek Quickies</title>
+  <meta name="author" content="Antoine Martin">
+
+  
+  <meta name="description" content="I needed recently to install the excellent project management tool
+Redmine on a CentOS 6.2 machine. There are some tutorials on the Web (here
+or here &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/GeekQuickies" rel="alternate" title="Geek Quickies" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Mono:400" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29953512-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Geek Quickies</a></h1>
+  
+    <h2>Stories from the cloudvergence.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/GeekQuickies" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:antoinemartin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Installing Redmine on CentOS 6.2 Wiht MySQL and Apache</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-06T17:56:00+02:00" pubdate data-updated="true">Jul 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I needed recently to install the excellent project management tool
+<a href="http://www.redmine.org/">Redmine</a> on a <a href="http://www.centos.org/">CentOS</a>
+ 6.2 machine. There are some tutorials on the Web (<a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29">here</a>
+or <a href="http://luzem.dyndns.org/2011/04/14/install-redmine-in-rhel6-and-rh-based-distributions/">here</a>)
+but they are a little bit outdated. The following is a method that works as of
+today.</p>
+
+<!-- More -->
+
+
+<h2>Pre-requisites</h2>
+
+<p>Logged as root, install the following packages:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then install the <code>bundle</code> ruby gem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem install bundle
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install Redmine</h2>
+
+<p>Redmine is installed with the following commmands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www
+</span><span class='line'>wget http://rubyforge.org/frs/download.php/76255/redmine-1.4.4.tar.gz
+</span><span class='line'>tar zxf redmine-1.4.4.tar.gz
+</span><span class='line'>ln -s redmine-1.4.4 redmine
+</span><span class='line'>rm -f redmine-1.4.4.tar.gz
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install Redmine ruby dependencies</h2>
+
+<p>Bundle helps us install the ruby Redmine dependencies:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine
+</span><span class='line'>bundle install --without postgresql sqlite <span class="nb">test </span>development
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Database creation</h2>
+
+<p>First we start MySQL:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>service mysqld start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then we secure it (Optional):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>mysql_secure_installation
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We then create the redmine database and user:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">$ </span>mysql
+</span><span class='line'>mysql&gt; create database redmine character <span class="nb">set </span>utf8;
+</span><span class='line'>mysql&gt; grant all privileges on redmine.* to <span class="s1">&#39;redmine&#39;</span>@<span class="s1">&#39;localhost&#39;</span> identified by <span class="s1">&#39;my_password&#39;</span>;
+</span><span class='line'>mysql&gt; flush privileges;
+</span><span class='line'>mysql&gt; quit
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Redmine database configuration</h2>
+
+<p>We copy the database configuration example and we modify it to point to our
+newly created database:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine/config
+</span><span class='line'>copy database.yml.example database.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On the <code>database.yml</code> file, the <code>production</code> section should look like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">adapter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mysql</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">database</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">redmine</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">localhost</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">redmine</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my_password</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">encoding</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">utf8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then we create and populate the database with the following rake commands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine
+</span><span class='line'>rake generate_session_store
+</span><span class='line'>rake db:migrate <span class="nv">RAILS_ENV</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
+</span><span class='line'>rake redmine:load_default_data <span class="nv">RAILS_ENV</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Outgoing email configuration (Optional)</h2>
+
+<p>To configure an outgoing SMTP server for sending emails, we create the
+<code>config/configuration.yml</code> file from the sample:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine/config
+</span><span class='line'>cp configuration.yml.example configuration.yml
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And edit it to provide our configuration :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">production</span><span class="p-Indicator">:</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">email_delivery</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">delivery_method</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">:smtp</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">smtp_settings</span><span class="p-Indicator">:</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">address</span><span class="p-Indicator">:</span> <span class="s">&quot;smtp.mydomain.com&quot;</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">port</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">25</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">domain</span><span class="p-Indicator">:</span> <span class="s">&quot;mydomain.com&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Redmine standalone testing</h2>
+
+<p>At this point, Redmine can be tested in <em>standalone</em> mode by running the
+following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine/
+</span><span class='line'>ruby script/server webrick -e production
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and open the <code>http://localhost:3000</code> addess in a browser. If you are testing
+from another computer, you will need to open the port in the
+<code>/etc/sysconfig/iptables</code> file by duplicating the ssh (port 22) line and
+adapting it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+</span><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then apply the new configuration with the following command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>service iptables restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Passenger installation</h2>
+
+<p>To install <a href="http://www.modrails.com/">Phusion passenger</a>, we firts install its
+gem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>gem install passenger
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then install the Apache module with the command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>passenger-install-apache2-module
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Apache configuration</h2>
+
+<p>We remove the default Apache configuration and replace it by a new one:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /etc/httpd
+</span><span class='line'>mv conf.d available
+</span><span class='line'>mkdir conf.d
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the empty new <code>conf.d</code> folder, we create a <code>redmine.conf</code> file with the
+following configuration:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c"># Loading Passenger</span>
+</span><span class='line'>LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13/ext/apache2/mod_passenger.so
+</span><span class='line'>PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13
+</span><span class='line'>PassengerRuby /usr/bin/ruby
+</span><span class='line'>
+</span><span class='line'>&lt;VirtualHost *:80&gt;
+</span><span class='line'>   ServerName redmine.mycompany.com
+</span><span class='line'>   DocumentRoot /var/www/redmine/public
+</span><span class='line'>   &lt;Directory /var/www/redmine/public&gt;
+</span><span class='line'>      <span class="c"># This relaxes Apache security settings.</span>
+</span><span class='line'>      AllowOverride all
+</span><span class='line'>      <span class="c"># MultiViews must be turned off.</span>
+</span><span class='line'>      Options -MultiViews
+</span><span class='line'>      allow from all
+</span><span class='line'>   &lt;/Directory&gt;
+</span><span class='line'>
+</span><span class='line'>   ErrorLog <span class="s2">&quot;|/usr/sbin/rotatelogs /etc/httpd/logs/redmine-error.%Y-%m-%d.log 86400&quot;</span>
+</span><span class='line'>   CustomLog <span class="s2">&quot;|/usr/sbin/rotatelogs /etc/httpd/logs/redmine-access.%Y-%m-%d.log 86400&quot;</span> <span class="s2">&quot;%h %l %u %t %D \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'>&lt;/VirtualHost&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We then enable named based virtual hosting for our server by <strong>uncomenting</strong> the
+following line in the <code>/etc/httpd/conf/httpd.conf</code> file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>...
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'><span class="c"># Use name-based virtual hosting.</span>
+</span><span class='line'><span class="c">#</span>
+</span><span class='line'>NameVirtualHost *:80
+</span><span class='line'>...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We give full access on the redmine folder to the <code>apache</code> user and test the
+configuration:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>chown -R apache:root /var/www/redmine
+</span><span class='line'>service httpd configtest
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At this point, the SELinux configuration needs to be modified to allow our
+apache instance to run the phusion passenger module. You can do this by putting
+SELinux in permissive mode:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>setenfore Permissive
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And letting the Permissive mode survive a reboot by modifyin the
+<code>/etc/selinux/config</code> file from:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">SELINUX</span><span class="o">=</span>enforcing
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nv">SELINUX</span><span class="o">=</span>permissive
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to run redmine while enforcing, you may want to apply the method
+<a href="http://www.bangheadonwall.net/?p=343">described here</a> for which you will need
+to install the <code>policycoreutils-python</code> package.</p>
+
+<p>In any case, you will start Apache with the command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>service httpd start
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can access your Redmine installation with your browser. To access it
+from all the computers in your network, you will need to open the port 80 in the
+<code>/etc/sysconfig/iptables</code>. You can replace the 3000 rule by :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+</span><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And restart iptables.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>service iptables restart
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Start services at boot</h2>
+
+<p>To have MySQL and Apache started at boot, run the commands:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>chkconfig --level 345 mysqld on
+</span><span class='line'>chkconfig --level 345 httpd on
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Cleaning up</h2>
+
+<p>A quick command to clean up all the <code>devel</code> stuff needed for installation:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>yum remove <span class="s1">&#39;*-devel&#39;</span> make automake autoconf
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Tips</h2>
+
+<p>Don&#8217;t forget that if you change your Redmine configuration, you don&#8217;t have to
+restart Apache. Your can restart only Redmine with the command:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>touch /var/www/redmine/tmp/restart.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you restore data on your server from another redmine instance that runs on a
+previous version, dont forget to migrate your data:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">cd</span> /var/www/redmine
+</span><span class='line'>rake db:migrate <span class="nv">RAILS_ENV</span><span class="o">=</span><span class="s2">&quot;production&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Antoine Martin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-06T17:56:00+02:00" pubdate data-updated="true">Jul 6<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/centos/'>CentOS</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>, <a class='category' href='/blog/categories/redmine/'>Redmine</a>, <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/" data-via="antoinemartin" data-counturl="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/" title="Previous Post: Django on Windows: run Celery as a Service">&laquo; Django on Windows: run Celery as a Service</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/">Installing Redmine on CentOS 6.2 wiht MySQL and Apache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/">Django on Windows: run Celery as a Service</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django under Windows with IIS using FastCGI</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/">Using Eclipse templates to ease Android logging</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/">Get the height of the status bar in Android</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("antoinemartin", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/antoinemartin" class="twitter-follow-button" data-show-count="false">Follow @antoinemartin</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/antoine@openance.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Antoine Martin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'geekquickies';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/';
+        var disqus_url = 'http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

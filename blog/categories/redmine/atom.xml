@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Redmine | Geek Quickies]]></title>
+  <link href="http://antoinemartin.github.com/blog/categories/redmine/atom.xml" rel="self"/>
+  <link href="http://antoinemartin.github.com/"/>
+  <updated>2012-07-07T12:10:39+02:00</updated>
+  <id>http://antoinemartin.github.com/</id>
+  <author>
+    <name><![CDATA[Antoine Martin]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Installing Redmine on CentOS 6.2 wiht MySQL and Apache]]></title>
+    <link href="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/"/>
+    <updated>2012-07-06T17:56:00+02:00</updated>
+    <id>http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache</id>
+    <content type="html"><![CDATA[<p>I needed recently to install the excellent project management tool
+<a href="http://www.redmine.org/">Redmine</a> on a <a href="http://www.centos.org/">CentOS</a>
+ 6.2 machine. There are some tutorials on the Web (<a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29">here</a>
+or <a href="http://luzem.dyndns.org/2011/04/14/install-redmine-in-rhel6-and-rh-based-distributions/">here</a>)
+but they are a little bit outdated. The following is a method that works as of
+today.</p>
+
+<!-- More -->
+
+
+<h2>Pre-requisites</h2>
+
+<p>Logged as root, install the following packages:</p>
+
+<p><code>sh
+yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel
+</code></p>
+
+<p>And then install the <code>bundle</code> ruby gem:</p>
+
+<p><code>sh
+gem install bundle
+</code></p>
+
+<h2>Install Redmine</h2>
+
+<p>Redmine is installed with the following commmands:</p>
+
+<p><code>sh
+cd /var/www
+wget http://rubyforge.org/frs/download.php/76255/redmine-1.4.4.tar.gz
+tar zxf redmine-1.4.4.tar.gz
+ln -s redmine-1.4.4 redmine
+rm -f redmine-1.4.4.tar.gz
+</code></p>
+
+<h2>Install Redmine ruby dependencies</h2>
+
+<p>Bundle helps us install the ruby Redmine dependencies:</p>
+
+<p><code>sh
+cd /var/www/redmine
+bundle install --without postgresql sqlite test development
+</code></p>
+
+<h2>Database creation</h2>
+
+<p>First we start MySQL:</p>
+
+<p><code>sh
+service mysqld start
+</code></p>
+
+<p>Then we secure it (Optional):</p>
+
+<p><code>sh
+mysql_secure_installation
+</code></p>
+
+<p>We then create the redmine database and user:</p>
+
+<p><code>sh
+$ mysql
+mysql&gt; create database redmine character set utf8;
+mysql&gt; grant all privileges on redmine.* to 'redmine'@'localhost' identified by 'my_password';
+mysql&gt; flush privileges;
+mysql&gt; quit
+</code></p>
+
+<h2>Redmine database configuration</h2>
+
+<p>We copy the database configuration example and we modify it to point to our
+newly created database:</p>
+
+<p><code>sh
+cd /var/www/redmine/config
+copy database.yml.example database.yml
+</code></p>
+
+<p>On the <code>database.yml</code> file, the <code>production</code> section should look like this:</p>
+
+<p>``` yaml
+production:
+  adapter: mysql
+  database: redmine
+  host: localhost
+  username: redmine
+  password: my_password
+  encoding: utf8</p>
+
+<p>```</p>
+
+<p>And then we create and populate the database with the following rake commands:</p>
+
+<p><code>sh
+cd /var/www/redmine
+rake generate_session_store
+rake db:migrate RAILS_ENV="production"
+rake redmine:load_default_data RAILS_ENV="production"
+</code></p>
+
+<h2>Outgoing email configuration (Optional)</h2>
+
+<p>To configure an outgoing SMTP server for sending emails, we create the
+<code>config/configuration.yml</code> file from the sample:</p>
+
+<p><code>sh
+cd /var/www/redmine/config
+cp configuration.yml.example configuration.yml
+</code></p>
+
+<p>And edit it to provide our configuration :</p>
+
+<p>```yaml
+production:
+  email_delivery:</p>
+
+<pre><code>delivery_method: :smtp
+smtp_settings:
+  address: "smtp.mydomain.com"
+  port: 25
+  domain: "mydomain.com"
+</code></pre>
+
+<p>```</p>
+
+<h2>Redmine standalone testing</h2>
+
+<p>At this point, Redmine can be tested in <em>standalone</em> mode by running the
+following command:</p>
+
+<p><code>sh
+cd /var/www/redmine/
+ruby script/server webrick -e production
+</code></p>
+
+<p>and open the <code>http://localhost:3000</code> addess in a browser. If you are testing
+from another computer, you will need to open the port in the
+<code>/etc/sysconfig/iptables</code> file by duplicating the ssh (port 22) line and
+adapting it:</p>
+
+<p><code>
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
+</code></p>
+
+<p>Then apply the new configuration with the following command:</p>
+
+<p><code>sh
+service iptables restart
+</code></p>
+
+<h2>Passenger installation</h2>
+
+<p>To install <a href="http://www.modrails.com/">Phusion passenger</a>, we firts install its
+gem:</p>
+
+<p><code>sh
+gem install passenger
+</code></p>
+
+<p>And then install the Apache module with the command:</p>
+
+<p><code>sh
+passenger-install-apache2-module
+</code></p>
+
+<h2>Apache configuration</h2>
+
+<p>We remove the default Apache configuration and replace it by a new one:</p>
+
+<p><code>sh
+cd /etc/httpd
+mv conf.d available
+mkdir conf.d
+</code></p>
+
+<p>In the empty new <code>conf.d</code> folder, we create a <code>redmine.conf</code> file with the
+following configuration:</p>
+
+<p>```</p>
+
+<h1>Loading Passenger</h1>
+
+<p>LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13/ext/apache2/mod_passenger.so
+PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13
+PassengerRuby /usr/bin/ruby</p>
+
+<p><VirtualHost *:80>
+   ServerName redmine.mycompany.com
+   DocumentRoot /var/www/redmine/public
+   <Directory /var/www/redmine/public></p>
+
+<pre><code>  # This relaxes Apache security settings.
+  AllowOverride all
+  # MultiViews must be turned off.
+  Options -MultiViews
+  allow from all
+</code></pre>
+
+<p>   </Directory></p>
+
+<p>   ErrorLog "|/usr/sbin/rotatelogs /etc/httpd/logs/redmine-error.%Y-%m-%d.log 86400"
+   CustomLog "|/usr/sbin/rotatelogs /etc/httpd/logs/redmine-access.%Y-%m-%d.log 86400" "%h %l %u %t %D \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\""</p>
+
+<p></VirtualHost></p>
+
+<p>```</p>
+
+<p>We then enable named based virtual hosting for our server by <strong>uncomenting</strong> the
+following line in the <code>/etc/httpd/conf/httpd.conf</code> file:</p>
+
+<p>```
+...
+#</p>
+
+<h1>Use name-based virtual hosting.</h1>
+
+<p>#
+NameVirtualHost *:80
+...
+```</p>
+
+<p>We give full access on the redmine folder to the <code>apache</code> user and test the
+configuration:</p>
+
+<p><code>sh
+chown -R apache:root /var/www/redmine
+service httpd configtest
+</code></p>
+
+<p>At this point, the SELinux configuration needs to be modified to allow our
+apache instance to run the phusion passenger module. You can do this by putting
+SELinux in permissive mode:</p>
+
+<p><code>sh
+setenfore Permissive
+</code></p>
+
+<p>And letting the Permissive mode survive a reboot by modifyin the
+<code>/etc/selinux/config</code> file from:</p>
+
+<p><code>
+SELINUX=enforcing
+</code></p>
+
+<p>to</p>
+
+<p><code>
+SELINUX=permissive
+</code></p>
+
+<p>If you want to run redmine while enforcing, you may want to apply the method
+<a href="http://www.bangheadonwall.net/?p=343">described here</a> for which you will need
+to install the <code>policycoreutils-python</code> package.</p>
+
+<p>In any case, you will start Apache with the command:</p>
+
+<p><code>sh
+service httpd start
+</code></p>
+
+<p>Now you can access your Redmine installation with your browser. To access it
+from all the computers in your network, you will need to open the port 80 in the
+<code>/etc/sysconfig/iptables</code>. You can replace the 3000 rule by :</p>
+
+<p><code>
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+</code></p>
+
+<p>And restart iptables.</p>
+
+<p><code>sh
+service iptables restart
+</code></p>
+
+<h2>Start services at boot</h2>
+
+<p>To have MySQL and Apache started at boot, run the commands:</p>
+
+<p><code>sh
+chkconfig --level 345 mysqld on
+chkconfig --level 345 httpd on
+</code></p>
+
+<h2>Cleaning up</h2>
+
+<p>A quick command to clean up all the <code>devel</code> stuff needed for installation:</p>
+
+<p><code>sh
+yum remove '*-devel' make automake autoconf
+</code></p>
+
+<h2>Tips</h2>
+
+<p>Don't forget that if you change your Redmine configuration, you don't have to
+restart Apache. Your can restart only Redmine with the command:</p>
+
+<p><code>sh
+touch /var/www/redmine/tmp/restart.txt
+</code></p>
+
+<p>If you restore data on your server from another redmine instance that runs on a
+previous version, dont forget to migrate your data:</p>
+
+<p><code>sh
+cd /var/www/redmine
+rake db:migrate RAILS_ENV="production"
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>
