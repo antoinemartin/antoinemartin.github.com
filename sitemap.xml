@@ -2,56 +2,56 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/
+            http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django/
         </loc>
         <lastmod>2012-03-13T07:01:21+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/
+            http://mrtn.me/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/
         </loc>
         <lastmod>2012-03-13T08:42:31+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/
+            http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/
         </loc>
         <lastmod>2012-03-18T11:03:58+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/
+            http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/
         </loc>
         <lastmod>2012-03-24T10:08:18+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/
+            http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/
         </loc>
         <lastmod>2012-07-03T20:16:44+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/
+            http://mrtn.me/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/
         </loc>
         <lastmod>2012-07-04T19:52:14+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/
+            http://mrtn.me/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/
         </loc>
         <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
-        <loc>http://antoinemartin.github.com/</loc>
+        <loc>http://mrtn.me/</loc>
         <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
-        <loc>http://antoinemartin.github.com/blog/archives/</loc>
+        <loc>http://mrtn.me/blog/archives/</loc>
         <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
-        <loc>http://antoinemartin.github.com/about/</loc>
+        <loc>http://mrtn.me/about/</loc>
         <lastmod>2012-03-13T09:01:13+01:00</lastmod>
     </url>
 </urlset>
