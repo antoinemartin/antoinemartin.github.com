@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Windows | Geek Quickies]]></title>
-  <link href="http://antoinemartin.github.com/blog/categories/windows/atom.xml" rel="self"/>
-  <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-07-07T12:10:39+02:00</updated>
-  <id>http://antoinemartin.github.com/</id>
+  <link href="http://mrtn.me/blog/categories/windows/atom.xml" rel="self"/>
+  <link href="http://mrtn.me/"/>
+  <updated>2012-10-24T13:46:08+02:00</updated>
+  <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Django on Windows: run Celery as a Service]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/"/>
+    <link href="http://mrtn.me/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/"/>
     <updated>2012-07-04T12:21:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service</id>
+    <id>http://mrtn.me/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service</id>
     <content type="html"><![CDATA[<p>In my <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">previous post</a>,
 I showed how to set up a Django project on a Windows Server to be served behind
 IIS. After setting up the server, the next thing we want with a Django
@@ -375,9 +375,9 @@ parameters=--noinput
   
   <entry>
     <title type="html"><![CDATA[Running Django under Windows with IIS using FastCGI]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
+    <link href="http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
     <updated>2012-06-27T14:12:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
+    <id>http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
     <content type="html"><![CDATA[<p><strong>Update</strong>: The configuration process described in this post can be achieved
 with only one management command if you install the
 <a href="https://github.com/antoinemartin/django-windows-tools">django-windows-tools application</a>.</p>

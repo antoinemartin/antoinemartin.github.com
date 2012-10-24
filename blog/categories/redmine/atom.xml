@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Redmine | Geek Quickies]]></title>
-  <link href="http://antoinemartin.github.com/blog/categories/redmine/atom.xml" rel="self"/>
-  <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-07-07T12:10:39+02:00</updated>
-  <id>http://antoinemartin.github.com/</id>
+  <link href="http://mrtn.me/blog/categories/redmine/atom.xml" rel="self"/>
+  <link href="http://mrtn.me/"/>
+  <updated>2012-10-24T13:46:08+02:00</updated>
+  <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Installing Redmine on CentOS 6.2 wiht MySQL and Apache]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/"/>
+    <link href="http://mrtn.me/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/"/>
     <updated>2012-07-06T17:56:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache</id>
+    <id>http://mrtn.me/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache</id>
     <content type="html"><![CDATA[<p>I needed recently to install the excellent project management tool
 <a href="http://www.redmine.org/">Redmine</a> on a <a href="http://www.centos.org/">CentOS</a>
  6.2 machine. There are some tutorials on the Web (<a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29">here</a>

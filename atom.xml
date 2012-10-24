@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Geek Quickies]]></title>
-  <link href="http://antoinemartin.github.com/atom.xml" rel="self"/>
-  <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-07-07T12:10:39+02:00</updated>
-  <id>http://antoinemartin.github.com/</id>
+  <link href="http://mrtn.me/atom.xml" rel="self"/>
+  <link href="http://mrtn.me/"/>
+  <updated>2012-10-24T13:46:08+02:00</updated>
+  <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
     
@@ -14,10 +14,102 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Quickly deploy a Git project on a server with SSH]]></title>
+    <link href="http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/"/>
+    <updated>2012-10-24T13:23:00+02:00</updated>
+    <id>http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh</id>
+    <content type="html"><![CDATA[<p>So you have this brand new project <code>my_project</code> of yours with your local Git
+repository set up and you want to quickly make it available for others to clone
+on your repository server.</p>
+
+<p>All your projects are located in your server <code>git.mycompany.com</code> under
+<code>/srv/git</code>. You&#8217;re using the user named <code>git</code> to connect to your server with
+the SSH private key located in <code>~/.ssh/git</code>.</p>
+
+<p>Here is the quickiest way to deploy your projet:</p>
+
+<!-- More -->
+
+
+<p>You first add your SSH key to the SSH agent :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>ssh-add ~/.ssh/git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If the agent is not started, you need to execute first :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you create an empty Git bare repository on your server with the name of
+your project :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>ssh git@git.mycompany.com <span class="s2">&quot;git --bare init /srv/git/$(basename $(pwd)).git&quot;</span>
+</span><span class='line'>Initialized empty Git repository in /srv/git/my_project.git/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you add your newly created remote Git repository as the origin of your
+local repo :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git remote add origin <span class="s2">&quot;git@git.mycompany.com:/srv/git/$(basename $(pwd)).git&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You push your master branch to the remote repository :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git push origin master
+</span><span class='line'>Counting objects: 3, <span class="k">done</span>.
+</span><span class='line'>Writing objects: 100% <span class="o">(</span>3/3<span class="o">)</span>, 209 bytes, <span class="k">done</span>.
+</span><span class='line'>Total 3 <span class="o">(</span>delta 0<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+</span><span class='line'>To git@git.mycompany.com:/srv/git/my_project.git
+</span><span class='line'> * <span class="o">[</span>new branch<span class="o">]</span>      master -&gt; master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lastly, you make your local branch track your remote branch :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git branch --set-upstream master origin/master
+</span><span class='line'>Branch master <span class="nb">set </span>up to track remote branch master from origin.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The last two steps can be done for any local branch you have that you want to
+push on the server.</p>
+
+<p>You can test pulling from the server :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git pull
+</span><span class='line'>Already up-to-date.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s it !</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Installing Redmine on CentOS 6.2 wiht MySQL and Apache]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/"/>
+    <link href="http://mrtn.me/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/"/>
     <updated>2012-07-06T17:56:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache</id>
+    <id>http://mrtn.me/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache</id>
     <content type="html"><![CDATA[<p>I needed recently to install the excellent project management tool
 <a href="http://www.redmine.org/">Redmine</a> on a <a href="http://www.centos.org/">CentOS</a>
  6.2 machine. There are some tutorials on the Web (<a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29">here</a>
@@ -410,10 +502,10 @@ previous version, dont forget to migrate your data:</p>
   
   <entry>
     <title type="html"><![CDATA[Django on Windows: run Celery as a Service]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/"/>
+    <link href="http://mrtn.me/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/"/>
     <updated>2012-07-04T12:21:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">previous post</a>,
+    <id>http://mrtn.me/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service</id>
+    <content type="html"><![CDATA[<p>In my <a href="http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">previous post</a>,
 I showed how to set up a Django project on a Windows Server to be served behind
 IIS. After setting up the server, the next thing we want with a Django
 application is to be able to run background and scheduled tasks, and
@@ -470,7 +562,7 @@ processes.</p>
 I personnaly use a <a href="https://github.com/MSOpenTech/Redis">Windows port of Redis</a>
 installed as a <a href="https://github.com/kcherenkov/redis-windows-service">Windows Service</a>.
 The advantage of Redis is that it can also be used as an in-memory database. In
-case you&#8217;re interested, you can find <a href="http://antoinemartin.github.com/downloads/redis.zip">here</a> a binay copy
+case you&#8217;re interested, you can find <a href="http://mrtn.me/downloads/redis.zip">here</a> a binay copy
 of my installation.</p>
 
 <p>The configuration of Redis as Celery&#8217;s broker also occurs in the <code>settings.py</code>:</p>
@@ -549,7 +641,7 @@ command:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_install.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/winservice_install.png" width="600"></p>
 
 <p>It will create two files in the root directory of your project .<code>service.py</code>
 will help you install, run and remove the Windows Service. It&#8217;s much like
@@ -674,12 +766,12 @@ that with the following command:</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_install.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/winservice_install.png" width="600"></p>
 
 <p>The <code>--startup=auto</code> parameter will allow the service to start automatically
 when the server boots. You can check it has been installed:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_service.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_service.png"></p>
 
 <p>It can be removed with the following commands:</p>
 
@@ -705,11 +797,11 @@ restart.</p>
 
 <p>If everything went fine, the python processes should be there:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_process.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_process.png"></p>
 
 <p>Along with the log files :</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_logs.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_logs.png"></p>
 
 <h2>Running the Beat service</h2>
 
@@ -744,7 +836,7 @@ the Celery beat service.</p>
 <p>The <code>winservice_install</code> facility provides a convenient option for choosing
 the current machine as the <em>Beat</em> machine. Let&#8217;s try that :</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_beat.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/winservice_beat.png" width="600"></p>
 
 <p>The new <code>service.py</code> file will contain a section with the name of the current
 machine:</p>
@@ -762,11 +854,11 @@ machine:</p>
 
 <p>Now, when run, the service will start a new python process:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_process_beat.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_process_beat.png"></p>
 
 <p>And new log files for the beat service will be present:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_log_beat.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_log_beat.png"></p>
 
 <h2>Changes to the configuration</h2>
 
@@ -812,7 +904,7 @@ file. In case it is modified, the service does the following:</p>
 <p>As soon as you save the file, you can make your browser point to
 <code>http://localhost:8000</code> and will obtain:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/winservice_runserver.png"></p>
+<p><img src="http://mrtn.me/images/django/winservice_runserver.png"></p>
 
 <h2>Running arbitrary commands</h2>
 
@@ -833,9 +925,9 @@ modified. You could imagine having a section:</p>
   
   <entry>
     <title type="html"><![CDATA[Running Django under Windows with IIS using FastCGI]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
+    <link href="http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/"/>
     <updated>2012-06-27T14:12:00+02:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
+    <id>http://mrtn.me/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi</id>
     <content type="html"><![CDATA[<p><strong>Update</strong>: The configuration process described in this post can be achieved
 with only one management command if you install the
 <a href="https://github.com/antoinemartin/django-windows-tools">django-windows-tools application</a>.</p>
@@ -884,7 +976,7 @@ window, juste type:</p>
 
 <p>And then python and its commands are available from the command line:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/command.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/command.png" width="600"></p>
 
 <p>Another advantage of Portable Python is that it comes already bundled with
 <a href="http://sourceforge.net/projects/pywin32/">The Python for Windows extensions</a>
@@ -900,7 +992,7 @@ been tested on Windows 2008 Server R2.</p>
 <code>management\commands</code> directory of one of your project applications so that
 the <code>manage.py help fcgi</code> command returns you:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/fcgi.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/fcgi.png" width="600"></p>
 
 <h2>Configure the FastCGI application on IIS</h2>
 
@@ -909,12 +1001,12 @@ available whenever you have installed the CGI feature on your IIS installation.
 Run the server manager and go to the IIS role and configuration. Select your
 website. You should see a FastCGI Settings icon:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/fastcgi_settings.png" width="600"></p>
+<p><img src="http://mrtn.me/images/django/fastcgi_settings.png" width="600"></p>
 
 <p>Double click on it and select the <em>Add application</em> action. Enter the following
 parameters:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/fcgi_configuration.png" width="400"></p>
+<p><img src="http://mrtn.me/images/django/fcgi_configuration.png" width="400"></p>
 
 <ul>
 <li>In <code>Full Path</code>, enter the path to your python executable.</li>
@@ -936,7 +1028,7 @@ explicitely update via a <code>touch</code> command.</p>
 <p>Once we have our FastCGI application configured, we need a web site to make use
 of it. For it, we create a website pointing to our Django project:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/website_configuration.png" width="400"></p>
+<p><img src="http://mrtn.me/images/django/website_configuration.png" width="400"></p>
 
 <p>To make the website use our FastCGI application, we create the following
 <code>web.config</code> file in the root of our project (here
@@ -1076,7 +1168,7 @@ with the following script that must be run as an administrator:</p>
 <p>After the configuration, the website should be available through IIS. If this
 is not the case, you will probably get a <code>500</code> Error:</p>
 
-<p><img src="http://antoinemartin.github.com/images/django/500_error.png" width="400"></p>
+<p><img src="http://mrtn.me/images/django/500_error.png" width="400"></p>
 
 <p>The first thing to do is to check that the website is available outside of IIS
 by running it with the command:</p>
@@ -1208,9 +1300,9 @@ management command.</p>
   
   <entry>
     <title type="html"><![CDATA[Using Eclipse templates to ease Android logging]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/"/>
+    <link href="http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/"/>
     <updated>2012-03-24T07:26:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging</id>
+    <id>http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging</id>
     <content type="html"><![CDATA[<p>Adding logs to your Android source code is sometimes the only way to really
 understand what happens , especially in asynchronous situations.</p>
 
@@ -1260,11 +1352,11 @@ our imagination. With the <em>Templates</em> feature, it can even write code for
 <code>Window &gt; Preferences</code> and then in the preferences dialog, <code>Java &gt; Editor &gt; Templates</code>.
 The window looks like this:</p>
 
-<p><img src="http://antoinemartin.github.com/images/eclipse_templates.png" width="500"></p>
+<p><img src="http://mrtn.me/images/eclipse_templates.png" width="500"></p>
 
 <p>If you double click on a template you can edit it:</p>
 
-<p><img src="http://antoinemartin.github.com/images/eclipse_template_edit.png" width="500"></p>
+<p><img src="http://mrtn.me/images/eclipse_template_edit.png" width="500"></p>
 
 <p>The template name is what you type in the Editor window before hitting
 <code>CTRL+Space</code> and that will make Eclipse propose you the template. I won&#8217;t go
@@ -1416,9 +1508,9 @@ Elimination).</p>
   
   <entry>
     <title type="html"><![CDATA[Get the height of the status bar in Android]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
+    <link href="http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
     <updated>2012-03-17T09:09:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
+    <id>http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
     <content type="html"><![CDATA[<p>Sometimes in Android, the flexible layout system is not flexible enough and you
 need to make some computations inside your code. In these computations, you may
 need to subtract the size of the status bar. Stackoverflow gives you
@@ -1468,9 +1560,9 @@ however compute it at runtime with the following code:</p>
   
   <entry>
     <title type="html"><![CDATA[Start a virtualenv Django shell from the Linux Desktop]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/"/>
+    <link href="http://mrtn.me/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/"/>
     <updated>2012-03-13T07:58:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop</id>
+    <id>http://mrtn.me/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop</id>
     <content type="html"><![CDATA[<p>If you are tired to fire a terminal window, <code>cd</code> to your project directory and activate your python <code>virtualenv</code>
 to get to your Django project, you will find here some tips to improve things a little bit.</p>
 
@@ -1488,7 +1580,7 @@ That spawns a console in our environment.</li>
 
 <p>Here you have the startup script:</p>
 
-<figure class='code'><figcaption><span>Django startup script (.consolerc)</span> <a href='http://antoinemartin.github.com/downloads/code/.consolerc'>download</a></figcaption>
+<figure class='code'><figcaption><span>Django startup script (.consolerc)</span> <a href='http://mrtn.me/downloads/code/.consolerc'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -1587,7 +1679,7 @@ script. In consequence, it is reusable <em>as is</em> in any other project.</p>
 
 <p>Here is the <code>.desktop</code> file that runs a terminal console with our script:</p>
 
-<figure class='code'><figcaption><span>Django desktop file (Django.desktop)</span> <a href='http://antoinemartin.github.com/downloads/code/Django.desktop'>download</a></figcaption>
+<figure class='code'><figcaption><span>Django desktop file (Django.desktop)</span> <a href='http://mrtn.me/downloads/code/Django.desktop'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -1634,7 +1726,7 @@ line specific to the project is</p>
 
 <p>The <code>Icon</code> is the familiar Django icon :</p>
 
-<p><img src="http://antoinemartin.github.com/images/django-icon_0.png"></p>
+<p><img src="http://mrtn.me/images/django-icon_0.png"></p>
 
 <p>I personally put the <code>.desktop</code> file in <code>$HOME/Desktop</code>, but it also can reside in <code>$HOME/.local/share/applications</code>. In that
 case, the entry will be available in the menu. I&#8217;ve tested this under KDE, but it should work also with Gnome.</p>
@@ -1643,9 +1735,9 @@ case, the entry will be available in the menu. I&#8217;ve tested this under KDE,
   
   <entry>
     <title type="html"><![CDATA[Checking Google Play signatures with Django]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/"/>
+    <link href="http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django/"/>
     <updated>2012-03-12T07:43:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django</id>
+    <id>http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django</id>
     <content type="html"><![CDATA[<p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
 In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
 Google states the following:</p>

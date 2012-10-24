@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Get the height of the status bar in Android - Geek Quickies</title>
+  <title>Quickly deploy a Git project on a server with SSH - Geek Quickies</title>
   <meta name="author" content="Antoine Martin">
 
   
-  <meta name="description" content="Sometimes in Android, the flexible layout system is not flexible enough and you
-need to make some computations inside your code. In these &hellip;">
+  <meta name="description" content="So you have this brand new project my_project of yours with your local Git
+repository set up and you want to quickly make it available for others to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ need to make some computations inside your code. In these &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android">
+  <link rel="canonical" href="http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -82,7 +82,7 @@ need to make some computations inside your code. In these &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Get the Height of the Status Bar in Android</h1>
+      <h1 class="entry-title">Quickly Deploy a Git Project on a Server With SSH</h1>
     
     
       <p class="meta">
@@ -98,34 +98,59 @@ need to make some computations inside your code. In these &hellip;">
   
 
 
-<time datetime="2012-03-17T09:09:00+01:00" pubdate data-updated="true">Mar 17<span>th</span>, 2012</time>
+<time datetime="2012-10-24T13:23:00+02:00" pubdate data-updated="true">Oct 24<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Sometimes in Android, the flexible layout system is not flexible enough and you
-need to make some computations inside your code. In these computations, you may
-need to subtract the size of the status bar. Stackoverflow gives you
-<a href="http://stackoverflow.com/questions/3407256/height-of-status-bar-in-android">some answers</a>,
-but they all rely on the fact that te status bar is shown at the time you make
-your computation. If you are in full screen mode, by having called for instance:</p>
+<div class="entry-content"><p>So you have this brand new project <code>my_project</code> of yours with your local Git
+repository set up and you want to quickly make it available for others to clone
+on your repository server.</p>
+
+<p>All your projects are located in your server <code>git.mycompany.com</code> under
+<code>/srv/git</code>. You&#8217;re using the user named <code>git</code> to connect to your server with
+the SSH private key located in <code>~/.ssh/git</code>.</p>
+
+<p>Here is the quickiest way to deploy your projet:</p>
+
+<!-- More -->
+
+
+<p>You first add your SSH key to the SSH agent :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">getWindow</span><span class="o">().</span><span class="na">setFlags</span><span class="o">(</span><span class="n">WindowManager</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">FLAG_FULLSCREEN</span><span class="o">,</span> <span class="n">WindowManager</span><span class="o">.</span><span class="na">LayoutParams</span><span class="o">.</span><span class="na">FLAG_FULLSCREEN</span><span class="o">)</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>ssh-add ~/.ssh/git
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>It doesn&#8217;t work.</p>
+<p>If the agent is not started, you need to execute first :</p>
 
-<!-- more -->
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The height of the status bar is contained in a dimension resource called
-<code>status_bar_height</code>. It&#8217;s not part of the public resources, so you can&#8217;t access
-it directly from your code with <code>android.R.dimen.status_bar_height</code>. You can
-however compute it at runtime with the following code:</p>
+<p>Then you create an empty Git bare repository on your server with the name of
+your project :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>ssh git@git.mycompany.com <span class="s2">&quot;git --bare init /srv/git/$(basename $(pwd)).git&quot;</span>
+</span><span class='line'>Initialized empty Git repository in /srv/git/my_project.git/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you add your newly created remote Git repository as the origin of your
+local repo :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git remote add origin <span class="s2">&quot;git@git.mycompany.com:/srv/git/$(basename $(pwd)).git&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You push your master branch to the remote repository :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -133,22 +158,37 @@ however compute it at runtime with the following code:</p>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">getStatusBarHeight</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">resourceId</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getIdentifier</span><span class="o">(</span><span class="s">&quot;status_bar_height&quot;</span><span class="o">,</span> <span class="s">&quot;dimen&quot;</span><span class="o">,</span> <span class="s">&quot;android&quot;</span><span class="o">);</span>
-</span><span class='line'>  <span class="k">if</span> <span class="o">(</span><span class="n">resourceId</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">result</span> <span class="o">=</span> <span class="n">getResources</span><span class="o">().</span><span class="na">getDimensionPixelSize</span><span class="o">(</span><span class="n">resourceId</span><span class="o">);</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git push origin master
+</span><span class='line'>Counting objects: 3, <span class="k">done</span>.
+</span><span class='line'>Writing objects: 100% <span class="o">(</span>3/3<span class="o">)</span>, 209 bytes, <span class="k">done</span>.
+</span><span class='line'>Total 3 <span class="o">(</span>delta 0<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+</span><span class='line'>To git@git.mycompany.com:/srv/git/my_project.git
+</span><span class='line'> * <span class="o">[</span>new branch<span class="o">]</span>      master -&gt; master
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You need to put this method in a <code>ContextWrapper</code> class.</p>
+<p>Lastly, you make your local branch track your remote branch :</p>
 
-<p>Hope it helps.</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git branch --set-upstream master origin/master
+</span><span class='line'>Branch master <span class="nb">set </span>up to track remote branch master from origin.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The last two steps can be done for any local branch you have that you want to
+push on the server.</p>
+
+<p>You can test pulling from the server :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev my_project<span class="o">]</span> <span class="nv">$ </span>git pull
+</span><span class='line'>Already up-to-date.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s it !</p>
 </div>
 
 
@@ -171,12 +211,12 @@ however compute it at runtime with the following code:</p>
   
 
 
-<time datetime="2012-03-17T09:09:00+01:00" pubdate data-updated="true">Mar 17<span>th</span>, 2012</time>
+<time datetime="2012-10-24T13:23:00+02:00" pubdate data-updated="true">Oct 24<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/android/'>Android</a>
+    <a class='category' href='/blog/categories/bash/'>Bash</a>, <a class='category' href='/blog/categories/git/'>Git</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>, <a class='category' href='/blog/categories/osx/'>OSX</a>, <a class='category' href='/blog/categories/ssh/'>SSH</a>
   
 </span>
 
@@ -185,7 +225,7 @@ however compute it at runtime with the following code:</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/" data-via="antoinemartin" data-counturl="http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/" data-via="antoinemartin" data-counturl="http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -196,10 +236,8 @@ however compute it at runtime with the following code:</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/" title="Previous Post: Start a virtualenv Django shell from the Linux Desktop">&laquo; Start a virtualenv Django shell from the Linux Desktop</a>
+        <a class="basic-alignment left" href="/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/" title="Previous Post: Installing Redmine on CentOS 6.2 wiht MySQL and Apache">&laquo; Installing Redmine on CentOS 6.2 wiht MySQL and Apache</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/" title="Next Post: Using Eclipse templates to ease Android logging">Using Eclipse templates to ease Android logging &raquo;</a>
       
     </p>
   </footer>
@@ -291,8 +329,8 @@ however compute it at runtime with the following code:</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/';
-        var disqus_url = 'http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/';
+        var disqus_identifier = 'http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/';
+        var disqus_url = 'http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/';
         var disqus_script = 'embed.js';
       
     (function () {

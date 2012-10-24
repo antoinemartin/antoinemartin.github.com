@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Android | Geek Quickies]]></title>
-  <link href="http://antoinemartin.github.com/blog/categories/android/atom.xml" rel="self"/>
-  <link href="http://antoinemartin.github.com/"/>
-  <updated>2012-07-07T12:10:39+02:00</updated>
-  <id>http://antoinemartin.github.com/</id>
+  <link href="http://mrtn.me/blog/categories/android/atom.xml" rel="self"/>
+  <link href="http://mrtn.me/"/>
+  <updated>2012-10-24T13:46:08+02:00</updated>
+  <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Using Eclipse templates to ease Android logging]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/"/>
+    <link href="http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/"/>
     <updated>2012-03-24T07:26:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging</id>
+    <id>http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging</id>
     <content type="html"><![CDATA[<p>Adding logs to your Android source code is sometimes the only way to really
 understand what happens , especially in asynchronous situations.</p>
 
@@ -210,9 +210,9 @@ Elimination).</p>
   
   <entry>
     <title type="html"><![CDATA[Get the height of the status bar in Android]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
+    <link href="http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/"/>
     <updated>2012-03-17T09:09:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
+    <id>http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android</id>
     <content type="html"><![CDATA[<p>Sometimes in Android, the flexible layout system is not flexible enough and you
 need to make some computations inside your code. In these computations, you may
 need to subtract the size of the status bar. Stackoverflow gives you
@@ -256,9 +256,9 @@ however compute it at runtime with the following code:</p>
   
   <entry>
     <title type="html"><![CDATA[Checking Google Play signatures with Django]]></title>
-    <link href="http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django/"/>
+    <link href="http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django/"/>
     <updated>2012-03-12T07:43:00+01:00</updated>
-    <id>http://antoinemartin.github.com/blog/2012/03/12/checking-google-play-signatures-with-django</id>
+    <id>http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django</id>
     <content type="html"><![CDATA[<p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
 In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
 Google states the following:</p>

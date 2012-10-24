@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: OSX | Geek Quickies]]></title>
+  <link href="http://mrtn.me/blog/categories/osx/atom.xml" rel="self"/>
+  <link href="http://mrtn.me/"/>
+  <updated>2012-10-24T13:46:08+02:00</updated>
+  <id>http://mrtn.me/</id>
+  <author>
+    <name><![CDATA[Antoine Martin]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Quickly deploy a Git project on a server with SSH]]></title>
+    <link href="http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/"/>
+    <updated>2012-10-24T13:23:00+02:00</updated>
+    <id>http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh</id>
+    <content type="html"><![CDATA[<p>So you have this brand new project <code>my_project</code> of yours with your local Git
+repository set up and you want to quickly make it available for others to clone
+on your repository server.</p>
+
+<p>All your projects are located in your server <code>git.mycompany.com</code> under
+<code>/srv/git</code>. You're using the user named <code>git</code> to connect to your server with
+the SSH private key located in <code>~/.ssh/git</code>.</p>
+
+<p>Here is the quickiest way to deploy your projet:</p>
+
+<!-- More -->
+
+
+<p>You first add your SSH key to the SSH agent :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ ssh-add ~/.ssh/git
+</code></p>
+
+<p>If the agent is not started, you need to execute first :
+<code>sh
+[antoine@dev my_project] $ eval `ssh-agent`
+</code></p>
+
+<p>Then you create an empty Git bare repository on your server with the name of
+your project :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ ssh git@git.mycompany.com "git --bare init /srv/git/$(basename $(pwd)).git"
+Initialized empty Git repository in /srv/git/my_project.git/
+</code></p>
+
+<p>Then you add your newly created remote Git repository as the origin of your
+local repo :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ git remote add origin "git@git.mycompany.com:/srv/git/$(basename $(pwd)).git"
+</code></p>
+
+<p>You push your master branch to the remote repository :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ git push origin master
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 209 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To git@git.mycompany.com:/srv/git/my_project.git
+ * [new branch]      master -&gt; master
+</code></p>
+
+<p>Lastly, you make your local branch track your remote branch :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ git branch --set-upstream master origin/master
+Branch master set up to track remote branch master from origin.
+</code></p>
+
+<p>The last two steps can be done for any local branch you have that you want to
+push on the server.</p>
+
+<p>You can test pulling from the server :</p>
+
+<p><code>sh
+[antoine@dev my_project] $ git pull
+Already up-to-date.
+</code></p>
+
+<p>That's it !</p>
+]]></content>
+  </entry>
+  
+</feed>

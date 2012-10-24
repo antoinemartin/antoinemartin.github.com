@@ -1,9 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>
-            http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django/
-        </loc>
+        <loc>http://mrtn.me/blog/2012/03/12/checking-google-play-signatures-with-django/</loc>
         <lastmod>2012-03-13T07:01:21+01:00</lastmod>
     </url>
     <url>
@@ -13,15 +11,11 @@
         <lastmod>2012-03-13T08:42:31+01:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/
-        </loc>
+        <loc>http://mrtn.me/blog/2012/03/17/get-the-height-of-the-status-bar-in-android/</loc>
         <lastmod>2012-03-18T11:03:58+01:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/
-        </loc>
+        <loc>http://mrtn.me/blog/2012/03/24/using-eclipse-templates-to-ease-android-logging/</loc>
         <lastmod>2012-03-24T10:08:18+01:00</lastmod>
     </url>
     <url>
@@ -43,12 +37,18 @@
         <lastmod>2012-07-07T12:10:38+02:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://mrtn.me/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/
+        </loc>
+        <lastmod>2012-10-24T13:46:07+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://mrtn.me/</loc>
-        <lastmod>2012-07-07T12:10:38+02:00</lastmod>
+        <lastmod>2012-10-24T13:46:07+02:00</lastmod>
     </url>
     <url>
         <loc>http://mrtn.me/blog/archives/</loc>
-        <lastmod>2012-07-07T12:10:38+02:00</lastmod>
+        <lastmod>2012-10-24T13:46:07+02:00</lastmod>
     </url>
     <url>
         <loc>http://mrtn.me/about/</loc>
