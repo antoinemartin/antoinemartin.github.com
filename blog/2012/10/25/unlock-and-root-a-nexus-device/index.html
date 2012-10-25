@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Unlock and root a Nexus device - Geek Quickies</title>
+  <meta name="author" content="Antoine Martin">
+
+  
+  <meta name="description" content="Having an unlocked and rooted device provides several advantages : Easy backup and restore with Nandroid backup,
+Easy firmware replacement and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/GeekQuickies" rel="alternate" title="Geek Quickies" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Mono:400" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29953512-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Geek Quickies</a></h1>
+  
+    <h2>Stories from the cloudvergence.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/GeekQuickies" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:mrtn.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about/">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Unlock and Root a Nexus Device</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T07:51:00+02:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Having an unlocked and rooted device provides several advantages :</p>
+
+<ul>
+<li>Easy backup and restore with Nandroid backup,</li>
+<li>Easy firmware replacement and updates installation,</li>
+<li>Advanced debugging capabilities.</li>
+</ul>
+
+
+<p>The following instructions allow unlocking and rooting a Nexus device (Galaxy
+Nexus, Nexus 7) from the command line on a Linux machine. It involves:</p>
+
+<ul>
+<li>Backuping your device,</li>
+<li>Unlocking the bootloader,</li>
+<li>Restoring the backup,</li>
+<li>Rooting the device.</li>
+</ul>
+
+
+<!-- More -->
+
+
+<h3>Prerequisites</h3>
+
+<p>Here is the list of prerequisites :</p>
+
+<ul>
+<li><a href="http://developer.android.com/sdk/index.html">Android SDK</a>, to have access to <code>adb</code> and <code>fastboot</code>.</li>
+<li><a href="http://download2.clockworkmod.com/recoveries/recovery-clockwork-6.0.1.0-grouper.img">Clockwork Mode (CWM) </a> recovery image.</li>
+<li><a href="http://download.chainfire.eu/212/SuperSU/CWM-SuperSU-v0.96.zip">SuperSU</a> installable zip.</li>
+</ul>
+
+
+<p>The <code>platform-tools</code> directory of the Android SDK must be on your <code>PATH</code>, and
+the device must have USB debugging enabled.</p>
+
+<h3>Udev rules</h3>
+
+<p>On Linux, you don&#8217;t have to install any driver. You need however to enable
+access for your users. Depending on your distribution, you may have a package
+handling that, but if not, here is a quick way to give access to your user to
+the device (here <code>antoine</code>). Type as <code>root</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>root@dev ~<span class="o">]</span> <span class="nv">$ </span><span class="nb">cd</span> /etc/udev/rules.d
+</span><span class='line'><span class="o">[</span>root@dev rules.d<span class="o">]</span> <span class="nv">$ </span>wget https://raw.github.com/M0Rf30/android-udev-rules/master/51-android.rules
+</span><span class='line'><span class="o">[</span>root@dev rules.d<span class="o">]</span> <span class="nv">$ </span>groupadd adbusers
+</span><span class='line'><span class="o">[</span>root@dev rules.d<span class="o">]</span> <span class="nv">$ </span>udevadm control --reload-rules
+</span><span class='line'><span class="o">[</span>root@dev rules.d<span class="o">]</span> <span class="nv">$ </span>gpasswd -a antoine adbusers
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Plug your device on the USB cable, and you should be able to see it with <code>adb</code>:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb devices
+</span><span class='line'>List of devices attached
+</span><span class='line'>015d2ebecd341e06        device
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Backup</h3>
+
+<p>Unlocking the bootloader wipes all the data on the device. If you&#8217;re not doing
+this on a new device, you may want to backup and restore your data and
+applications. With the device connected in USB debug mode, type :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb backup -apk -shared -all -f backup.ab
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Depending on the amount of data you have on your device, this process can be
+quite long.</p>
+
+<h3>OEM unlock</h3>
+
+<p>Unlocking the device is easy. With the device connected in USB debug mode, type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb reboot bootloader
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The device will reboot in <em>fastboot</em> mode. To check this, type:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot devices
+</span><span class='line'>015d2ebecd341e06        fastboot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will see your device in the list. Then you can unlock it by typing:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot oem unlock
+</span><span class='line'>...
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> erasing userdata...
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> erasing userdata <span class="k">done</span>
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> erasing cache...
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> erasing cache <span class="k">done</span>
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> unlocking...
+</span><span class='line'><span class="o">(</span>bootloader<span class="o">)</span> Bootloader is unlocked now.
+</span><span class='line'>OKAY <span class="o">[</span> 54.821s<span class="o">]</span>
+</span><span class='line'>finished. total <span class="nb">time</span>: 54.821s
+</span><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot reboot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At the end of the process, reboot your device:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot reboot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will go through the initialization process in the device.</p>
+
+<h3>Restore</h3>
+
+<p>Once the device is up and running, you can restore your data with:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb restore backup.ab
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Root</h3>
+
+<p>To root the device, we will apply the SuperSU installable zip as an update in
+CWM.</p>
+
+<p>First we push the SuperSU installable zip in the device filesystem:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb push CWM-SuperSU-v0.96.zip /sdcard/update.zip
+</span><span class='line'>752 KB/s <span class="o">(</span>674673 bytes in 0.875s<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now that the device is unlocked, we can boot it into CWM. We first reboot it in
+fastboot mode:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb reboot bootloader
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And then boot it with CWM:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot boot recovery-clockwork-6.0.1.0-grouper.img
+</span><span class='line'>downloading <span class="s1">&#39;boot.img&#39;</span>...
+</span><span class='line'>OKAY <span class="o">[</span>  0.800s<span class="o">]</span>
+</span><span class='line'>booting...
+</span><span class='line'>OKAY <span class="o">[</span>  0.020s<span class="o">]</span>
+</span><span class='line'>finished. total <span class="nb">time</span>: 0.820s
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After a few seconds, the device will show the CWM interface. With the volume
+buttons, move to the <code>install zip from sdcard</code> option and select it by pushing
+the power button.</p>
+
+<p>On the new menu that appears, choose the <code>apply /sdcard/update.zip</code> option and
+scroll down to the <code>Yes</code> option. click on the power button and SuperSU will
+be installed.</p>
+
+<p>Once done, you can go back to the main CWM menu and reboot the device.</p>
+
+<h3>Permanently install CWM</h3>
+
+<p>You can permanetly install CWM on the device recovery partition so that
+you can start your device in CWM without being connected via USB.</p>
+
+<p>Your device automatically restores the recovery partition at each boot. To avoid
+that, you need to delete the <code>/system/recovery-from-boot.p</code> file on the
+device :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb shell
+</span><span class='line'>shell@android:/ <span class="nv">$ </span>su
+</span><span class='line'>shell@android:/ <span class="c"># rm /system/recovery-from-boot.p</span>
+</span><span class='line'>shell@android:/ <span class="c"># exit</span>
+</span><span class='line'>shell@android:/ <span class="nv">$ </span><span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then reboot in fastboot mode and install CWM permanetly :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>adb reboot bootloader
+</span><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot flash recovery recovery-clockwork-touch-6.0.0.6-grouper.img
+</span><span class='line'><span class="o">[</span>antoine@dev nexus<span class="o">]</span> <span class="nv">$ </span>fastboot reboot
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I personally don&#8217;t recommend to install CWM permanetly as it will prevent you
+from installing the OTA updates that are pushed to your device.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Antoine Martin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T07:51:00+02:00" pubdate data-updated="true">Oct 25<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/adb/'>ADB</a>, <a class='category' href='/blog/categories/android/'>Android</a>, <a class='category' href='/blog/categories/linux/'>Linux</a>, <a class='category' href='/blog/categories/root/'>Root</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device/" data-via="antoinemartin" data-counturl="http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/" title="Previous Post: Quickly deploy a Git project on a server with SSH">&laquo; Quickly deploy a Git project on a server with SSH</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/10/25/unlock-and-root-a-nexus-device/">Unlock and root a Nexus device</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/">Quickly deploy a Git project on a server with SSH</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/">Installing Redmine on CentOS 6.2 wiht MySQL and Apache</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/">Django on Windows: run Celery as a Service</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django under Windows with IIS using FastCGI</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("antoinemartin", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/antoinemartin" class="twitter-follow-button" data-show-count="false">Follow @antoinemartin</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/antoine@openance.com?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Antoine Martin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'geekquickies';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device/';
+        var disqus_url = 'http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

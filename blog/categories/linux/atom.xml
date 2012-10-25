@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | Geek Quickies]]></title>
   <link href="http://mrtn.me/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://mrtn.me/"/>
-  <updated>2012-10-24T13:46:08+02:00</updated>
+  <updated>2012-10-25T09:09:04+02:00</updated>
   <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,200 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unlock and root a Nexus device]]></title>
+    <link href="http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device/"/>
+    <updated>2012-10-25T07:51:00+02:00</updated>
+    <id>http://mrtn.me/blog/2012/10/25/unlock-and-root-a-nexus-device</id>
+    <content type="html"><![CDATA[<p>Having an unlocked and rooted device provides several advantages :</p>
+
+<ul>
+<li>Easy backup and restore with Nandroid backup,</li>
+<li>Easy firmware replacement and updates installation,</li>
+<li>Advanced debugging capabilities.</li>
+</ul>
+
+
+<p>The following instructions allow unlocking and rooting a Nexus device (Galaxy
+Nexus, Nexus 7) from the command line on a Linux machine. It involves:</p>
+
+<ul>
+<li>Backuping your device,</li>
+<li>Unlocking the bootloader,</li>
+<li>Restoring the backup,</li>
+<li>Rooting the device.</li>
+</ul>
+
+
+<!-- More -->
+
+
+<h3>Prerequisites</h3>
+
+<p>Here is the list of prerequisites :</p>
+
+<ul>
+<li><a href="http://developer.android.com/sdk/index.html">Android SDK</a>, to have access to <code>adb</code> and <code>fastboot</code>.</li>
+<li><a href="http://download2.clockworkmod.com/recoveries/recovery-clockwork-6.0.1.0-grouper.img">Clockwork Mode (CWM) </a> recovery image.</li>
+<li><a href="http://download.chainfire.eu/212/SuperSU/CWM-SuperSU-v0.96.zip">SuperSU</a> installable zip.</li>
+</ul>
+
+
+<p>The <code>platform-tools</code> directory of the Android SDK must be on your <code>PATH</code>, and
+the device must have USB debugging enabled.</p>
+
+<h3>Udev rules</h3>
+
+<p>On Linux, you don't have to install any driver. You need however to enable
+access for your users. Depending on your distribution, you may have a package
+handling that, but if not, here is a quick way to give access to your user to
+the device (here <code>antoine</code>). Type as <code>root</code>:</p>
+
+<p><code>sh
+[root@dev ~] $ cd /etc/udev/rules.d
+[root@dev rules.d] $ wget https://raw.github.com/M0Rf30/android-udev-rules/master/51-android.rules
+[root@dev rules.d] $ groupadd adbusers
+[root@dev rules.d] $ udevadm control --reload-rules
+[root@dev rules.d] $ gpasswd -a antoine adbusers
+</code></p>
+
+<p>Plug your device on the USB cable, and you should be able to see it with <code>adb</code>:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb devices                                                                                                                                                                                                                                                    
+List of devices attached                                                                                                                                                                                                                                                        
+015d2ebecd341e06        device                                                                                                                                                                                                                                                  
+</code></p>
+
+<h3>Backup</h3>
+
+<p>Unlocking the bootloader wipes all the data on the device. If you're not doing
+this on a new device, you may want to backup and restore your data and
+applications. With the device connected in USB debug mode, type :</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb backup -apk -shared -all -f backup.ab
+</code></p>
+
+<p>Depending on the amount of data you have on your device, this process can be
+quite long.</p>
+
+<h3>OEM unlock</h3>
+
+<p>Unlocking the device is easy. With the device connected in USB debug mode, type:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb reboot bootloader
+</code></p>
+
+<p>The device will reboot in <em>fastboot</em> mode. To check this, type:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ fastboot devices
+015d2ebecd341e06        fastboot
+</code>
+You will see your device in the list. Then you can unlock it by typing:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ fastboot oem unlock
+...
+(bootloader) erasing userdata...
+(bootloader) erasing userdata done
+(bootloader) erasing cache...
+(bootloader) erasing cache done
+(bootloader) unlocking...
+(bootloader) Bootloader is unlocked now.
+OKAY [ 54.821s]
+finished. total time: 54.821s
+[antoine@dev nexus] $ fastboot reboot
+</code></p>
+
+<p>At the end of the process, reboot your device:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ fastboot reboot
+</code></p>
+
+<p>You will go through the initialization process in the device.</p>
+
+<h3>Restore</h3>
+
+<p>Once the device is up and running, you can restore your data with:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb restore backup.ab
+</code></p>
+
+<h3>Root</h3>
+
+<p>To root the device, we will apply the SuperSU installable zip as an update in
+CWM.</p>
+
+<p>First we push the SuperSU installable zip in the device filesystem:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb push CWM-SuperSU-v0.96.zip /sdcard/update.zip
+752 KB/s (674673 bytes in 0.875s)
+</code></p>
+
+<p>Now that the device is unlocked, we can boot it into CWM. We first reboot it in
+fastboot mode:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb reboot bootloader
+</code></p>
+
+<p>And then boot it with CWM:</p>
+
+<p><code>sh
+[antoine@dev nexus] $ fastboot boot recovery-clockwork-6.0.1.0-grouper.img
+downloading 'boot.img'...
+OKAY [  0.800s]
+booting...
+OKAY [  0.020s]
+finished. total time: 0.820s
+</code></p>
+
+<p>After a few seconds, the device will show the CWM interface. With the volume
+buttons, move to the <code>install zip from sdcard</code> option and select it by pushing
+the power button.</p>
+
+<p>On the new menu that appears, choose the <code>apply /sdcard/update.zip</code> option and
+scroll down to the <code>Yes</code> option. click on the power button and SuperSU will
+be installed.</p>
+
+<p>Once done, you can go back to the main CWM menu and reboot the device.</p>
+
+<h3>Permanently install CWM</h3>
+
+<p>You can permanetly install CWM on the device recovery partition so that
+you can start your device in CWM without being connected via USB.</p>
+
+<p>Your device automatically restores the recovery partition at each boot. To avoid
+that, you need to delete the <code>/system/recovery-from-boot.p</code> file on the
+device :</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb shell
+shell@android:/ $ su
+shell@android:/ # rm /system/recovery-from-boot.p
+shell@android:/ # exit
+shell@android:/ $ exit
+</code></p>
+
+<p>You can then reboot in fastboot mode and install CWM permanetly :</p>
+
+<p><code>sh
+[antoine@dev nexus] $ adb reboot bootloader
+[antoine@dev nexus] $ fastboot flash recovery recovery-clockwork-touch-6.0.0.6-grouper.img
+[antoine@dev nexus] $ fastboot reboot
+</code></p>
+
+<p>I personally don't recommend to install CWM permanetly as it will prevent you
+from installing the OTA updates that are pushed to your device.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Quickly deploy a Git project on a server with SSH]]></title>
