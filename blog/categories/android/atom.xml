@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | Geek Quickies]]></title>
   <link href="http://mrtn.me/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mrtn.me/"/>
-  <updated>2012-10-25T09:09:04+02:00</updated>
+  <updated>2012-11-08T18:29:33+01:00</updated>
   <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,284 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Avoid Thread Issues while Testing an Android Service]]></title>
+    <link href="http://mrtn.me/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/"/>
+    <updated>2012-11-08T12:12:00+01:00</updated>
+    <id>http://mrtn.me/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service</id>
+    <content type="html"><![CDATA[<p>The <a href="http://developer.android.com/tools/testing/testing_android.html">Android Test Framework</a>
+provides many tools to test parts of an Android application, and the
+<a href="http://developer.android.com/reference/android/test/ServiceTestCase.html">ServiceTestCase</a>
+in particular to test your <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>
+classes.</p>
+
+<p>This class is quite useful but you may find yourself scratching your head
+because your test does not work like it should. This happens in particular if
+you're doing some background work in your service, relying for example on
+<a href="http://developer.android.com/reference/android/os/AsyncTask.html">AsyncTask</a>
+for it.</p>
+
+<p>Read on if you want to understand why it doesn't work and find a solution for it.</p>
+
+<!-- More -->
+
+
+<p>In an Android application, any service is instantiated and operates on the main
+thread. But this is not the case in the test framework provided by the
+<code>ServiceTestCase</code> class. Your Service is instantiated in the same thread the
+test runs.</p>
+
+<p>While your tests are running, there is no <a href="http://developer.android.com/reference/android/os/Looper.html">Looper</a>
+waiting for messages on the service thread. In consequence, anything that relies
+on it and on the <a href="http://developer.android.com/reference/android/os/Handler.html">Handler</a>
+class to communicate back to the main thread will not work.</p>
+
+<p>For instance, <code>AsyncTask</code> uses a handler to ensure that the <code>onPostExecute</code>
+method is called on the main thread. After <code>doInBackground</code> has been called,
+it posts a message on this handler, but as the <code>Looper</code> on the service is not
+running to handle the message, the <code>onPostExecute</code> method will never be
+called.</p>
+
+<p>To circumvent this behaviour, the service must be run on a separate thread with
+a <code>Looper</code> running.</p>
+
+<h2>Simulating <em>main thread</em> behaviour</h2>
+
+<p>The <code>ThreadServiceTestCase&lt;T extends Service&gt;</code> (<a href="/downloads/code/ThreadServiceTestCase.java">source here</a>)
+class that we describe here provides such features. It declares a <code>Looper</code> and a
+<code>Hanlder</code> to be able to run code on it:</p>
+
+<p><code>java
+  protected Handler serviceHandler;
+  protected Looper serviceLooper;
+</code></p>
+
+<p>In the setup of the test, we instantiate the service thread, start it, and link
+our handler with its looper:</p>
+
+<p>``` java</p>
+
+<pre><code>@Override
+protected void setUp() throws Exception {
+    super.setUp();
+    // Setup service thread
+    HandlerThread serviceThread = new HandlerThread("[" + serviceClass.getSimpleName() + "Thread]");
+    serviceThread.start();
+    serviceLooper = serviceThread.getLooper();
+    serviceHandler = new Handler(serviceLooper);
+}
+</code></pre>
+
+<p><code>``
+The corresponding</code>tearDown` method shuts down the tread.</p>
+
+<p>We provide a <code>runOnServiceThread</code> method to be able to run code on the service
+thread:</p>
+
+<p>``` java</p>
+
+<pre><code>protected void runOnServiceThread(final Runnable r) {
+    final CountDownLatch serviceSignal = new CountDownLatch(1);
+    serviceHandler.post(new Runnable() {
+
+        @Override
+        public void run() {
+            r.run();
+            serviceSignal.countDown();
+        }
+    });
+
+    try {
+        serviceSignal.await();
+    } catch (InterruptedException ie) {
+        fail("The Service thread has been interrupted");
+    }
+}
+</code></pre>
+
+<p>```</p>
+
+<p>Then, the <code>startService</code> methods starts the service in its own thread:</p>
+
+<p>``` java</p>
+
+<pre><code>static class Holder&lt;H&gt; {
+    H value;
+}
+
+protected T startService(final boolean bound, final ServiceRunnable r) {
+    final Holder&lt;T&gt; serviceHolder = new Holder&lt;T&gt;();
+
+    // I want to create my service in its own 'Main thread'
+    // So it can use its handler
+    runOnServiceThread(new Runnable() {
+
+        @Override
+        public void run() {
+            T service = null;
+            if (bound) {
+                /* IBinder binder = */bindService(new Intent(getContext(), serviceClass));
+            } else {
+                startService(new Intent(getContext(), serviceClass));
+            }
+            service = getService();
+            if (r != null)
+                r.run(service);
+            serviceHolder.value = service;
+        }
+    });
+
+    return serviceHolder.value;
+}
+</code></pre>
+
+<p>```</p>
+
+<p>The <code>bound</code> parameters tells wether to start the service with a binding or with
+an <code>Intent</code>.. The optional <code>ServiceRunnable</code> parameter can be provided to add
+some initialization code.</p>
+
+<p>A test class using this code looks like the following:</p>
+
+<p>```java
+public class MyServiceTest extends ThreadServiceTestCase<MyService> {</p>
+
+<pre><code>public MyServiceTest() {
+    super(MyService.class);
+}
+
+
+public void testSomething() {
+
+    // starts the service
+    MyService service = startService(true, null);
+    ...
+    // Do something on the service
+    runOnServiceThread( new ServiceRunnable() {
+        public void run(Service service) {
+            // do something
+        }
+    });
+
+}
+</code></pre>
+
+<p>```</p>
+
+<p>With it, the service is started in its own thread and the <code>Looper</code> and <code>Handler</code>
+mechanism will work.</p>
+
+<h2>Waiting for listeners to be notified</h2>
+
+<p>A service that performs tasks asynchronously also notifies the outcome of the
+background tasks asynchronously. There are several techniques for doing that,
+but the most common are :</p>
+
+<ul>
+<li>Broadcast an intent, or</li>
+<li>Call a callback method on listeners.</li>
+</ul>
+
+
+<p>This usually happens in the main thread. In our case, it would happen in the
+service thread. As the test is executing itself in its own thread, some
+synchronization mechanism is needed between the service thread and the test
+thread to be able to handle the outcome of the background task in the test.</p>
+
+<p>The <code>ThreadServiceTestCase</code> class provides an helper class for that:</p>
+
+<p>```java</p>
+
+<pre><code>public static class ServiceSyncHelper {
+    // The semaphore will wakeup clients
+    protected final Semaphore semaphore = new Semaphore(0);
+
+    /**
+     * Waits for some response coming from the service.
+     * 
+     * @param timeout
+     *            The maximum time to wait.
+     * @throws InterruptedException
+     *             if the Thread is interrupted or reaches the timeout.
+     */
+    public synchronized void waitListener(long timeout) throws InterruptedException {
+        if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS))
+            throw new InterruptedException();
+    }
+
+}
+</code></pre>
+
+<p>```</p>
+
+<p>It contains a semaphore that can be used to synchronize the service thread with
+the test thread.</p>
+
+<p>In the case of the callback listener, we can then define an utility class like
+the following:</p>
+
+<p>```java</p>
+
+<pre><code>static class SynchronizedListener extends ServiceSyncHelper {
+    Object result;
+
+    /**
+     * Service listener that registers the value returned by the service in
+     * the holder and release the semaphore.
+     */
+    final MyService.Listener listener = new MyService.Listener() {
+        public void onTaskPerformed(MyService service, Object returnValue) {
+            result = returnValue;
+            semaphore.release();
+        }
+    };
+
+}
+</code></pre>
+
+<p>```</p>
+
+<p>When notified by the service in the service thread, the contained listener
+releases the semaphore and awakes the test that is waiting on the semaphore.</p>
+
+<p>The listener contained in the helper class also needs to be added to the service
+being tested at service initialization. A test using this feature then becomes :</p>
+
+<p>```java
+public void testSomething() {</p>
+
+<pre><code>// Catch listener callback in the test
+final SynchronizedListener listener = new SynchronizedListener();
+
+// starts the service
+/* MyService service = */ startService(true, new ServiceRunnable() {
+    @Override
+    public void run(Service service) {
+    // add our listener to the service
+        service.addListener(listener);
+    }
+});
+
+// wait for the service to notify us
+try {
+    // Wait for the service to perform its background task
+    listener.waitListener(WAIT_TIME);
+} catch (InterruptedException ie) {
+    fail("The listener never got signaled");
+}  
+
+assertEquals(expected_value, listener.result );
+...
+</code></pre>
+
+<p>}
+```</p>
+
+<p>You can grab The <code>ThreadServiceTestCase&lt;T extends Service&gt;</code> source code <a href="/downloads/code/ThreadServiceTestCase.java">here</a>.
+Hope it will help.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unlock and root a Nexus device]]></title>

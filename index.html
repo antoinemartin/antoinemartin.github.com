@@ -9,8 +9,10 @@
   <meta name="author" content="Antoine Martin">
 
   
-  <meta name="description" content="Having an unlocked and rooted device provides several advantages : Easy backup and restore with Nandroid backup,
-Easy firmware replacement and &hellip;">
+  <meta name="description" content="The Android Test Framework
+provides many tools to test parts of an Android application, and the
+ServiceTestCase
+in particular to test your Service &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +81,59 @@ Easy firmware replacement and &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/">Avoid Thread Issues While Testing an Android Service</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-08T12:12:00+01:00" pubdate data-updated="true">Nov 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://developer.android.com/tools/testing/testing_android.html">Android Test Framework</a>
+provides many tools to test parts of an Android application, and the
+<a href="http://developer.android.com/reference/android/test/ServiceTestCase.html">ServiceTestCase</a>
+in particular to test your <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>
+classes.</p>
+
+<p>This class is quite useful but you may find yourself scratching your head
+because your test does not work like it should. This happens in particular if
+you&#8217;re doing some background work in your service, relying for example on
+<a href="http://developer.android.com/reference/android/os/AsyncTask.html">AsyncTask</a>
+for it.</p>
+
+<p>Read on if you want to understand why it doesn&#8217;t work and find a solution for it.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -581,6 +636,10 @@ on the authentication of the dialog with the server.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/">Avoid Thread Issues while Testing an Android Service</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/25/unlock-and-root-a-nexus-device/">Unlock and root a Nexus device</a>
       </li>
     
@@ -594,10 +653,6 @@ on the authentication of the dialog with the server.</p>
     
       <li class="post">
         <a href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/">Django on Windows: run Celery as a Service</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/27/running-django-under-windows-with-iis-using-fcgi/">Running Django under Windows with IIS using FastCGI</a>
       </li>
     
   </ul>

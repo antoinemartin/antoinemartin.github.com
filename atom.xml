@@ -4,7 +4,7 @@
   <title><![CDATA[Geek Quickies]]></title>
   <link href="http://mrtn.me/atom.xml" rel="self"/>
   <link href="http://mrtn.me/"/>
-  <updated>2012-10-25T09:09:04+02:00</updated>
+  <updated>2012-11-08T18:29:33+01:00</updated>
   <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,400 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Avoid Thread Issues while Testing an Android Service]]></title>
+    <link href="http://mrtn.me/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/"/>
+    <updated>2012-11-08T12:12:00+01:00</updated>
+    <id>http://mrtn.me/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service</id>
+    <content type="html"><![CDATA[<p>The <a href="http://developer.android.com/tools/testing/testing_android.html">Android Test Framework</a>
+provides many tools to test parts of an Android application, and the
+<a href="http://developer.android.com/reference/android/test/ServiceTestCase.html">ServiceTestCase</a>
+in particular to test your <a href="http://developer.android.com/reference/android/app/Service.html">Service</a>
+classes.</p>
+
+<p>This class is quite useful but you may find yourself scratching your head
+because your test does not work like it should. This happens in particular if
+you&#8217;re doing some background work in your service, relying for example on
+<a href="http://developer.android.com/reference/android/os/AsyncTask.html">AsyncTask</a>
+for it.</p>
+
+<p>Read on if you want to understand why it doesn&#8217;t work and find a solution for it.</p>
+
+<!-- More -->
+
+
+<p>In an Android application, any service is instantiated and operates on the main
+thread. But this is not the case in the test framework provided by the
+<code>ServiceTestCase</code> class. Your Service is instantiated in the same thread the
+test runs.</p>
+
+<p>While your tests are running, there is no <a href="http://developer.android.com/reference/android/os/Looper.html">Looper</a>
+waiting for messages on the service thread. In consequence, anything that relies
+on it and on the <a href="http://developer.android.com/reference/android/os/Handler.html">Handler</a>
+class to communicate back to the main thread will not work.</p>
+
+<p>For instance, <code>AsyncTask</code> uses a handler to ensure that the <code>onPostExecute</code>
+method is called on the main thread. After <code>doInBackground</code> has been called,
+it posts a message on this handler, but as the <code>Looper</code> on the service is not
+running to handle the message, the <code>onPostExecute</code> method will never be
+called.</p>
+
+<p>To circumvent this behaviour, the service must be run on a separate thread with
+a <code>Looper</code> running.</p>
+
+<h2>Simulating <em>main thread</em> behaviour</h2>
+
+<p>The <code>ThreadServiceTestCase&lt;T extends Service&gt;</code> (<a href="http://mrtn.me/downloads/code/ThreadServiceTestCase.java">source here</a>)
+class that we describe here provides such features. It declares a <code>Looper</code> and a
+<code>Hanlder</code> to be able to run code on it:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'>  <span class="kd">protected</span> <span class="n">Handler</span> <span class="n">serviceHandler</span><span class="o">;</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="n">Looper</span> <span class="n">serviceLooper</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In the setup of the test, we instantiate the service thread, start it, and link
+our handler with its looper:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">super</span><span class="o">.</span><span class="na">setUp</span><span class="o">();</span>
+</span><span class='line'>  <span class="c1">// Setup service thread</span>
+</span><span class='line'>  <span class="n">HandlerThread</span> <span class="n">serviceThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HandlerThread</span><span class="o">(</span><span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">serviceClass</span><span class="o">.</span><span class="na">getSimpleName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;Thread]&quot;</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">serviceThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">serviceLooper</span> <span class="o">=</span> <span class="n">serviceThread</span><span class="o">.</span><span class="na">getLooper</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">serviceHandler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">(</span><span class="n">serviceLooper</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The corresponding <code>tearDown</code> method shuts down the tread.</p>
+
+<p>We provide a <code>runOnServiceThread</code> method to be able to run code on the service
+thread:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">runOnServiceThread</span><span class="o">(</span><span class="kd">final</span> <span class="n">Runnable</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">final</span> <span class="n">CountDownLatch</span> <span class="n">serviceSignal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountDownLatch</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>      <span class="n">serviceHandler</span><span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>          <span class="nd">@Override</span>
+</span><span class='line'>          <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">r</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+</span><span class='line'>              <span class="n">serviceSignal</span><span class="o">.</span><span class="na">countDown</span><span class="o">();</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>      <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">serviceSignal</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">ie</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">fail</span><span class="o">(</span><span class="s">&quot;The Service thread has been interrupted&quot;</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, the <code>startService</code> methods starts the service in its own thread:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">static</span> <span class="kd">class</span> <span class="nc">Holder</span><span class="o">&lt;</span><span class="n">H</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">H</span> <span class="n">value</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">protected</span> <span class="n">T</span> <span class="nf">startService</span><span class="o">(</span><span class="kd">final</span> <span class="kt">boolean</span> <span class="n">bound</span><span class="o">,</span> <span class="kd">final</span> <span class="n">ServiceRunnable</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="kd">final</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">serviceHolder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Holder</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// I want to create my service in its own &#39;Main thread&#39;</span>
+</span><span class='line'>  <span class="c1">// So it can use its handler</span>
+</span><span class='line'>  <span class="n">runOnServiceThread</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nd">@Override</span>
+</span><span class='line'>      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">T</span> <span class="n">service</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">bound</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="cm">/* IBinder binder = */</span><span class="n">bindService</span><span class="o">(</span><span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">serviceClass</span><span class="o">));</span>
+</span><span class='line'>          <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>              <span class="n">startService</span><span class="o">(</span><span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">getContext</span><span class="o">(),</span> <span class="n">serviceClass</span><span class="o">));</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>          <span class="n">service</span> <span class="o">=</span> <span class="n">getService</span><span class="o">();</span>
+</span><span class='line'>          <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>              <span class="n">r</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+</span><span class='line'>          <span class="n">serviceHolder</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="n">serviceHolder</span><span class="o">.</span><span class="na">value</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>bound</code> parameters tells wether to start the service with a binding or with
+an <code>Intent</code>.. The optional <code>ServiceRunnable</code> parameter can be provided to add
+some initialization code.</p>
+
+<p>A test class using this code looks like the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyServiceTest</span> <span class="kd">extends</span> <span class="n">ThreadServiceTestCase</span><span class="o">&lt;</span><span class="n">MyService</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="nf">MyServiceTest</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">super</span><span class="o">(</span><span class="n">MyService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSomething</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// starts the service</span>
+</span><span class='line'>      <span class="n">MyService</span> <span class="n">service</span> <span class="o">=</span> <span class="n">startService</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>      <span class="o">...</span>
+</span><span class='line'>      <span class="c1">// Do something on the service</span>
+</span><span class='line'>      <span class="n">runOnServiceThread</span><span class="o">(</span> <span class="k">new</span> <span class="n">ServiceRunnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>          <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>              <span class="c1">// do something</span>
+</span><span class='line'>          <span class="o">}</span>
+</span><span class='line'>      <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With it, the service is started in its own thread and the <code>Looper</code> and <code>Handler</code>
+mechanism will work.</p>
+
+<h2>Waiting for listeners to be notified</h2>
+
+<p>A service that performs tasks asynchronously also notifies the outcome of the
+background tasks asynchronously. There are several techniques for doing that,
+but the most common are :</p>
+
+<ul>
+<li>Broadcast an intent, or</li>
+<li>Call a callback method on listeners.</li>
+</ul>
+
+
+<p>This usually happens in the main thread. In our case, it would happen in the
+service thread. As the test is executing itself in its own thread, some
+synchronization mechanism is needed between the service thread and the test
+thread to be able to handle the outcome of the background task in the test.</p>
+
+<p>The <code>ThreadServiceTestCase</code> class provides an helper class for that:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ServiceSyncHelper</span> <span class="o">{</span>
+</span><span class='line'>  <span class="c1">// The semaphore will wakeup clients</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Waits for some response coming from the service.</span>
+</span><span class='line'><span class="cm">  * </span>
+</span><span class='line'><span class="cm">  * @param timeout</span>
+</span><span class='line'><span class="cm">  *            The maximum time to wait.</span>
+</span><span class='line'><span class="cm">  * @throws InterruptedException</span>
+</span><span class='line'><span class="cm">  *             if the Thread is interrupted or reaches the timeout.</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">waitListener</span><span class="o">(</span><span class="kt">long</span> <span class="n">timeout</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="o">(!</span><span class="n">semaphore</span><span class="o">.</span><span class="na">tryAcquire</span><span class="o">(</span><span class="n">timeout</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">))</span>
+</span><span class='line'>          <span class="k">throw</span> <span class="k">new</span> <span class="nf">InterruptedException</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>  
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It contains a semaphore that can be used to synchronize the service thread with
+the test thread.</p>
+
+<p>In the case of the callback listener, we can then define an utility class like
+the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">static</span> <span class="kd">class</span> <span class="nc">SynchronizedListener</span> <span class="kd">extends</span> <span class="n">ServiceSyncHelper</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">Object</span> <span class="n">result</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="cm">/**</span>
+</span><span class='line'><span class="cm">  * Service listener that registers the value returned by the service in</span>
+</span><span class='line'><span class="cm">  * the holder and release the semaphore.</span>
+</span><span class='line'><span class="cm">  */</span>
+</span><span class='line'>  <span class="kd">final</span> <span class="n">MyService</span><span class="o">.</span><span class="na">Listener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyService</span><span class="o">.</span><span class="na">Listener</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onTaskPerformed</span><span class="o">(</span><span class="n">MyService</span> <span class="n">service</span><span class="o">,</span> <span class="n">Object</span> <span class="n">returnValue</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>          <span class="n">result</span> <span class="o">=</span> <span class="n">returnValue</span><span class="o">;</span>
+</span><span class='line'>          <span class="n">semaphore</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>  <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When notified by the service in the service thread, the contained listener
+releases the semaphore and awakes the test that is waiting on the semaphore.</p>
+
+<p>The listener contained in the helper class also needs to be added to the service
+being tested at service initialization. A test using this feature then becomes :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSomething</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// Catch listener callback in the test</span>
+</span><span class='line'>    <span class="kd">final</span> <span class="n">SynchronizedListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SynchronizedListener</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// starts the service</span>
+</span><span class='line'>    <span class="cm">/* MyService service = */</span> <span class="n">startService</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="k">new</span> <span class="n">ServiceRunnable</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>      <span class="c1">// add our listener to the service</span>
+</span><span class='line'>            <span class="n">service</span><span class="o">.</span><span class="na">addListener</span><span class="o">(</span><span class="n">listener</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// wait for the service to notify us</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// Wait for the service to perform its background task</span>
+</span><span class='line'>        <span class="n">listener</span><span class="o">.</span><span class="na">waitListener</span><span class="o">(</span><span class="n">WAIT_TIME</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">ie</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">fail</span><span class="o">(</span><span class="s">&quot;The listener never got signaled&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">assertEquals</span><span class="o">(</span><span class="n">expected_value</span><span class="o">,</span> <span class="n">listener</span><span class="o">.</span><span class="na">result</span> <span class="o">);</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can grab The <code>ThreadServiceTestCase&lt;T extends Service&gt;</code> source code <a href="http://mrtn.me/downloads/code/ThreadServiceTestCase.java">here</a>.
+Hope it will help.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unlock and root a Nexus device]]></title>
