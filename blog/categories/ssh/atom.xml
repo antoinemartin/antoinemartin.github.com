@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SSH | Geek Quickies]]></title>
   <link href="http://mrtn.me/blog/categories/ssh/atom.xml" rel="self"/>
   <link href="http://mrtn.me/"/>
-  <updated>2012-11-15T15:28:19+01:00</updated>
+  <updated>2012-11-15T18:16:46+01:00</updated>
   <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,102 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Mirror a Git repository through SSH]]></title>
+    <link href="http://mrtn.me/blog/2012/11/15/mirror-a-git-repository-through-ssh/"/>
+    <updated>2012-11-15T17:45:00+01:00</updated>
+    <id>http://mrtn.me/blog/2012/11/15/mirror-a-git-repository-through-ssh</id>
+    <content type="html"><![CDATA[<p>Redmine can show the timeline of a Git repository but this repository needs to
+be local (see <a href="http://www.redmine.org/boards/2/topics/3487">here</a>). When you
+host your repository externally (on GitHub, for instance), you need to
+synchronize your remote repository on your Redmine server.</p>
+
+<p>The following shell script is an <em>All in one</em> command that can be easily put in
+the crontab to mirror the repository on your Redmine server :</p>
+
+<!-- More -->
+
+
+<p>``` sh</p>
+
+<h1>!/bin/sh</h1>
+
+<p>if [ "run" != "$1" ]; then
+  exec ssh -i "$GIT_KEY" -o "StrictHostKeyChecking no" "$@"
+fi</p>
+
+<p>remote=$2
+local=$3</p>
+
+<p>echo "Mirroring from $remote to $local"</p>
+
+<p>name=$(basename "$local")</p>
+
+<p>export GIT_KEY="<code>mktemp /tmp/git.XXXXXX</code>"
+export GIT_SSH="$0"</p>
+
+<p>cat >"$GIT_KEY" &lt;&lt;EOF
+-----BEGIN DSA PRIVATE KEY-----</p>
+
+<h3>Put here your private key</h3>
+
+<p>-----END DSA PRIVATE KEY-----
+EOF</p>
+
+<p>if [ -d "$local" ]; then</p>
+
+<pre><code>    git "--git-dir=$local" remote update
+</code></pre>
+
+<p>else</p>
+
+<pre><code>    git clone --mirror "$remote" "$local"
+</code></pre>
+
+<p>fi</p>
+
+<p>rm -f "$GIT_KEY"</p>
+
+<p>exit 0</p>
+
+<p>```</p>
+
+<p>You need to copy the private key in the script (line 20). You can then use the
+script with the following syntax</p>
+
+<p><code>sh
+git-import.sh run &lt;remote_repository&gt;  &lt;local_repository&gt;
+</code></p>
+
+<p>Notice the use of the <strong>run</strong> argument to distinguish between executions of the
+script as a user and as the <code>ssh</code> command to be used by Git.</p>
+
+<p>Here is an example:</p>
+
+<p><code>sh
+[antoine@dev ~]$ ./git-import.sh run git@github.com:antoinemartin/django-windows-tools.git django-windows-tools.git
+Mirroring from git@github.com:antoinemartin/django-windows-tools.git to django-windows-tools.git
+Cloning into bare repository 'django-windows-tools.git'...                                                                                                                                                                                                                      
+remote: Counting objects: 112, done.
+remote: Compressing objects: 100% (88/88), done.
+remote: Total 112 (delta 46), reused 78 (delta 14)
+Receiving objects: 100% (112/112), 41.04 KiB, done.                                                                                                                                                                                                                             
+Resolving deltas: 100% (46/46), done.                                                                                                                                                                                                                                           
+[antoine@dev ~]$          
+</code></p>
+
+<p>The first time you run the script, it
+creates the Git mirror. The following runs only syncs the mirror:</p>
+
+<p><code>sh
+[antoine@dev ~]$ ./git-import.sh run git@github.com:antoinemartin/django-windows-tools.git django-windows-tools.git                                                                                                                                                             
+Mirroring from git@github.com:antoinemartin/django-windows-tools.git to django-windows-tools.git                                                                                                                                                                                
+Fetching origin                                                                                                                                                                                                                                                                 
+[antoine@dev ~]$          
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Quickly deploy a Git project on a server with SSH]]></title>
