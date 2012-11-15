@@ -4,7 +4,7 @@
   <title><![CDATA[Geek Quickies]]></title>
   <link href="http://mrtn.me/atom.xml" rel="self"/>
   <link href="http://mrtn.me/"/>
-  <updated>2012-11-08T18:29:33+01:00</updated>
+  <updated>2012-11-15T15:28:19+01:00</updated>
   <id>http://mrtn.me/</id>
   <author>
     <name><![CDATA[Antoine Martin]]></name>
@@ -12,6 +12,183 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Checking Google Play Signatures on .Net]]></title>
+    <link href="http://mrtn.me/blog/2012/11/15/checking-google-play-signatures-on-net/"/>
+    <updated>2012-11-15T11:50:00+01:00</updated>
+    <id>http://mrtn.me/blog/2012/11/15/checking-google-play-signatures-on-net</id>
+    <content type="html"><![CDATA[<p>With <a href="http://developer.android.com/guide/google/play/billing/billing_integrate.html">In-App Billing</a>
+on Android, each time a purchase occurs, your application receives a JSON
+payload containing information about the purchase, as well as its signature with
+your developer certificate.</p>
+
+<p>Google encourages you to verify that the signature is valid to authentify the
+purchase. You can do that inside the application, but if the delivery of the
+purchase involves a server, it is better to do it on the server to prevent
+client code manipulation. The following show how to do it on .Net server
+application.</p>
+
+<!-- More -->
+
+
+<p>The JSON payload looks like the following :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="p">{</span> <span class="s2">&quot;nonce&quot;</span> <span class="o">:</span> <span class="mi">1836535032137741465</span><span class="p">,</span>
+</span><span class='line'>  <span class="s2">&quot;orders&quot;</span> <span class="o">:</span>
+</span><span class='line'>    <span class="p">[{</span> <span class="s2">&quot;notificationId&quot;</span> <span class="o">:</span> <span class="s2">&quot;android.test.purchased&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;orderId&quot;</span> <span class="o">:</span> <span class="s2">&quot;transactionId.android.test.purchased&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;packageName&quot;</span> <span class="o">:</span> <span class="s2">&quot;com.example.dungeons&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;productId&quot;</span> <span class="o">:</span> <span class="s2">&quot;android.test.purchased&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;developerPayload&quot;</span> <span class="o">:</span> <span class="s2">&quot;bGoa+V7g/yqDXvKRqq+JTFn4uQZbPiQJo4pf9RzJ&quot;</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;purchaseTime&quot;</span> <span class="o">:</span> <span class="mi">1290114783411</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;purchaseState&quot;</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>       <span class="s2">&quot;purchaseToken&quot;</span> <span class="o">:</span> <span class="s2">&quot;rojeslcdyyiapnqcynkjyyjh&quot;</span> <span class="p">}]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You receive it with a broadcast <code>com.android.vending.billing.PURCHASE_STATE_CHANGED</code>
+in the <code>inapp_signed_data</code> extra intent field. The signature comes as a base 64
+encoded string in the <code>inapp_signature</code> intent field and looks like this :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">YlNBaqlKSS</span><span class="o">+</span><span class="nx">zk</span><span class="o">/</span><span class="nx">fteJuHbvI3</span><span class="o">/</span><span class="nx">N</span><span class="o">+</span><span class="nx">hbiLiolYsMl8gCD13</span><span class="o">+</span><span class="nx">Ii</span><span class="o">+</span><span class="mi">1</span><span class="nx">m4GSd68rc2TwbSLYsYrHVL</span><span class="o">/</span><span class="mi">9</span><span class="nx">xg</span><span class="o">/</span><span class="mi">0</span><span class="nx">CBf</span>
+</span><span class='line'><span class="nx">CN6NKLtqjFqRs034ExCW2qaMddwfRiqsGZ3z7ZvWuMyNntE3pTGTxG2X</span><span class="o">/</span><span class="mi">71</span><span class="o">/</span><span class="nx">cpGwQoSFQBceVR9t5Sge</span>
+</span><span class='line'><span class="nx">Tw5HJimt5xlIhHqgRxS</span><span class="o">/</span><span class="nx">W</span><span class="o">/</span><span class="nx">kfrJIyKt03l2hUJDGOX9eig5S4ex6fgyFZxR73</span><span class="o">/</span><span class="nx">HxOFGJ9ohApwaBNF7rD</span>
+</span><span class='line'><span class="nx">LaMZFnYbLsYgBWMOHW1uE</span><span class="o">+</span><span class="nx">F5b2JZWvyColpe5SKMWaNVWVWZGte1WBOYRFxbriZR1VwClkEg9Y4mVn5k</span>
+</span><span class='line'><span class="nx">SZIje5pSueLKwiForU02jA</span><span class="o">==</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It is the signature of the <code>SHA1</code> digest of the JSON payload with the private
+key of your developer certificate. Don&#8217;t look for this private key, it is
+detained by Google. Google only provides you the corresponding public key in the
+profile page of your developer account :</p>
+
+<p><img src="http://developer.android.com/images/billing_public_key.png"></p>
+
+<p>This public key is the base 64 string of the <a href="http://tools.ietf.org/html/rfc3280#section-4.1.2.7">Subject Public Key Info</a> of
+your certificate encoded in the <a href="http://en.wikipedia.org/wiki/Distinguished_Encoding_Rules#DER_encoding">DER format</a>.
+It corresponds to the following part of your certificate:</p>
+
+<pre>
+Certificate:
+...
+       Subject Public Key Info:
+           Public Key Algorithm: rsaEncryption
+           RSA Public Key: (1024 bit)
+               Modulus (1024 bit):
+                   00:b4:31:98:0a:c4:bc:62:c1:88:aa:dc:b0:c8:bb:
+                   33:35:19:d5:0c:64:b9:3d:41:b2:96:fc:f3:31:e1:
+                   66:36:d0:8e:56:12:44:ba:75:eb:e8:1c:9c:5b:66:
+                   70:33:52:14:c9:ec:4f:91:51:70:39:de:53:85:17:
+                   16:94:6e:ee:f4:d5:6f:d5:ca:b3:47:5e:1b:0c:7b:
+                   c5:cc:2b:6b:c1:90:c3:16:31:0d:bf:7a:c7:47:77:
+                   8f:a0:21:c7:4c:d0:16:65:00:c1:0f:d7:b8:80:e3:
+                   d2:75:6b:c1:ea:9e:5c:5c:ea:7d:c1:a1:10:bc:b8:
+                   e8:35:1c:9e:27:52:7e:41:8f
+               Exponent: 65537 (0x10001)
+...
+</pre>
+
+
+<p>The public key in this format cannot be read directly by the
+<code>RSACryptoServiceProvider</code> class of the .Net <code>System.Security.Cryptography</code>
+module. The preferred import format for this class is XML. The
+<a href="http://www.bouncycastle.org/">Bouncy Castle Library</a> allows reading this kind
+of encoding, but you don&#8217;t really need to add a new dependency to your project.
+Instead, what you need is simply to convert your public key in XML. Once this is
+done, you can use the following simple .Net code to check the signature:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'>    <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="nf">verify</span><span class="p">(</span><span class="n">String</span> <span class="n">message</span><span class="p">,</span> <span class="n">String</span> <span class="n">base64Signature</span><span class="p">,</span> <span class="n">String</span> <span class="n">publicKey</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// By default the result is false</span>
+</span><span class='line'>        <span class="kt">bool</span> <span class="n">result</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">try</span>
+</span><span class='line'>        <span class="p">{</span>
+</span><span class='line'>            <span class="c1">// Create the provider and load the KEY</span>
+</span><span class='line'>            <span class="n">RSACryptoServiceProvider</span> <span class="n">provider</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RSACryptoServiceProvider</span><span class="p">();</span>
+</span><span class='line'>            <span class="n">provider</span><span class="p">.</span><span class="n">FromXmlString</span><span class="p">(</span><span class="n">publicKey</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="c1">// The signature is supposed to be encoded in base64 and the SHA1 checksum</span>
+</span><span class='line'>            <span class="c1">// Of the message is computed against the UTF-8 representation of the </span>
+</span><span class='line'>            <span class="c1">// message</span>
+</span><span class='line'>            <span class="kt">byte</span><span class="p">[]</span> <span class="n">signature</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">FromBase64String</span><span class="p">(</span><span class="n">base64Signature</span><span class="p">);</span>
+</span><span class='line'>            <span class="n">SHA1Managed</span> <span class="n">sha</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SHA1Managed</span><span class="p">();</span>
+</span><span class='line'>            <span class="kt">byte</span><span class="p">[]</span> <span class="n">data</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>            <span class="n">result</span> <span class="p">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">VerifyData</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">sha</span><span class="p">,</span> <span class="n">signature</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="cm">/* e */</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* TODO: add some kind of logging here */</span><span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For converting your key, you can download the <a href="http://mrtn.me/downloads/code/PEMKeyLoader.cs">PEMKeyLoader class</a>
+and use it in a Console Project to convert your key to XML with the follwing code :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">RSACryptoServiceProvider</span> <span class="n">provider</span> <span class="p">=</span> <span class="n">PEMKeyLoader</span><span class="p">.</span><span class="n">CryptoServiceProviderFromPublicKeyInfo</span><span class="p">(</span><span class="n">MY_BASE64_PUBLIC_KEY</span><span class="p">);</span>
+</span><span class='line'><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">provider</span><span class="p">.</span><span class="n">ToXmlString</span><span class="p">(</span><span class="k">false</span><span class="p">));</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will obtain your XML formatted key :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='csharp'><span class='line'><span class="p">&lt;</span><span class="n">RSAKeyValue</span><span class="p">&gt;&lt;</span><span class="n">Modulus</span><span class="p">&gt;</span><span class="n">u5xfVod</span><span class="p">+</span><span class="m">5</span><span class="n">uEP7Zu</span><span class="p">/</span><span class="n">xN3v4yhAO3tSsezDJUBajr92u</span><span class="p">+</span><span class="n">wUXZNH2IKt</span><span class="p">/</span><span class="m">9</span><span class="p">/</span><span class="n">V</span><span class="p">/</span><span class="n">HjMyzW5AC0PZpi6ROTWvQoO5Xa2L8</span><span class="p">+</span><span class="n">lKLiVtVcaI60O</span><span class="p">+</span><span class="n">M6B1Rn1zCYD</span><span class="c1">//TgYwfqofKPvbv/Vshl+LwdkqBcp1as4t6+2f0sGHwH/hT1D+E94m0zf4qOR5O5o3ILXaC1z8pAoV4cM6YttFRDh9lxPj/9hkQR4l809bbxOdJPo41F69rqdyU4xFjncxCOHcFdnkT7LQUVv1v2GYae3Rl4iZVncbEygg4K/+uG21QyC0xRda9L2KmQyV7Mtcb5YTJzyfaI/Z/EEZ0A2pkX+4Ki1MKCaUAPLw==&lt;/Modulus&gt;&lt;Exponent&gt;AQAC&lt;/Exponent&gt;&lt;/RSAKeyValue&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That you can use then in your project as a string constant.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Avoid Thread Issues while Testing an Android Service]]></title>

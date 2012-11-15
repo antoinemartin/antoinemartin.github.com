@@ -9,10 +9,9 @@
   <meta name="author" content="Antoine Martin">
 
   
-  <meta name="description" content="The Android Test Framework
-provides many tools to test parts of an Android application, and the
-ServiceTestCase
-in particular to test your Service &hellip;">
+  <meta name="description" content="With In-App Billing
+on Android, each time a purchase occurs, your application receives a JSON
+payload containing information about the purchase, as &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,56 @@ in particular to test your Service &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/15/checking-google-play-signatures-on-net/">Checking Google Play Signatures on .Net</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-15T11:50:00+01:00" pubdate data-updated="true">Nov 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With <a href="http://developer.android.com/guide/google/play/billing/billing_integrate.html">In-App Billing</a>
+on Android, each time a purchase occurs, your application receives a JSON
+payload containing information about the purchase, as well as its signature with
+your developer certificate.</p>
+
+<p>Google encourages you to verify that the signature is valid to authentify the
+purchase. You can do that inside the application, but if the delivery of the
+purchase involves a server, it is better to do it on the server to prevent
+client code manipulation. The following show how to do it on .Net server
+application.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/15/checking-google-play-signatures-on-net/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -572,58 +621,9 @@ to get to your Django project, you will find here some tips to improve things a 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/12/checking-google-play-signatures-with-django/">Checking Google Play Signatures With Django</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-12T07:43:00+01:00" pubdate data-updated="true">Mar 12<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Google play, formerly known as the Android Market, provides in-app billing in several countries.
-In the <a href="http://developer.android.com/guide/market/billing/billing_best_practices.html">Security and Design</a> page,
-Google states the following:</p>
-
-<blockquote><p>If practical, you should perform signature verification on a remote server and not on a device.
-Implementing the verification process on a server makes it difficult for attackers to break the verification process by
-reverse engineering your .apk file. If you do offload security processing to a remote server, be sure that the device-server handshake is secure.</p></blockquote>
-
-<p>The signature verification here refers to the signature sent back by the Billing Service to the
-<code>GET_PURCHASE_INFORMATION</code>request. The signature is against the JSON payload containing the purchase information. We&#8217;llget back later
-on the authentication of the dialog with the server.</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/12/checking-google-play-signatures-with-django/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -634,6 +634,10 @@ on the authentication of the dialog with the server.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/15/checking-google-play-signatures-on-net/">Checking Google Play Signatures on .Net</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/11/08/avoid-thread-issues-while-testing-an-android-service/">Avoid Thread Issues while Testing an Android Service</a>
@@ -649,10 +653,6 @@ on the authentication of the dialog with the server.</p>
     
       <li class="post">
         <a href="/blog/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/">Installing Redmine on CentOS 6.2 wiht MySQL and Apache</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/04/django-on-windows-run-celery-as-a-windows-service/">Django on Windows: run Celery as a Service</a>
       </li>
     
   </ul>
