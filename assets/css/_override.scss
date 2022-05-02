@@ -1,0 +1,23 @@
+$global-font-size: 18px;
+$global-line-height: 1.5rem;
+$global-font-color-dark: #c1c1ce;
+$global-font-secondary-color-dark: #78787a;
+.single {
+    .content {
+        p {
+            margin: 1.5rem 0 !important;
+        }
+        > h2,
+        > h3,
+        > h4,
+        > h5,
+        > h6 {
+            > .header-mark::before {
+                // content: "🔗" !important;
+                font-size: 0.8rem;
+                margin-right: 0.2rem !important;
+            }
+        }
+    }
+
+}

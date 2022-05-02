@@ -1,0 +1,14 @@
+img[src$='#floatright'] {
+    max-width: 30%;
+    min-width: 200px;
+    height: auto;
+    float: right;
+}
+
+img[src$='#floatleft'] {
+    max-width: 30%;
+    min-width: 200px;
+    height: auto;
+    float: left;
+    margin-right: 1em;
+}

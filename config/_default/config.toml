@@ -1,0 +1,49 @@
+baseURL = 'http://mrtn.me'
+languageCode = 'en-us'
+title = 'mrtn.me'
+
+theme = "LoveIt"
+
+enableRobotsTXT = true
+enableGitInfo = true
+enableEmoji = true
+
+
+[markup]
+[markup.highlight]
+codeFences = true
+guessSyntax = true
+lineNos = true
+lineNumbersInTable = true
+noClasses = false
+[markup.goldmark]
+[markup.goldmark.extensions]
+definitionList = true
+footnote = true
+linkify = true
+strikethrough = true
+table = true
+taskList = true
+typographer = true
+[markup.goldmark.renderer]
+unsafe = true
+[markup.tableOfContents]
+startLevel = 2
+endLevel = 6
+
+[author]
+name = "Antoine Martin"
+email = "antoine@mrtn.me"
+link = "https://linked.in/in/antoinemartin"
+
+# Sitemap config
+[sitemap]
+changefreq = "weekly"
+filename = "sitemap.xml"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+page = ["HTML"]
+section = ["HTML", "RSS"]
+taxonomy = ["HTML", "RSS"]
+taxonomyTerm = ["HTML"]
