@@ -57,7 +57,7 @@ anonymizeIP = false
 rss = 10
 [home.profile]
 enable = true
-gravatarEmail = "antoine@openance.com"
+# gravatarEmail = "antoine@openance.com"
 avatarURL = "/images/avatar.webp"
 title = "mrtn.me"
 subtitle = "Stories from the cloudvergence"
