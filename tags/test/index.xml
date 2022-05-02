@@ -1,0 +1,14 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>test - Tag - mrtn.me</title><link>http://mrtn.me/tags/test/</link><description>test - Tag - mrtn.me</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Thu, 08 Nov 2012 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/tags/test/" rel="self" type="application/rss+xml"/><item><title>Avoid Thread Issues While Testing an Android Service</title><link>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</link><pubDate>Thu, 08 Nov 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</guid><description><![CDATA[<p>The
+<a href="http://developer.android.com/tools/testing/testing_android.html" target="_blank" rel="noopener noreffer">Android Test Framework</a>
+provides many tools to test parts of an Android application, and the
+<a href="http://developer.android.com/reference/android/test/ServiceTestCase.html" target="_blank" rel="noopener noreffer">ServiceTestCase</a>
+in particular to test your
+<a href="http://developer.android.com/reference/android/app/Service.html" target="_blank" rel="noopener noreffer">Service</a>
+classes.</p>
+<p>This class is quite useful but you may find yourself scratching your head
+because your test does not work like it should. This happens in particular if
+you&rsquo;re doing some background work in your service, relying for example on
+<a href="http://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="noopener noreffer">AsyncTask</a>
+for it.</p>
+<p>Read on if you want to understand why it doesn&rsquo;t work and find a solution for
+it.</p>]]></description></item></channel></rss>

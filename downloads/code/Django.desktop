@@ -1,0 +1,14 @@
+[Desktop Entry]
+Exec=/bin/bash --rcfile .consolerc
+GenericName[fr]=MyProject Django
+GenericName=MyProject Django
+Icon=/home/antoine/images/django-icon_0.png
+MimeType=
+Name[fr]=MyProject Django
+Name=MyProject Django
+Path=/home/antoine/src/django/my_project/src/my_project/
+StartupNotify=true
+Terminal=true
+TerminalOptions=
+Type=Application
+Categories=Development
