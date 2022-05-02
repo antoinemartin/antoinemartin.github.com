@@ -3,7 +3,7 @@ title: "Start a Virtualenv Django Shell From the Linux Desktop"
 date: "2012-03-13"
 slug: "2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop"
 Categories: ["Development", "Django"]
-Tags: ["snippet", "django", "linux", "bash"]
+Tags: ["old", "obsolete", "snippet", "django", "linux", "bash"]
 toc:
   enable: false
 ---

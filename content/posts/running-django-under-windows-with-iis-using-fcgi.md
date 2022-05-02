@@ -3,7 +3,7 @@ title = "Running Django Under Windows With Iis Using Fcgi"
 date = "2012-06-27"
 slug = "2012/06/27/running-django-under-windows-with-iis-using-fcgi"
 Categories = ["DevOps", "Django"]
-Tags = ["django", "iis", "windows", "fcgi"]
+Tags = ["old", "obsolete", "django", "iis", "windows", "fcgi"]
 +++
 
 **Update**: The configuration process described in this post can be achieved
@@ -48,7 +48,7 @@ folder. You can even have different python environments with differents
 configurations on the same server. To use the portable python installation in
 copied in `d:\python` from a command line window, juste type:
 
-```
+```cmd
 set path=d:\python\app\scripts;d:\python\app;%path%
 ```
 
@@ -156,7 +156,7 @@ The project wide defined static files are located in the `local_static`
 directory. All the static files are collected in the `static` directory by
 running the following command:
 
-```
+```cmd
 python manage.py collecstatic
 ```
 
@@ -168,7 +168,7 @@ In the `local_static` directory we put the following `web.config` file:
   <system.webServer>
     <!-- this configuration overrides the FastCGI handler to let IIS serve the static files -->
     <handlers>
-	  <clear/>
+      <clear/>
       <add name="StaticFile" path="*" verb="*" modules="StaticFileModule" resourceType="File" requireAccess="Read" />
     </handlers>
   </system.webServer>
@@ -186,7 +186,7 @@ that all requests below the path `/static` should be served as static files.
 The website creation that is described in the previous sections can be automated
 with the following script that must be run as an administrator:
 
-```
+```cmd
 %windir%\system32\inetsrv\appcmd.exe set config -section:system.webServer/fastCgi /+"[fullPath='d:\python\app\python.exe',arguments='d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings',maxInstances='4',idleTimeout='1800',activityTimeout='30',requestTimeout='90',instanceMaxRequests='100000',protocol='NamedPipe',flushNamedPipe='False',monitorChangesTo='d:\sites\esplayer\esplayer\web.config']" /commit:apphost
 %windir%\system32\inetsrv\appcmd.exe add apppool /name:esplayer
 %windir%\system32\inetsrv\appcmd.exe add site /name:esplayer /bindings:http://*:80 /physicalPath:d:\sites\esplayer\esplayer
@@ -279,7 +279,7 @@ With this script, the `Arguments` setting of the FastCGI application becomes
 `d:\sites\esplayer\esplayer\scripts\manage.py fcgi` and the `scriptProcessor`
 attribute in the `web.config` file becomes
 
-```
+```text
 scriptProcessor="D:\python\App\python.exe|d:\sites\esplayer\esplayer\script\manage.py fcgi"
 ```
 

@@ -4,6 +4,8 @@ date: 2012-11-08
 slug: 2012/11/08/avoid-thread-issues-while-testing-an-android-service
 Categories: ["Development", "Android", "Test"]
 tags:
+  - old
+  - obsolete
   - android
   - test
   - development

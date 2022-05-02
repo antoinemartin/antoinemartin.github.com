@@ -3,7 +3,8 @@ title: "Checking Google Play Signatures With Django"
 date: "2012-03-12"
 slug: "2012/03/12/checking-google-play-signatures-with-django"
 Categories: ["Development", "Django", "Android"]
-tags: 
+tags:
+  - old
   - android
   - django
   - android

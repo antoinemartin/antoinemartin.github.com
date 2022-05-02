@@ -3,7 +3,7 @@ title: "Checking Google Play Signatures on .Net"
 date: "2012-11-15"
 slug: "2012/11/15/checking-google-play-signatures-on-net"
 Categories: ["Development", "Android"]
-tags: [android, "google play", ".net"]
+tags: [old, android, "google play", ".net"]
 ---
 
 With
@@ -41,7 +41,7 @@ You receive it with a broadcast
 extra intent field. The signature comes as a base 64 encoded string in the
 `inapp_signature` intent field and looks like this :
 
-```
+```text
 YlNBaqlKSS+zk/fteJuHbvI3/N+hbiLiolYsMl8gCD13+Ii+1m4GSd68rc2TwbSLYsYrHVL/9xg/0CBf
 CN6NKLtqjFqRs034ExCW2qaMddwfRiqsGZ3z7ZvWuMyNntE3pTGTxG2X/71/cpGwQoSFQBceVR9t5Sge
 Tw5HJimt5xlIhHqgRxS/W/kfrJIyKt03l2hUJDGOX9eig5S4ex6fgyFZxR73/HxOFGJ9ohApwaBNF7rD
@@ -62,7 +62,7 @@ your certificate encoded in the
 [DER format](http://en.wikipedia.org/wiki/Distinguished_Encoding_Rules#DER_encoding).
 It corresponds to the following part of your certificate:
 
-<pre>
+```text
 Certificate:
 ...
        Subject Public Key Info:
@@ -80,7 +80,7 @@ Certificate:
                    e8:35:1c:9e:27:52:7e:41:8f
                Exponent: 65537 (0x10001)
 ...
-</pre>
+```
 
 The public key in this format cannot be read directly by the
 `RSACryptoServiceProvider` class of the .Net `System.Security.Cryptography`
@@ -130,7 +130,7 @@ Console.WriteLine(provider.ToXmlString(false));
 
 You will obtain your XML formatted key :
 
-```
+```xml
 <RSAKeyValue><Modulus>u5xfVod+5uEP7Zu/xN3v4yhAO3tSsezDJUBajr92u+wUXZNH2IKt/9/V/HjMyzW5AC0PZpi6ROTWvQoO5Xa2L8+lKLiVtVcaI60O+M6B1Rn1zCYD//TgYwfqofKPvbv/Vshl+LwdkqBcp1as4t6+2f0sGHwH/hT1D+E94m0zf4qOR5O5o3ILXaC1z8pAoV4cM6YttFRDh9lxPj/9hkQR4l809bbxOdJPo41F69rqdyU4xFjncxCOHcFdnkT7LQUVv1v2GYae3Rl4iZVncbEygg4K/+uG21QyC0xRda9L2KmQyV7Mtcb5YTJzyfaI/Z/EEZ0A2pkX+4Ki1MKCaUAPLw==</Modulus><Exponent>AQAC</Exponent></RSAKeyValue>
 ```
 

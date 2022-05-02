@@ -3,7 +3,9 @@ title: Using Eclipse Templates to Ease Android Logging
 date: "2012-03-24"
 slug: "2012/03/24/using-eclipse-templates-to-ease-android-logging"
 Categories: ["Development", "Android"]
-tags: 
+tags:
+  - old
+  - obsolete
   - android
   - eclipse
 ---

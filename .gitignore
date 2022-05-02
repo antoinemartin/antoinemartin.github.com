@@ -9,5 +9,6 @@ source.old
 source/_stash
 source/stylesheets/screen.css
 vendor
+public/
 node_modules
 resources/_gen

@@ -3,7 +3,7 @@ title = "Installing Redmine on Centos 6 Dot 2 Wiht Mysql and Apache"
 date = "2012-07-06"
 slug = "2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache"
 Categories = ["DevOps"]
-Tags = ["linux", "redmine", "centos", "ruby"]
+Tags = ["old", "obsolete", "linux", "redmine", "centos", "ruby"]
 [toc]
 enable = true
 +++
@@ -146,7 +146,7 @@ from another computer, you will need to open the port in the
 `/etc/sysconfig/iptables` file by duplicating the ssh (port 22) line and
 adapting it:
 
-```
+```text
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
 ```
@@ -185,7 +185,7 @@ mkdir conf.d
 In the empty new `conf.d` folder, we create a `redmine.conf` file with the
 following configuration:
 
-```
+```apache
 # Loading Passenger
 LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13/ext/apache2/mod_passenger.so
 PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-3.0.13
@@ -212,7 +212,7 @@ PassengerRuby /usr/bin/ruby
 We then enable named based virtual hosting for our server by **uncomenting** the
 following line in the `/etc/httpd/conf/httpd.conf` file:
 
-```
+```apache
 ...
 #
 # Use name-based virtual hosting.
@@ -240,13 +240,13 @@ setenfore Permissive
 And letting the Permissive mode survive a reboot by modifyin the
 `/etc/selinux/config` file from:
 
-```
+```ini
 SELINUX=enforcing
 ```
 
 to
 
-```
+```ini
 SELINUX=permissive
 ```
 
@@ -264,7 +264,7 @@ Now you can access your Redmine installation with your browser. To access it
 from all the computers in your network, you will need to open the port 80 in the
 `/etc/sysconfig/iptables`. You can replace the 3000 rule by :
 
-```
+```text
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 ```

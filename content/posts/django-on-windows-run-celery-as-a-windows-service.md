@@ -3,7 +3,7 @@ title = "Django on Windows: Run Celery as a Windows Service"
 date = "2012-07-04"
 slug = "2012/07/04/django-on-windows-run-celery-as-a-windows-service"
 Categories = ["DevOps", "Django"]
-tags = ["django", "celery", "windows"]
+tags = ["old", "obsolete", "django", "celery", "windows"]
 [toc]
 enable = true
 +++
@@ -40,8 +40,8 @@ processes.
 
 Installation of celery is easy:
 
-```
-pip install django-celery
+```posh
+> pip install django-celery
 ```
 
 Then you add it to your `settings.py`:
@@ -110,7 +110,7 @@ management commands related to our project.
 With the application installed, on the root of your project, type the following
 command:
 
-```
+```post
 D:\sites\mydjangoapp> python winservice_install
 ```
 
@@ -125,7 +125,7 @@ commands that will be run by the Windows Service.
 
 A look at the `service.ini` file gives us the following:
 
-```
+```ini
     [services]
     # Services to be run on all machines
     run=celeryd
@@ -165,7 +165,7 @@ The `services` section contains :
 Here the `run` directive contains only one command: `celeryd`. If we look at the
 corresponding section of the `ini` file, we find:
 
-```
+```ini
     [celeryd]
     command=celeryd
     parameters=-f d:\logs\celery.log -l info
@@ -177,7 +177,7 @@ the parameters to the command.
 So here the configurations tells us that the service, when started, will run a
 python process equivalent to the command line:
 
-```
+```posh
   D:\sites\mydjangoapp> python manage.py celeryd -f d:\logs\celery.log -l info
 ```
 
@@ -186,7 +186,7 @@ And that the `d:\logs\celery.log` will be deleted between runs.
 The `log` sections defines a log file and logging level for the service process
 itself:
 
-```
+```ini
     [log]
     filename=d:\logs\service.log
     level=INFO
@@ -198,7 +198,7 @@ You need to have administrator privileges to install the service in the Windows
 Registry so that it's started each time the machine boots. You do that with the
 following command:
 
-```
+```posh
 D:\sites\mydjangoapp> python service.py --startup=auto install
 ```
 
@@ -211,7 +211,7 @@ when the server boots. You can check it has been installed:
 
 It can be removed with the following commands:
 
-```
+```posh
 D:\sites\mydjangoapp> python service.py remove
 ```
 
@@ -223,7 +223,7 @@ restart.
 
 The service can be manually started and stopped with the following commands:
 
-```
+```posh
 D:\sites\mydjangoapp> python service.py start
 D:\sites\mydjangoapp> python service.py stop
 ```
@@ -251,7 +251,7 @@ fallback to the `services` section if it does not find it. This allows you to
 have a different behaviour for the service on different machines. In the
 preceding configuration, you have one section, named `BEATSERVER` :
 
-```
+```ini
     [BEATSERVER]
     # There should be only one machine with the celerybeat service
     run=celeryd celerybeat
@@ -270,7 +270,7 @@ current machine as the _Beat_ machine. Let's try that :
 The new `service.py` file will contain a section with the name of the current
 machine:
 
-```
+```ini
 [WS2008R2X64]
 # There should be only one machine with the celerybeat service
 run=celeryd celerybeat
@@ -296,7 +296,7 @@ case it is modified, the service does the following:
 
 You may have seen in the `service.ini` file the `runserver` section:
 
-```
+```ini
     [runserver]
     # Runs the debug server and listen on port 8000
     # This one is just an example to show that any manage command can be used
@@ -307,7 +307,7 @@ You may have seen in the `service.ini` file the `runserver` section:
 It allows running the runserver command in a separate process. I you edit the
 `service.ini` file and add `runserver` to the `run` directive:
 
-```
+```ini
 [WS2008R2X64]
 # There should be only one machine with the celerybeat service
 run=celeryd celerybeat runserver
@@ -325,7 +325,7 @@ As shown in the preceding section, virtually any Django management command can
 be run by the service at startup or each time the `service.ini` file is
 modified. You could imagine having a section:
 
-```
+```ini
 [collectstatic]
 command=collectstatic
 parameters=--noinput

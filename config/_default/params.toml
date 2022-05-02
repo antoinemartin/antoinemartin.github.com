@@ -41,7 +41,7 @@ copy = true
 maxShownLines = 30
 
 [page.comment]
-enable = false
+enable = true
 [page.comment.disqus]
 enable = true
 shortname = "geekquickies"

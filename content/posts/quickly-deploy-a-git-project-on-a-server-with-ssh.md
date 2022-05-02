@@ -6,13 +6,13 @@ Categories = ["DevOps"]
 Tags = ["old", "git", "bash", "ssh", "linux", "macos"]
 +++
 
-So you have this brand new project ``my_project`` of yours with your local Git 
+So you have this brand new project `my_project` of yours with your local Git
 repository set up and you want to quickly make it available for others to clone
-on your repository server. 
+on your repository server.
 
-All your projects are located in your server ``git.mycompany.com`` under 
-``/srv/git``. You're using the user named ``git`` to connect to your server with
-the SSH private key located in ``~/.ssh/git``. 
+All your projects are located in your server `git.mycompany.com` under
+`/srv/git`. You're using the user named `git` to connect to your server with the
+SSH private key located in `~/.ssh/git`.
 
 Here is the quickiest way to deploy your projet:
 
@@ -20,34 +20,34 @@ Here is the quickiest way to deploy your projet:
 
 You first add your SSH key to the SSH agent :
 
-``` sh
+```sh
 [antoine@dev my_project] $ ssh-add ~/.ssh/git
 ```
 
 If the agent is not started, you need to execute first :
-``` sh
+
+```sh
 [antoine@dev my_project] $ eval `ssh-agent`
 ```
 
-
-Then you create an empty Git bare repository on your server with the name of 
+Then you create an empty Git bare repository on your server with the name of
 your project :
 
-``` sh
+```sh
 [antoine@dev my_project] $ ssh git@git.mycompany.com "git --bare init /srv/git/$(basename $(pwd)).git"
 Initialized empty Git repository in /srv/git/my_project.git/
 ```
 
-Then you add your newly created remote Git repository as the origin of your 
+Then you add your newly created remote Git repository as the origin of your
 local repo :
 
-``` sh
+```sh
 [antoine@dev my_project] $ git remote add origin "git@git.mycompany.com:/srv/git/$(basename $(pwd)).git"
 ```
 
-You push your master branch to the remote repository : 
+You push your master branch to the remote repository :
 
-``` sh
+```sh
 [antoine@dev my_project] $ git push origin master
 Counting objects: 3, done.
 Writing objects: 100% (3/3), 209 bytes, done.
@@ -58,7 +58,7 @@ To git@git.mycompany.com:/srv/git/my_project.git
 
 Lastly, you make your local branch track your remote branch :
 
-``` sh
+```sh
 [antoine@dev my_project] $ git branch --set-upstream master origin/master
 Branch master set up to track remote branch master from origin.
 ```
@@ -68,7 +68,7 @@ push on the server.
 
 You can test pulling from the server :
 
-``` sh
+```sh
 [antoine@dev my_project] $ git pull
 Already up-to-date.
 ```
