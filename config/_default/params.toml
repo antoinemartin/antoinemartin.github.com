@@ -58,7 +58,7 @@ rss = 10
 [home.profile]
 enable = true
 gravatarEmail = "antoine@openance.com"
-#avatarURL = "/images/avatar.png"
+avatarURL = "/images/avatar.webp"
 title = "mrtn.me"
 subtitle = "Stories from the cloudvergence"
 typeit = true

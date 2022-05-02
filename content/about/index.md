@@ -6,10 +6,10 @@ sharing: true
 footer: true
 ---
 
-![Me](https://www.gravatar.com/avatar/2822e90281e07b2f29177dee6e2dd84c?s=300&d=mp#floatleft)
-I'm a _Hands on_ seasoned Technical Manager with a strong expertise both in
-mobile applications and backend services development. In the 90s, I pioneered
-the French media Web with Libération, Le Monde and France Télévisions.
+![Me](/images/avatar.webp#floatleft) I'm a _Hands on_ seasoned Technical Manager
+with a strong expertise both in mobile applications and backend services
+development. In the 90s, I pioneered the French media Web with Libération, Le
+Monde and France Télévisions.
 
 I started building my expertise in mobile applications in 2001, well before the
 rise of the iPhone and Android platforms. First with embedded navigation and
