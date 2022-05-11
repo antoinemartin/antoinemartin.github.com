@@ -1,0 +1,222 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Multiple Docker environments on Windows - mrtn.me</title><meta name=Description content="WSL rocks to manage docker instantiations
+"><meta property="og:title" content="Multiple Docker environments on Windows"><meta property="og:description" content="WSL rocks to manage docker instantiations
+"><meta property="og:type" content="article"><meta property="og:url" content="http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-05-11T00:00:00+00:00"><meta property="article:modified_time" content="2022-05-11T21:16:45+02:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Multiple Docker environments on Windows"><meta name=twitter:description content="WSL rocks to manage docker instantiations
+"><meta name=application-name content="mrtn.me"><meta name=apple-mobile-web-app-title content="mrtn.me"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/><link rel=prev href=http://mrtn.me/posts/2022/05/02/useful-python-packages-discovery-sites/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Multiple Docker environments on Windows","inLanguage":"en-us","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/mrtn.me\/posts\/2022\/05\/11\/multiple-docker-environments-on-windows\/"},"genre":"posts","keywords":"windows, docker, wsl, powershell","wordcount":1e3,"url":"http:\/\/mrtn.me\/posts\/2022\/05\/11\/multiple-docker-environments-on-windows\/","datePublished":"2022-05-11T00:00:00+00:00","dateModified":"2022-05-11T21:16:45+02:00","publisher":{"@type":"Organization","name":"Antoine Martin"},"author":{"@type":"Person","name":"Antoine Martin"},"description":"WSL rocks to manage docker instantiations\n"}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=mrtn.me>mrtn.me</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/ title="Blog posts">Posts </a><a class=menu-item href=/about/ title="About me">About </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=https://github.com/antoinemartin title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i> </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=mrtn.me>mrtn.me</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/posts/ title="Blog posts">Posts</a><a class=menu-item href=/about/ title="About me">About</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=https://github.com/antoinemartin title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Multiple Docker environments on Windows</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://linked.in/in/antoinemartin title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>Antoine Martin</a></span>&nbsp;<span class=post-category>included in <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=11-05>11-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1000 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;5 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#how-it-works>How it works</a></li><li><a href=#pre-requisites>Pre-requisites</a></li><li><a href=#installing-the-wsl-alpine-module>Installing the Wsl-Alpine module</a></li><li><a href=#creating-the-docker-environment>Creating the docker environment</a></li><li><a href=#saving-the-docker-distribution-for-reuse>Saving the docker distribution for reuse</a></li><li><a href=#creating-another-docker-environment>Creating another docker environment</a></li><li><a href=#switching-between-environments>Switching between environments</a></li><li><a href=#wrapping-up>Wrapping up</a></li></ul></nav></div></div><div class=content id=content><p>On Windows and docker platforms, your docker enviornment tends to get messy as
+time goes by.</p><p>You can start over from a clean sheet with <code>docker system prune --all</code> but
+sometimes you would like to keep some images around. This post shows how to set
+up multiple docker environments on Windows with the help of WSL2 (Windows
+Subsystem For Linux) and Alpine.</p><h2 id=how-it-works>How it works</h2><p>The idea is to run docker on WSL and use a <code>docker</code> alias on the windows side to
+invoke the docker command in the WSL distribution. This is a well-known usage
+pattern <a href=https://docs.docker.com/desktop/windows/wsl/ target=_blank rel="noopener noreffer">with</a> or
+<a href=https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9 target=_blank rel="noopener noreffer">without</a>
+Docker desktop.</p><p>With this scenario, nothing prevents us having several WSL distributions with
+docker. To the contrary, we are going to have several of them, and depending on
+the environment we want to target, the actual docker command will run on one
+distribution or the other.</p><p>To avoid the manual configuration of the several distributions, we are going to
+use the
+<a href=https://www.powershellgallery.com/packages/Wsl-Alpine/1.1.1 target=_blank rel="noopener noreffer">Wsl-Alpine</a>
+powershell module I have created (github
+<a href=https://github.com/antoinemartin/PowerShell-Wsl-Alpine target=_blank rel="noopener noreffer">here</a>). It will allow
+us create a distribution template we can reuse for each docker environment.</p><h2 id=pre-requisites>Pre-requisites</h2><p>In order to perform this guide, you will need</p><ul><li>To have a working WSL environment. Instructions are
+<a href=https://docs.microsoft.com/en-us/windows/wsl/install target=_blank rel="noopener noreffer">here</a>.</li><li>To be able to install powershell modules from the
+<a href=https://www.powershellgallery.com/ target=_blank rel="noopener noreffer">Powershell Gallery</a>. You may need to
+<a href="https://docs.microsoft.com/en-us/powershell/scripting/gallery/installing-psget?view=powershell-7.2#installing-the-latest-version-of-powershellget" target=_blank rel="noopener noreffer">update PowershellGet</a>
+on your system.</li></ul><h2 id=installing-the-wsl-alpine-module>Installing the Wsl-Alpine module</h2><p>Install the <code>Wsl-Alpine</code> module with the following command:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=nb>Install-Module</span> <span class=n>-Name</span> <span class=nb>Wsl-Alpine</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=creating-the-docker-environment>Creating the docker environment</h2><p>In this step, we are going to create a WSL distribution template to run docker.
+We will then use this template for our different docker environments.</p><p>We will start by creating a base Alpine WSL distribution:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=err>❯</span> <span class=nb>install-WslAlpine</span> <span class=n>docker</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Creating directory [C:\Users\AntoineMartin\AppData\Local\docker]...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Downloading https://dl-cdn.alpinelinux.org/alpine/v3.15/releases/x86_64/alpine-minirootfs-3.15.0-x86_64.tar.gz â†’ C:\Users\AntoineMartin\AppData\Local\docker\rootfs.tar.gz...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Creating distribution [docker]...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Running initialization script on distribution [docker]...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Done. Command to enter distribution: wsl -d docker</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=err>❯</span>
+</span></span></code></pre></td></tr></table></div></div><p>We will then confgure the distribution for docker:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># Get into to the distribution</span>
+</span></span><span class=line><span class=cl>PS❯ wsl -d docker -u root
+</span></span><span class=line><span class=cl><span class=o>[</span>powerlevel10k<span class=o>]</span> fetching gitstatusd .. <span class=o>[</span>ok<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=c1># Add docker</span>
+</span></span><span class=line><span class=cl>❯ apk --update add docker
+</span></span><span class=line><span class=cl><span class=o>(</span>1/13<span class=o>)</span> Installing libseccomp <span class=o>(</span>2.5.2-r0<span class=o>)</span>
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>OK: <span class=m>304</span> MiB in <span class=m>103</span> packages
+</span></span><span class=line><span class=cl><span class=c1># Start docker with OpenRC</span>
+</span></span><span class=line><span class=cl>❯ rc-update add docker default
+</span></span><span class=line><span class=cl> * service docker added to runlevel default
+</span></span><span class=line><span class=cl><span class=c1># Enable OpenRC (will start docker)</span>
+</span></span><span class=line><span class=cl>❯ openrc default
+</span></span><span class=line><span class=cl> * Caching service dependencies ...         <span class=o>[</span> ok <span class=o>]</span>
+</span></span><span class=line><span class=cl> * /var/log/docker.log: creating file
+</span></span><span class=line><span class=cl> * /var/log/docker.log: correcting owner
+</span></span><span class=line><span class=cl> * Starting Docker Daemon ...               <span class=o>[</span> ok <span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=c1># Allow default user to run docker</span>
+</span></span><span class=line><span class=cl>❯ addgroup alpine docker
+</span></span><span class=line><span class=cl><span class=c1># Return to powershell</span>
+</span></span><span class=line><span class=cl>❯ <span class=nb>exit</span>
+</span></span><span class=line><span class=cl>PS❯
+</span></span></code></pre></td></tr></table></div></div><p>Then we can test the distrbitution can run docker:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=err>❯</span> <span class=n>wsl</span> <span class=n>-d</span> <span class=n>docker</span> <span class=n>docker</span> <span class=nb>ps
+</span></span></span><span class=line><span class=cl><span class=nb></span><span class=n>CONTAINER</span> <span class=n>ID</span>   <span class=n>IMAGE</span>     <span class=n>COMMAND</span>   <span class=n>CREATED</span>   <span class=n>STATUS</span>    <span class=n>PORTS</span>     <span class=n>NAMES</span>
+</span></span></code></pre></td></tr></table></div></div><p>And we can stop it:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=c># Terminate distrbution</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=err>❯</span> <span class=n>wsl</span> <span class=p>-</span><span class=n>-terminate</span> <span class=n>docker</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=saving-the-docker-distribution-for-reuse>Saving the docker distribution for reuse</h2><p>Now we are going to save the WSL distribution in its current state in order to
+be able to reuse it.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=nb>Export-WslAlpine</span> <span class=n>docker</span> <span class=n>-OutputFile</span> <span class=nv>$env:USERPROFILE</span><span class=p>\</span><span class=n>Downloads</span><span class=p>\</span><span class=n>docker</span><span class=p>.</span><span class=n>tar</span><span class=p>.</span><span class=n>gz</span>
+</span></span><span class=line><span class=cl><span class=n>Distribution</span> <span class=n>docker</span> <span class=n>saved</span> <span class=n>to</span> <span class=n>C:</span><span class=p>\</span><span class=n>Users</span><span class=p>\</span><span class=n>AntoineMartin</span><span class=p>\</span><span class=n>Downloads</span><span class=p>\</span><span class=n>docker</span><span class=p>.</span><span class=n>tar</span><span class=p>.</span><span class=n>gz</span>
+</span></span></code></pre></td></tr></table></div></div><p>The size of the distribution file system is about 115 Mbytes:</p><p><img class=lazyload src=/svg/loading.min.svg data-src=/images/s3.us-west-2.amazonaws.com_Untitled.png data-srcset="/images/s3.us-west-2.amazonaws.com_Untitled.png, /images/s3.us-west-2.amazonaws.com_Untitled.png 1.5x, /images/s3.us-west-2.amazonaws.com_Untitled.png 2x" data-sizes=auto alt=/images/s3.us-west-2.amazonaws.com_Untitled.png title="template size"></p><h2 id=creating-another-docker-environment>Creating another docker environment</h2><p>From the saved template, we can create a new docker environment that we name
+<code>dockersandbox</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=nb>Install-WslAlpine</span> <span class=n>dockersandbox</span> <span class=n>-SkipConfigure</span> <span class=n>-RootFSURL</span> <span class=n>file</span><span class=err>:</span><span class=p>//</span><span class=nv>$env:USERPROFILE</span><span class=p>/</span><span class=n>Downloads</span><span class=p>/</span><span class=n>docker</span><span class=p>.</span><span class=n>tar</span><span class=p>.</span><span class=n>gz</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Creating directory [C:\Users\AntoineMartin\AppData\Local\dockersandbox]...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Downloading file://C:\Users\AntoineMartin/Downloads/docker.tar.gz â†’ C:\Users\AntoineMartin\AppData\Local\dockersandbox\rootfs.tar.gz...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Creating distribution [dockersandbox]...</span>
+</span></span><span class=line><span class=cl><span class=c>####&gt; Done. Command to enter distribution: wsl -d dockersandbox</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><div class="details admonition warning open"><div class="details-summary admonition-title"><i class="icon fas fa-exclamation-triangle fa-fw"></i>Warning<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><p><strong>Important</strong> Confirguring the automatic start of
+openrc through
+<a href=https://docs.microsoft.com/fr-fr/windows/wsl/wsl-config#boot-settings target=_blank rel="noopener noreffer">wsl.conf</a>
+doesn’t work (Windows 11 only). In consequence we need to start docker before
+using it:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=n>wsl</span> <span class=n>-d</span> <span class=n>dockersandbox</span> <span class=n>-u</span> <span class=n>root</span> <span class=n>openrc</span> <span class=k>default</span>
+</span></span><span class=line><span class=cl> <span class=p>*</span> <span class=n>Caching</span> <span class=n>service</span> <span class=n>dependencies</span> <span class=p>...</span>            <span class=p>[</span> <span class=n>ok</span> <span class=p>]</span>
+</span></span><span class=line><span class=cl> <span class=p>*</span> <span class=n>Starting</span> <span class=n>Docker</span> <span class=n>Daemon</span> <span class=p>...</span>                  <span class=p>[</span> <span class=n>ok</span> <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div></div></div></div><p>We can test docker in our new environment:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=n>wsl</span> <span class=n>-d</span> <span class=n>dockersandbox</span> <span class=n>docker</span> <span class=n>run</span> <span class=p>-</span><span class=n>-rm</span> <span class=n>-it</span> <span class=n>alpine</span><span class=err>:</span><span class=n>latest</span> <span class=p>/</span><span class=n>bin</span><span class=p>/</span><span class=n>sh</span>
+</span></span><span class=line><span class=cl><span class=n>Unable</span> <span class=n>to</span> <span class=n>find</span> <span class=n>image</span> <span class=s1>&#39;alpine:latest&#39;</span> <span class=n>locally</span>
+</span></span><span class=line><span class=cl><span class=n>latest</span><span class=err>:</span> <span class=n>Pulling</span> <span class=n>from</span> <span class=n>library</span><span class=p>/</span><span class=n>alpine</span>
+</span></span><span class=line><span class=cl><span class=n>df9b9388f04a</span><span class=err>:</span> <span class=n>Pull</span> <span class=n>complete</span>
+</span></span><span class=line><span class=cl><span class=n>Digest</span><span class=err>:</span> <span class=n>sha256</span><span class=err>:</span><span class=n>4edbd2beb5f78b1014028f4fbb99f3237d9561100b6881aabbf5acce2c4f9454</span>
+</span></span><span class=line><span class=cl><span class=n>Status</span><span class=err>:</span> <span class=n>Downloaded</span> <span class=n>newer</span> <span class=n>image</span> <span class=k>for</span> <span class=n>alpine</span><span class=err>:</span><span class=n>latest</span>
+</span></span><span class=line><span class=cl><span class=p>/</span> <span class=c># exit</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=switching-between-environments>Switching between environments</h2><p>Add the following alias to
+<code>%USERPROFILE%\Documents\WindowsPowerShell\profile.ps1</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=k>function</span> <span class=n>RunDockerInWsl</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c># Take $Env:DOCKER_WSL or &#39;docker&#39; if undefined</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$DockerWSL</span> <span class=p>=</span> <span class=k>if</span> <span class=p>(</span><span class=nv>$null</span> <span class=o>-eq</span> <span class=nv>$Env:DOCKER_WSL</span><span class=p>)</span> <span class=p>{</span> <span class=s2>&#34;docker&#34;</span> <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=nv>$Env:DOCKER_WSL</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c># Try to find an existing distribution with the name</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$existing</span> <span class=p>=</span> <span class=nb>Get-ChildItem</span> <span class=n>HKCU</span><span class=err>:</span><span class=p>\</span><span class=n>SOFTWARE</span><span class=p>\</span><span class=n>Microsoft</span><span class=p>\</span><span class=n>Windows</span><span class=p>\</span><span class=n>CurrentVersion</span><span class=p>\</span><span class=n>Lxss</span> <span class=p>|</span>  <span class=nb>Where-Object</span> <span class=p>{</span> <span class=nv>$_</span><span class=p>.</span><span class=n>GetValue</span><span class=p>(</span><span class=s1>&#39;DistributionName&#39;</span><span class=p>)</span> <span class=o>-eq</span> <span class=nv>$DockerWSL</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=nv>$null</span> <span class=o>-eq</span> <span class=nv>$existing</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c># Fail if the distribution doesn&#39;t exist</span>
+</span></span><span class=line><span class=cl>    <span class=k>throw</span> <span class=s2>&#34;The WSL distribution [$DockerWSL] does not exist !&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c># Ensure docker is started</span>
+</span></span><span class=line><span class=cl>    <span class=n>wsl</span> <span class=n>-d</span> <span class=nv>$DockerWSL</span> <span class=n>-u</span> <span class=n>root</span> <span class=n>openrc</span> <span class=k>default</span>
+</span></span><span class=line><span class=cl>    <span class=c># Perform the requested command</span>
+</span></span><span class=line><span class=cl>    <span class=n>wsl</span> <span class=n>-d</span> <span class=nv>$DockerWSL</span> <span class=p>/</span><span class=n>usr</span><span class=p>/</span><span class=n>bin</span><span class=p>/</span><span class=n>docker</span> <span class=nv>$args</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>Set-Alias</span> <span class=n>-Name</span> <span class=n>docker</span> <span class=n>-Value</span> <span class=n>RunDockerInWsl</span>
+</span></span></code></pre></td></tr></table></div></div><p>It creates the <code>docker</code> alias. It will run docker command in the WSL
+distribution specified by the <code>DOCKER_WSL</code> environment variable, falling down to
+the <code>docker</code> WSL distribution if the variable is not defined. In consequence,
+switching from one environment to the other is easy :</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=n>docker</span> <span class=n>image</span> <span class=nb>ls
+</span></span></span><span class=line><span class=cl><span class=nb></span><span class=p>*</span> <span class=n>Caching</span> <span class=n>service</span> <span class=n>dependencies</span> <span class=p>...</span>         <span class=p>[</span> <span class=n>ok</span> <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>*</span> <span class=n>Starting</span> <span class=n>Docker</span> <span class=n>Daemon</span> <span class=p>...</span>               <span class=p>[</span> <span class=n>ok</span> <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>REPOSITORY</span>   <span class=n>TAG</span>       <span class=n>IMAGE</span> <span class=n>ID</span>   <span class=n>CREATED</span>   <span class=n>SIZE</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span><span class=nv>$Env:DOCKER_WSL</span><span class=p>=</span><span class=s2>&#34;dockersandbox&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span><span class=n>docker</span> <span class=n>image</span> <span class=nb>ls
+</span></span></span><span class=line><span class=cl><span class=nb></span><span class=n>REPOSITORY</span>   <span class=n>TAG</span>       <span class=n>IMAGE</span> <span class=n>ID</span>       <span class=n>CREATED</span>       <span class=n>SIZE</span>
+</span></span><span class=line><span class=cl><span class=n>alpine</span>       <span class=n>latest</span>    <span class=n>0ac33e5f5afa</span>   <span class=n>5</span> <span class=n>weeks</span> <span class=n>ago</span>   <span class=n>5</span><span class=p>.</span><span class=n>57MB</span>
+</span></span></code></pre></td></tr></table></div></div><p>At this point, the two WSL distributions are running:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=n>wsl</span> <span class=n>-l</span> <span class=n>-v</span>
+</span></span><span class=line><span class=cl>  <span class=n>NAME</span>                    <span class=n>STATE</span>           <span class=n>VERSION</span>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span><span class=line><span class=cl>  <span class=n>dockersandbox</span>           <span class=n>Running</span>         <span class=n>2</span>
+</span></span><span class=line><span class=cl>  <span class=n>docker</span>                  <span class=n>Running</span>         <span class=n>2</span>
+</span></span><span class=line><span class=cl><span class=p>...</span>
+</span></span></code></pre></td></tr></table></div></div><p>They can be stopped at will:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-powershell data-lang=powershell><span class=line><span class=cl><span class=n>PS</span><span class=p>&gt;</span> <span class=n>wsl</span> <span class=p>-</span><span class=n>-terminate</span> <span class=n>docker</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=wrapping-up>Wrapping up</h2><p>With WSL, having the ability to run Linux commands <strong>IN</strong> the current windows
+directory and treating distrbutions like docker containers provides a lot of
+flexibility and options when it comes to development environment setup and use.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 11-05&nbsp;<a class=git-hash href=https://github.com/antoinemartin/antoinemartin.github.io/commit/4937d9f1d49a4e465c52fbe82f34c670e5d64bf6 target=_blank title="commit by Antoine Martin(antoine@mrtn.fr) 4937d9f1d49a4e465c52fbe82f34c670e5d64bf6: 📝 New blog post">
+<i class="fas fa-hashtag fa-fw"></i>4937d9f</a></span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/windows/>windows</a>,&nbsp;<a href=/tags/docker/>docker</a>,&nbsp;<a href=/tags/wsl/>wsl</a>,&nbsp;<a href=/tags/powershell/>powershell</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/2022/05/02/useful-python-packages-discovery-sites/ class=prev rel=prev title="Useful Python packages discovery sites"><i class="fas fa-angle-left fa-fw"></i>Useful Python packages discovery sites</a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>Powered by <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.98.0">Hugo</a> | Theme - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2012 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://linked.in/in/antoinemartin target=_blank>Antoine Martin</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><script type=text/javascript src=https://geekquickies.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:30},comment:{},search:{highlightTag:"em",lunrIndexURL:"/index.json",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-29953512-1")</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-29953512-1" async></script></body></html>
