@@ -1,0 +1,14 @@
+{
+  "databaseID": "2b3355db45a64744b6ca83c3cc6f3f2b",
+  "imagesLink": "/images",
+  "imagesFolder": "./static/images",
+  "contentFolder": "./content/posts",
+  "archetypeFile": "./archetypes/notion-blog.md",
+  "propertyDescription": "Description",
+  "propertyTags": "Tags",
+  "propertyCategories": "Categories",
+  "filterProp": "Status",
+  "filterValue": ["Finished ✅", "Published 🖨"],
+  "publishedValue": "Published 🖨",
+  "useShortcodes": true
+}
