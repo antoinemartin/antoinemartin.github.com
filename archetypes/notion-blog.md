@@ -1,7 +1,7 @@
 ---
 title: [[.Title]]
-date: [[.CreationDate.Format "2006-01-02" ]]
-slug: [[.CreationDate.Format "2006/01/02" ]]/[[ slug .Title ]]
+date: [[.LastModified.Format "2006-01-02" ]]
+slug: [[.LastModified.Format "2006/01/02" ]]/[[ slug .Title ]]
 description: |
   [[.Description]]
 Categories:[[ range $index, $cat := .Categories]]
