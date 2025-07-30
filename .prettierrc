@@ -1,0 +1,27 @@
+{
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": "*.yaml",
+      "options": {
+        "bracketSpacing": false,
+        "printWidth": 80,
+        "proseWrap": "always",
+        "singleQuote": false
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "printWidth": 80,
+        "proseWrap": "always",
+        "tabWidth": 4
+      }
+    }
+  ],
+  "printWidth": 120,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false
+}

@@ -4,6 +4,11 @@ gitRepo = "https://github.com/antoinemartin/antoinemartin.github.io"
 paginate = 20
 dateFormat = "02-01"
 
+[author]
+name = "Antoine Martin"
+email = "antoine@mrtn.me"
+link = "https://linked.in/in/antoinemartin"
+
 [section]
 paginate = 20
 dateFormat = "02-01"
@@ -11,6 +16,9 @@ dateFormat = "02-01"
 [list]
 paginate = 20
 dateFormat = "02-01"
+
+[header.title]
+name = 'mrtn.me'
 
 [footer]
 enable = true
@@ -42,6 +50,7 @@ maxShownLines = 30
 
 [page.comment]
 enable = true
+
 [page.comment.disqus]
 enable = true
 shortname = "geekquickies"
@@ -71,8 +80,8 @@ defaultHiddenFromHomePage = false
 
 [social]
 GitHub = "antoinemartin"
-LinkedIn = "antoinemartin"
-Twitter = "antoinemartin"
+Linkedin = "antoinemartin"
+X = "antoinemartin"
 RSS = true
 
 [search]

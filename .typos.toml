@@ -1,0 +1,41 @@
+[files]
+extend-exclude = [
+  "themes/",
+  "public/",
+  "resources/",
+  "*.pdf",
+  "*.png",
+  "*.jpg",
+  "*.jpeg",
+  "*.gif",
+  "*.webp",
+  "*.svg"
+]
+
+[default]
+extend-ignore-re = [
+  # URLs and email addresses
+  "https?://[^\\s]+",
+  "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+  # Code blocks and inline code
+  "`[^`]*`",
+  # Hugo shortcodes
+  "\\{\\{[^}]*\\}\\}",
+  # Common technical terms and proper nouns
+  "(?i)github",
+  "(?i)hugo",
+  "(?i)toml",
+  "(?i)yaml",
+  "(?i)json",
+  "(?i)css",
+  "(?i)scss",
+  "(?i)javascript",
+  "(?i)typescript"
+]
+
+[default.extend-words]
+# Add custom words that should be ignored
+# Example: "custom_word" = "custom_word"
+
+[type.md]
+extend-glob = ["*.md"]

@@ -1,13 +1,13 @@
 ---
 title: Using Eclipse Templates to Ease Android Logging
-date: "2012-03-24"
-slug: "2012/03/24/using-eclipse-templates-to-ease-android-logging"
-Categories: ["Development", "Android"]
+date: '2012-03-24'
+slug: '2012/03/24/using-eclipse-templates-to-ease-android-logging'
+Categories: ['Development', 'Android']
 tags:
-  - old
-  - obsolete
-  - android
-  - eclipse
+    - old
+    - obsolete
+    - android
+    - eclipse
 ---
 
 Adding logs to your Android source code is sometimes the only way to really
@@ -82,8 +82,8 @@ The different `${}` mean:
 
 - `${:import(android.util.Log)}`: make sure `android.util.Log` is imported.
 - `${enclosing_type}`: insert the name of the type (class) we're in.
-- `${level}`: when inserting, put the cursor here and wait for the user to enter
-  the `level` variable.
+- `${level}`: when inserting, put the cursor here and wait for the user to
+    enter the `level` variable.
 - `${cursor}`: leave the cursor here when the user hits the `ENTER` key.
 
 With this template, inserting the log headers in a class is achievied with the
@@ -92,7 +92,7 @@ following steps:
 - type `alh` and hit `STRL+Space`.
 - select the template (first choice) and hit `ENTER`
 - enter the desired log level (`DEBUG` for instance) for the class and hit
-  `ENTER`.
+    `ENTER`.
 - continue coding.
 
 This is much simpler than copy-pasting the code from another class and replacing
@@ -115,7 +115,7 @@ after for your debug message. Just typing `Enter` will leave a log like:
             Log.v(LOG_TAG, "onStart() ");
 ```
 
-Wich may be just enough.
+Which may be just enough.
 
 On this model, you can create `ali`, `ald`, `ale` templates for the different
 debug levels, or if you want to use `String.format()` templates like :
@@ -165,9 +165,9 @@ public interface DebugConstants {
 The way the modified `alh` template works is the following:
 
 - if the value of `DebugConstants.LOG_FORCE_GLOBAL` is 0, the `LOG_LEVEL`
-  variable contains the value of the `LOG_LEVEL_LOCAL` variable.
+    variable contains the value of the `LOG_LEVEL_LOCAL` variable.
 - if the value of `DebugConstants.LOG_FORCE_GLOBAL` is 1, the `LOG_LEVEL`
-  variable contains the value of the `DebugConstants.LOG_LEVEL` variable.
+    variable contains the value of the `DebugConstants.LOG_LEVEL` variable.
 
 By having inserted this template in my classes, even if at delivery time some of
 the `LOG_LEVEL_LOCAL` values are still set to `Log.VERBOSE`, by setting

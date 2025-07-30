@@ -2,13 +2,13 @@
 title: Avoid Thread Issues While Testing an Android Service
 date: 2012-11-08
 slug: 2012/11/08/avoid-thread-issues-while-testing-an-android-service
-Categories: ["Development", "Android", "Test"]
+Categories: ['Development', 'Android', 'Test']
 tags:
-  - old
-  - obsolete
-  - android
-  - test
-  - development
+    - old
+    - obsolete
+    - android
+    - test
+    - development
 ---
 
 The
@@ -136,7 +136,7 @@ Then, the `startService` methods starts the service in its own thread:
     }
 ```
 
-The `bound` parameters tells wether to start the service with a binding or with
+The `bound` parameters tells whether to start the service with a binding or with
 an `Intent`.. The optional `ServiceRunnable` parameter can be provided to add
 some initialization code.
 

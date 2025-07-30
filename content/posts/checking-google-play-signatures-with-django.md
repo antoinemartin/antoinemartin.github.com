@@ -1,14 +1,14 @@
 ---
-title: "Checking Google Play Signatures With Django"
-date: "2012-03-12"
-slug: "2012/03/12/checking-google-play-signatures-with-django"
-Categories: ["Development", "Django", "Android"]
+title: 'Checking Google Play Signatures With Django'
+date: '2012-03-12'
+slug: '2012/03/12/checking-google-play-signatures-with-django'
+Categories: ['Development', 'Django', 'Android']
 tags:
-  - old
-  - android
-  - django
-  - android
-  - security
+    - old
+    - android
+    - django
+    - android
+    - security
 ---
 
 Google play, formerly known as the Android Market, provides in-app billing in
@@ -51,7 +51,7 @@ readability):
 
 And we we receive a signature in `Base64`:
 
-```
+```text
 rKf9B38gLbJaLiyRbQVJNr0i0IvJxBgi3EmsLoZLkFedZvn642s4+fz3jYCk6IVWWFSqtBH2Z8ChONJkHWrkDUCK79uSBPLN5s4x4AsRHgQ8aw3sRQLAoEDMFA1ym1gkfYfDz+6sxP2Rgg1U/qpHIEHWPDbJAdP7zcM1iz2kEWbYvFwKP3NNWExNB4gWH3IFtPR0l/KLjKBoqpX5zVukmUeaZW0Skx10eFROa4VhqA5JrbZZQwK0jc6FCYi3u6c1ryIw6W5tcdIv1PFOKpE7VMq67yyD+IEXc+nl29FN5ByGhkj/khNY1KLXcszCCa7ygSYw7mQI+omLdyMz6aL3hg==
 
 ```
@@ -68,7 +68,7 @@ in your Django virtual environment with:
 > pip install pycrypto
 ```
 
-Then, the following method allows checking of the payload singature:
+Then, the following method allows checking of the payload signature:
 
 ```python
 

@@ -3,17 +3,17 @@ title: Debugging a failing OpenStack image
 date: 2023-01-13
 slug: 2023/01/13/debugging-a-failing-openstack-image
 description: |
-  How to debug locally on a windows machine an Openstack image
+    How to debug locally on a windows machine an OpenStack image
 Categories:
-  - Devops
+    - Devops
 tags:
-  - Openstack
-  - cloud-init
-  - hyper-v
-  - wsl
-  - windows
+    - Openstack
+    - cloud-init
+    - hyper-v
+    - wsl
+    - windows
 toc:
-  enable: true
+    enable: true
 ---
 
 ## The problem
@@ -21,33 +21,33 @@ toc:
 On my
 [alpine-openstack-vm](https://github.com/antoinemartin/alpine-openstack-vm)
 project, There is a CI process producing a VM image for OpenStack. The process
-involves testing that the machine boots. [The test
-fails](https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713),
-but the machine is actually booted. What doesn’t work is the ssh access. As
-the machine can only be reached via SSH with a private key for obvious security
+involves testing that the machine boots.
+[The test fails](https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713),
+but the machine is actually booted. What doesn’t work is the ssh access. As the
+machine can only be reached via SSH with a private key for obvious security
 reasons, not having access prevents proper debug.
 
 ## The objective
 
 The objective is to be able to run the produced VM locally to assess the issue.
-As the image in its current form doesn’t work, the VM image needs to be
-slightly modified in order to allow access. If the VM is run locally, adding a
-root password should be sufficient.
+As the image in its current form doesn’t work, the VM image needs to be slightly
+modified in order to allow access. If the VM is run locally, adding a root
+password should be sufficient.
 
 ## The tools
 
 - Windows 11
 - Hyper-V. Information on installation is
-  [here](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v).
-  If you are using WSL, you should already be set up or really close.
+    [here](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v).
+    If you are using WSL, you should already be set up or really close.
 - PowerShell.
 - A Windows Subsystem for Linux (WSL) distribution with `qemu-img` installed.
-  You can set it up faster with
-  [Powershell-WSL-Manager](https://mrtn.me/PowerShell-Wsl-Manager/).
+    You can set it up faster with
+    [Powershell-WSL-Manager](https://mrtn.me/PowerShell-Wsl-Manager/).
 
 We need to download your Openstack image locally. Hopefully, it is kept as an
-artifact of [our
-build](https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713).
+artifact of
+[our build](https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713).
 
 ## The steps
 
@@ -107,7 +107,7 @@ PermitRootLogin yes
 In `/etc/cloud/cloud.cfg`, we allow ssh password authentication:
 
 ```yaml
-ssh_pwauth:   true
+ssh_pwauth: true
 ```
 
 At this point, you can also add a `/root/.ssh/authorized_keys` file containing a
@@ -125,16 +125,20 @@ PS> wsl --unmount  alpine-openstack.vhdx
 
 ### Creating the Hyper-V VM
 
-{{< admonition warning >}}
+{{<admonition warning>}}
 
-To be able to create Hyper-V VMs from the command line, your user needs to be part of the `Hyper-V Administrators` group. You can add your user to this group with the command line:
+To be able to create Hyper-V VMs from the command line, your user needs to be
+part of the `Hyper-V Administrators` group. You can add your user to this group
+with the command line:
+
 ```powershell
 PS> # In a `Run as Administrator` terminal (consider sudo from scoop)
 PS> net localgroup "Hyper-V Administrators" <UserName> /add
 ```
 
 Unfortunately, you will also need to restart your machine 😞
-{{< /admonition >}}
+
+{{</admonition>}}
 
 Create and start the VM from the command line:
 
@@ -188,7 +192,7 @@ ifIndex IPAddress                                          LinkLayerAddress     
 ```
 
 Here the address of the machine would be the second one, the one marked with
-Permanet. You can connect to it:
+Permanent. You can connect to it:
 
 ```powershell
 PS> ssh root@172.20.68.230

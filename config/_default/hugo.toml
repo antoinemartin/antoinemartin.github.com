@@ -31,11 +31,6 @@ unsafe = true
 startLevel = 2
 endLevel = 6
 
-[author]
-name = "Antoine Martin"
-email = "antoine@mrtn.me"
-link = "https://linked.in/in/antoinemartin"
-
 # Sitemap config
 [sitemap]
 changefreq = "weekly"
@@ -46,4 +41,3 @@ home = ["HTML", "RSS", "JSON"]
 page = ["HTML"]
 section = ["HTML", "RSS"]
 taxonomy = ["HTML", "RSS"]
-taxonomyTerm = ["HTML"]
