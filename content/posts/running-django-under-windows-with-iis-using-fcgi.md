@@ -44,7 +44,7 @@ server, a good choice is to use
 [Portable Python](http://www.portablepython.com/). With it, you can install and
 configure your python environment on your development or staging server and
 install it in your production server(s) by just copying over the `python`
-folder. You can even have different python environments with differents
+folder. You can even have different python environments with different
 configurations on the same server. To use the portable python installation in
 copied in `d:\python` from a command line window, juste type:
 
@@ -88,15 +88,15 @@ parameters:
 
 - In `Full Path`, enter the path to your python executable.
 - In `Arguments`, enter the command line for running our fcgi command, i.e.
-  `d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings`.
-  The `pythonpath` and `settings` arguments are needed to be path independent
-  (more on this later).
+    `d:\sites\esplayer\esplayer\manage.py fcgi --pythonpath=d:\sites\esplayer --settings=esplayer.settings`.
+    The `pythonpath` and `settings` arguments are needed to be path independent
+    (more on this later).
 
 The other arguments are optional but you should review them to enter sensible
 values. The `Monitor changes to file` setting is particularly interesting. It
 will allow you to specify the path of a file that will trigger a restart of the
 application whenever it is modified. You can enter the path to the `settings.py`
-of your project. I personally prefer to specify a file that I explicitely update
+of your project. I personally prefer to specify a file that I explicitly update
 via a `touch` command.
 
 ## Create the website and configure it to use the FastCGI application

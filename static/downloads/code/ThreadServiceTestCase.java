@@ -14,31 +14,31 @@ import android.test.ServiceTestCase;
 
 /**
  * Tests a service in its own Thread.
- * 
- * 
+ *
+ *
  * <p>
  * The {@link ServiceTestCase} class creates the service in the same thread the
  * test is running. In consequence Handlers and other constructs that depend on
  * the fact that the service methods are always run on the <em>main thread</em>
  * won't work.
  * </p>
- * 
+ *
  * <p>
  * To circumvent this, this test class creates a {@link HandlerThread} on setup
  * to simulate the main tread and provides helper constructs to ease the
  * communication between the Service and the test class :
  * </p>
- * 
+ *
  * <ul>
  * <li>The {@link #runOnServiceThread(Runnable)} methods allows to run code on
  * the service pseudo-main thread.</li>
- * <li>The {@link #startService(boolean, ServiceRunnable)} mehod allows starting
+ * <li>The {@link #startService(boolean, ServiceRunnable)} method allows starting
  * the service in its own thread with some additional initialization code.</li>
  * </ul>
- * 
- * 
+ *
+ *
  * @author Antoine Martin
- * 
+ *
  */
 public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTestCase<T> {
 
@@ -87,7 +87,7 @@ public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTe
 	/**
 	 * Runs the specified runnable on the service tread and waits for its
 	 * completion.
-	 * 
+	 *
 	 * @see InstrumentationTestCase#runTestOnUiThread(Runnable)
 	 * @param r
 	 *            The runnable to run on the pseudo-main thread.
@@ -112,9 +112,9 @@ public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTe
 
 	/**
 	 * Runnable interface allowing service initialization personalization.
-	 * 
+	 *
 	 * @author Antoine Martin
-	 * 
+	 *
 	 */
 	protected interface ServiceRunnable {
 		public void run(Service service);
@@ -122,7 +122,7 @@ public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTe
 
 	/**
 	 * Initialize the service in its own thread and returns it.
-	 * 
+	 *
 	 * @param bound
 	 *            if {@code true}, the service will be created as if it was
 	 *            bound by a client. if {@code false}, it will be created by a
@@ -156,14 +156,14 @@ public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTe
 
 		return serviceHolder.value;
 	}
-	
+
 	public static class ServiceSyncHelper {
 		// The semaphore will wakeup clients
 		protected final Semaphore semaphore = new Semaphore(0);
-		
+
 		/**
 		 * Waits for some response coming from the service.
-		 * 
+		 *
 		 * @param timeout
 		 *            The maximum time to wait.
 		 * @throws InterruptedException
@@ -172,7 +172,7 @@ public abstract class ThreadServiceTestCase<T extends Service> extends ServiceTe
 		public synchronized void waitListener(long timeout) throws InterruptedException {
 			if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS))
 				throw new InterruptedException();
-		}		
+		}
 	}
 
 }

@@ -28,12 +28,12 @@ Nexus, Nexus 7) from the command line on a Linux machine. It involves:
 
 Here is the list of prerequisites :
 
-- [Android SDK](http://developer.android.com/sdk/index.html), to have access to
-  `adb` and `fastboot`.
-- [Clockwork Mode (CWM) ](http://download2.clockworkmod.com/recoveries/recovery-clockwork-6.0.1.0-grouper.img)
-  recovery image.
+- [Android SDK](http://developer.android.com/sdk/index.html), to have access
+    to `adb` and `fastboot`.
+- [Clockwork Mode (CWM)](http://download2.clockworkmod.com/recoveries/recovery-clockwork-6.0.1.0-grouper.img)
+    recovery image.
 - [SuperSU](http://download.chainfire.eu/212/SuperSU/CWM-SuperSU-v0.96.zip)
-  installable zip.
+    installable zip.
 
 The `platform-tools` directory of the Android SDK must be on your `PATH`, and
 the device must have USB debugging enabled.
@@ -163,7 +163,7 @@ Once done, you can go back to the main CWM menu and reboot the device.
 
 ### Permanently install CWM
 
-You can permanetly install CWM on the device recovery partition so that you can
+You can permanently install CWM on the device recovery partition so that you can
 start your device in CWM without being connected via USB.
 
 Your device automatically restores the recovery partition at each boot. To avoid
@@ -177,7 +177,7 @@ shell@android:/ # exit
 shell@android:/ $ exit
 ```
 
-You can then reboot in fastboot mode and install CWM permanetly :
+You can then reboot in fastboot mode and install CWM permanently :
 
 ```sh
 [antoine@dev nexus] $ adb reboot bootloader
@@ -185,5 +185,5 @@ You can then reboot in fastboot mode and install CWM permanetly :
 [antoine@dev nexus] $ fastboot reboot
 ```
 
-I personally don't recommend to install CWM permanetly as it will prevent you
+I personally don't recommend to install CWM permanently as it will prevent you
 from installing the OTA updates that are pushed to your device.

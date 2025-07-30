@@ -2,7 +2,7 @@
 #
 # The layout of the development environment is assumed to be:
 #
-# <pyton virtual env>/
+# <python virtual env>/
 #   src/
 #     <project name>/
 #       .consolerc (this file)
@@ -33,7 +33,7 @@ source "${DJANGO_ENV_DIR}/bin/activate"
 cd "$DJANGO_PROJECT_DIR"
 export PATH="$PATH:$(pwd)"
 
-# Retrieve the Django bash completion file (only once) and execute it. 
+# Retrieve the Django bash completion file (only once) and execute it.
 # This is potentially insecure.
 DJANGO_BASH_COMPLETION="${DJANGO_SOURCE_DIR}/.django_bash_completion"
 if [ ! -f "$DJANGO_BASH_COMPLETION" ]; then

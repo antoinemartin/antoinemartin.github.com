@@ -57,11 +57,11 @@ djcelery.setup_loader()
 
 You can choose among
 [several message brokers](http://docs.celeryproject.org/en/latest/getting-started/brokers/index.html).
-I personnaly use a [Windows port of Redis](https://github.com/MSOpenTech/Redis)
+I personally use a [Windows port of Redis](https://github.com/MSOpenTech/Redis)
 installed as a
 [Windows Service](https://github.com/kcherenkov/redis-windows-service). The
 advantage of Redis is that it can also be used as an in-memory database. In case
-you're interested, you can find [here](/downloads/redis.zip) a binay copy of my
+you're interested, you can find [here](/downloads/redis.zip) a binary copy of my
 installation.
 
 The configuration of Redis as Celery's broker also occurs in the `settings.py`:
@@ -104,7 +104,7 @@ database of your project is up to date.
 
 ## Enabling the service
 
-The installed service is going to allow us to run in the backround arbitrary
+The installed service is going to allow us to run in the background arbitrary
 management commands related to our project.
 
 With the application installed, on the root of your project, type the following
@@ -160,7 +160,7 @@ The `services` section contains :
 
 - The list of background commands to run in the `run` directive.
 - The list of files to delete when refreshed or stopped in the `clean`
-  directive.
+    directive.
 
 Here the `run` directive contains only one command: `celeryd`. If we look at the
 corresponding section of the `ini` file, we find:

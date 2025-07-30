@@ -3,19 +3,19 @@ title: Multiple Docker environments on Windows
 date: 2022-05-11
 slug: 2022/05/11/multiple-docker-environments-on-windows
 description: |
-  WSL rocks to manage docker instantiations
+    WSL rocks to manage docker instantiations
 Categories:
-  - Development
+    - Development
 tags:
-  - windows
-  - docker
-  - wsl
-  - powershell
+    - windows
+    - docker
+    - wsl
+    - powershell
 toc:
-  enable: true
+    enable: true
 ---
 
-On Windows and docker platforms, your docker enviornment tends to get messy as
+On Windows and docker platforms, your docker environment tends to get messy as
 time goes by.
 
 You can start over from a clean sheet with `docker system prune --all` but
@@ -50,11 +50,11 @@ us create a distribution template we can reuse for each docker environment.
 In order to perform this guide, you will need:
 
 - To have a working WSL environment. Instructions are
-  [here](https://docs.microsoft.com/en-us/windows/wsl/install).
-- To be able to install powershell modules from the [Powershell
-  Gallery](https://www.powershellgallery.com/). You may need to [update
-  PowershellGet](https://docs.microsoft.com/en-us/powershell/scripting/gallery/installing-psget?view=powershell-7.2#installing-the-latest-version-of-powershellget)
-  on your system.
+    [here](https://docs.microsoft.com/en-us/windows/wsl/install).
+- To be able to install powershell modules from the
+    [Powershell Gallery](https://www.powershellgallery.com/). You may need to
+    [update PowershellGet](https://docs.microsoft.com/en-us/powershell/scripting/gallery/installing-psget?view=powershell-7.2#installing-the-latest-version-of-powershellget)
+    on your system.
 
 ## Installing the Wsl-Alpine module
 
@@ -81,7 +81,7 @@ PS❯ install-WslAlpine docker
 PS❯
 ```
 
-We will then confgure the distribution for docker:
+We will then configure the distribution for docker:
 
 ```bash
 # Get into to the distribution
@@ -150,9 +150,13 @@ PS> Install-WslAlpine dockersandbox -SkipConfigure -RootFSURL file://$env:USERPR
 PS>
 ```
 
-{{< admonition warning >}}
+{{<admonition warning>}}
 
-**Important** Confirguring the automatic start of openrc through [wsl.conf](https://docs.microsoft.com/fr-fr/windows/wsl/wsl-config#boot-settings) doesn’t work (Windows 11 only). In consequence we need to start docker before using it:
+**Important** Confirguring the automatic start of openrc through
+[wsl.conf](https://docs.microsoft.com/fr-fr/windows/wsl/wsl-config#boot-settings)
+doesn’t work (Windows 11 only). In consequence we need to start docker before
+using it:
+
 ```powershell
 PS> wsl -d dockersandbox -u root openrc default
  * Caching service dependencies ...            [ ok ]
@@ -160,7 +164,7 @@ PS> wsl -d dockersandbox -u root openrc default
 PS>
 ```
 
-{{< /admonition >}}
+{{</admonition>}}
 
 We can test docker in our new environment:
 
@@ -236,6 +240,5 @@ PS> wsl --terminate docker
 ## Wrapping up
 
 With WSL, having the ability to run Linux commands **IN** the current windows
-directory and treating distrbutions like docker containers provides a lot of
+directory and treating distributions like docker containers provides a lot of
 flexibility and options when it comes to development environment setup and use.
-

@@ -1,7 +1,7 @@
 +++
-title = "Installing Redmine on Centos 6 Dot 2 Wiht Mysql and Apache"
+title = "Installing Redmine on Centos 6 Dot 2 With Mysql and Apache"
 date = "2012-07-06"
-slug = "2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache"
+slug = "2012/07/06/installing-redmine-on-centos-6-dot-2-with-mysql-and-apache"
 Categories = ["DevOps"]
 Tags = ["old", "obsolete", "linux", "redmine", "centos", "ruby"]
 [toc]
@@ -35,7 +35,7 @@ gem install bundle
 
 ## Install Redmine
 
-Redmine is installed with the following commmands:
+Run the following commands to install Redmine:
 
 ```sh
 cd /var/www
@@ -92,12 +92,12 @@ On the `database.yml` file, the `production` section should look like this:
 
 ```yaml
 production:
-  adapter: mysql
-  database: redmine
-  host: localhost
-  username: redmine
-  password: my_password
-  encoding: utf8
+    adapter: mysql
+    database: redmine
+    host: localhost
+    username: redmine
+    password: my_password
+    encoding: utf8
 ```
 
 And then we create and populate the database with the following rake commands:
@@ -123,12 +123,12 @@ And edit it to provide our configuration :
 
 ```yaml
 production:
-  email_delivery:
-    delivery_method: :smtp
-    smtp_settings:
-      address: "smtp.mydomain.com"
-      port: 25
-      domain: "mydomain.com"
+    email_delivery:
+        delivery_method: :smtp
+        smtp_settings:
+            address: 'smtp.mydomain.com'
+            port: 25
+            domain: 'mydomain.com'
 ```
 
 ## Redmine standalone testing
@@ -141,7 +141,7 @@ cd /var/www/redmine/
 ruby script/server webrick -e production
 ```
 
-and open the `http://localhost:3000` addess in a browser. If you are testing
+and open the `http://localhost:3000` address in a browser. If you are testing
 from another computer, you will need to open the port in the
 `/etc/sysconfig/iptables` file by duplicating the ssh (port 22) line and
 adapting it:
@@ -159,7 +159,7 @@ service iptables restart
 
 ## Passenger installation
 
-To install [Phusion passenger](http://www.modrails.com/), we firts install its
+To install [Phusion passenger](http://www.modrails.com/), we first install its
 gem:
 
 ```sh
@@ -209,8 +209,8 @@ PassengerRuby /usr/bin/ruby
 
 ```
 
-We then enable named based virtual hosting for our server by **uncomenting** the
-following line in the `/etc/httpd/conf/httpd.conf` file:
+We then enable named based virtual hosting for our server by **uncommenting**
+the following line in the `/etc/httpd/conf/httpd.conf` file:
 
 ```apache
 ...
@@ -237,7 +237,7 @@ SELinux in permissive mode:
 setenfore Permissive
 ```
 
-And letting the Permissive mode survive a reboot by modifyin the
+And letting the Permissive mode survive a reboot by modifying the
 `/etc/selinux/config` file from:
 
 ```ini

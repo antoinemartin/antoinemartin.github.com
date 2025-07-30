@@ -8,7 +8,8 @@
       "args": ["server", "--disableFastRender", "--navigateToChanged"],
       "isBackground": true,
       "problemMatcher": [],
-      "options": { "cwd": "${workspaceFolder}" }
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBuildCommand": true
     }
   ]
 }

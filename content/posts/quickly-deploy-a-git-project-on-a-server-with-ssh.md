@@ -14,7 +14,7 @@ All your projects are located in your server `git.mycompany.com` under
 `/srv/git`. You're using the user named `git` to connect to your server with the
 SSH private key located in `~/.ssh/git`.
 
-Here is the quickiest way to deploy your projet:
+Here is the quickest way to deploy your project:
 
 <!-- More -->
 

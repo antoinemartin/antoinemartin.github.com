@@ -1,9 +1,9 @@
 ---
-title: "Checking Google Play Signatures on .Net"
-date: "2012-11-15"
-slug: "2012/11/15/checking-google-play-signatures-on-net"
-Categories: ["Development", "Android"]
-tags: [old, android, "google play", ".net"]
+title: 'Checking Google Play Signatures on .Net'
+date: '2012-11-15'
+slug: '2012/11/15/checking-google-play-signatures-on-net'
+Categories: ['Development', 'Android']
+tags: [old, android, 'google play', '.net']
 ---
 
 With
@@ -117,7 +117,7 @@ done, you can use the following simple .Net code to check the signature:
 
 For converting your key, you can download the
 [PEMKeyLoader class](/downloads/code/PEMKeyLoader.cs) and use it in a Console
-Project to convert your key to XML with the follwing code :
+Project to convert your key to XML with the following code :
 
 ```csharp
 ...

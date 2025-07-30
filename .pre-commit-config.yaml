@@ -1,0 +1,67 @@
+# Pre-commit configuration for Hugo blog
+# See https://pre-commit.com for more information
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+      - id: check-case-conflict
+      - id: mixed-line-ending
+
+  # Markdown formatting and linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+        exclude: ^themes/
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types_or: [yaml, json]
+        exclude: ^themes/
+
+  # Hugo specific checks
+  - repo: local
+    hooks:
+      - id: hugo-build
+        name: Hugo build check
+        entry: hugo
+        args: [--buildDrafts, --buildFuture, --quiet]
+        language: system
+        files: \.(md|toml|yaml|yml|html|scss|css|js)$
+        exclude: ^themes/
+        pass_filenames: false
+
+  # Spell checking for content
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.23.6
+    hooks:
+      - id: typos
+        args: [--format=brief]
+        exclude: ^(themes/|public/|resources/)
+
+# Configuration for specific hooks
+# default_language_version:
+#   node: system
+
+# Global excludes
+exclude: |
+  (?x)^(
+    themes/.*|
+    public/.*|
+    resources/.*|
+    \.git/.*
+  )$
