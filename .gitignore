@@ -12,3 +12,4 @@ vendor
 public/
 node_modules
 resources/_gen
+.hugo_build.lock
