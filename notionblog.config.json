@@ -8,7 +8,7 @@
   "propertyTags": "Tags",
   "propertyCategories": "Categories",
   "filterProp": "Status",
-  "filterValue": ["Finished ✅"],
+  "filterValue": ["To publish ✅"],
   "publishedValue": "Published 🖨",
   "useShortcodes": true
 }
