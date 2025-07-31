@@ -35,5 +35,14 @@ I've worked everywhere from startups to Fortune 500s in utilities, media, and
 tech. I eventually served as VP Engineering and CTO but never stopped coding
 (because honestly, it's still fun).
 
-Entrepreneur, Team builder and technical mentor, I Love to cultivate software
+Entrepreneur, Team builder and technical mentor, I love to cultivate software
 ecosystems and make things happen.
+
+Follow this <a href="/resume" target="_blank" title="Resume">link</a> to see my
+resume
+(<a href="/resume/Antoine_Martin_CTO_VP_Engineering_2025Q3_EN.pdf" target="_blank" title="Resume PDF">pdf</a>).
+Also available in
+<a href="/resume/index_fr.html" target="_blank" title="Resume">french</a>
+(<a href="/resume/Antoine_Martin_CTO_VP_Engineering_2025Q3_FR.pdf" target="_blank" title="Resume PDF">pdf</a>)
+and <a href="/resume/index_es.html" target="_blank" title="Resume">Spanish</a>
+(<a href="/resume/Antonio_Martin_Asenjo_CTO_VP_de_Ingeniería_2025Q3_ES.pdf" target="_blank" title="Resume PDF">pdf</a>).
