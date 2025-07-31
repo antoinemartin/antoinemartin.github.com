@@ -35,7 +35,7 @@ namespace PublicKeyConvert
 
             if (x509key == null || x509key.Length == 0)
                 return null;
-            
+
             x509size = x509key.Length;
 
             // ---------  Set up stream to read the asn.1 encoded SubjectPublicKeyInfo blob  ------
@@ -153,12 +153,12 @@ namespace PublicKeyConvert
             sb.Replace("-----END PUBLIC KEY-----", "");
 
             try
-            {   
+            {
                 //see if the file is a valid Base64 encoded cert
                 x509key = Convert.FromBase64String(sb.ToString());
             }
             catch (System.FormatException)
-            {		
+            {
                 //if not a b64-encoded publiccert, assume it's binary
                 Stream stream = new FileStream(filename, FileMode.Open);
                 int datalen = (int)stream.Length;

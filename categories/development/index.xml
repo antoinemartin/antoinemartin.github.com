@@ -1,25 +1,98 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Development - Category - mrtn.me</title><link>http://mrtn.me/categories/development/</link><description>Development - Category - mrtn.me</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Wed, 11 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/categories/development/" rel="self" type="application/rss+xml"/><item><title>Multiple Docker environments on Windows</title><link>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</link><pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</guid><description>On Windows and docker platforms, your docker enviornment tends to get messy as time goes by.
-You can start over from a clean sheet with docker system prune --all but sometimes you would like to keep some images around. This post shows how to set up multiple docker environments on Windows with the help of WSL2 (Windows Subsystem For Linux) and Alpine.
-How it works The idea is to run docker on WSL and use a docker alias on the windows side to invoke the docker command in the WSL distribution.</description></item><item><title>Checking Google Play Signatures on .Net</title><link>http://mrtn.me/posts/2012/11/15/checking-google-play-signatures-on-net/</link><pubDate>Thu, 15 Nov 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/11/15/checking-google-play-signatures-on-net/</guid><description>With In-App Billing on Android, each time a purchase occurs, your application receives a JSON payload containing information about the purchase, as well as its signature with your developer certificate.
-Google encourages you to verify that the signature is valid to authentify the purchase. You can do that inside the application, but if the delivery of the purchase involves a server, it is better to do it on the server to prevent client code manipulation.</description></item><item><title>Avoid Thread Issues While Testing an Android Service</title><link>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</link><pubDate>Thu, 08 Nov 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</guid><description><![CDATA[<p>The
-<a href="http://developer.android.com/tools/testing/testing_android.html" target="_blank" rel="noopener noreffer">Android Test Framework</a>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Development on mrtn.me</title><link>http://mrtn.me/categories/development/</link><description>Recent content in Development on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Wed, 30 Jul 2025 18:39:54 +0200</lastBuildDate><atom:link href="http://mrtn.me/categories/development/index.xml" rel="self" type="application/rss+xml"/><item><title>Multiple Docker environments on Windows</title><link>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</link><pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</guid><description>&lt;p>On Windows and docker platforms, your docker environment tends to get messy as
+time goes by.&lt;/p>
+&lt;p>You can start over from a clean sheet with &lt;code>docker system prune --all&lt;/code> but
+sometimes you would like to keep some images around. This post shows how to set
+up multiple docker environments on Windows with the help of WSL2 (Windows
+Subsystem For Linux) and Alpine.&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="how-it-works">How it works&lt;/h2>
+&lt;p>The idea is to run docker on WSL and use a &lt;code>docker&lt;/code> alias on the windows side to
+invoke the docker command in the WSL distribution. This is a well-known usage
+pattern &lt;a href="https://docs.docker.com/desktop/windows/wsl/" target="_blank" rel="noopener noreffer ">with&lt;/a> or
+&lt;a href="https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9" target="_blank" rel="noopener noreffer ">without&lt;/a>
+Docker desktop.&lt;/p></description></item><item><title>Checking Google Play Signatures on .Net</title><link>http://mrtn.me/posts/2012/11/15/checking-google-play-signatures-on-net/</link><pubDate>Thu, 15 Nov 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/11/15/checking-google-play-signatures-on-net/</guid><description>&lt;p>With
+&lt;a href="http://developer.android.com/guide/google/play/billing/billing_integrate.html" target="_blank" rel="noopener noreffer ">In-App Billing&lt;/a>
+on Android, each time a purchase occurs, your application receives a JSON
+payload containing information about the purchase, as well as its signature with
+your developer certificate.&lt;/p>
+&lt;p>Google encourages you to verify that the signature is valid to authentify the
+purchase. You can do that inside the application, but if the delivery of the
+purchase involves a server, it is better to do it on the server to prevent
+client code manipulation. The following show how to do it on .Net server
+application.&lt;/p></description></item><item><title>Avoid Thread Issues While Testing an Android Service</title><link>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</link><pubDate>Thu, 08 Nov 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/11/08/avoid-thread-issues-while-testing-an-android-service/</guid><description>&lt;p>The
+&lt;a href="http://developer.android.com/tools/testing/testing_android.html" target="_blank" rel="noopener noreffer ">Android Test Framework&lt;/a>
 provides many tools to test parts of an Android application, and the
-<a href="http://developer.android.com/reference/android/test/ServiceTestCase.html" target="_blank" rel="noopener noreffer">ServiceTestCase</a>
+&lt;a href="http://developer.android.com/reference/android/test/ServiceTestCase.html" target="_blank" rel="noopener noreffer ">ServiceTestCase&lt;/a>
 in particular to test your
-<a href="http://developer.android.com/reference/android/app/Service.html" target="_blank" rel="noopener noreffer">Service</a>
-classes.</p>
-<p>This class is quite useful but you may find yourself scratching your head
+&lt;a href="http://developer.android.com/reference/android/app/Service.html" target="_blank" rel="noopener noreffer ">Service&lt;/a>
+classes.&lt;/p>
+&lt;p>This class is quite useful but you may find yourself scratching your head
 because your test does not work like it should. This happens in particular if
-you&rsquo;re doing some background work in your service, relying for example on
-<a href="http://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="noopener noreffer">AsyncTask</a>
-for it.</p>
-<p>Read on if you want to understand why it doesn&rsquo;t work and find a solution for
-it.</p>]]></description></item><item><title>Unlock and Root a Nexus Device</title><link>http://mrtn.me/posts/2012/10/25/unlock-and-root-a-nexus-device/</link><pubDate>Thu, 25 Oct 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/10/25/unlock-and-root-a-nexus-device/</guid><description>Having an unlocked and rooted device provides several advantages :
-Easy backup and restore with Nandroid backup, Easy firmware replacement and updates installation, Advanced debugging capabilities. The following instructions allow unlocking and rooting a Nexus device (Galaxy Nexus, Nexus 7) from the command line on a Linux machine. It involves:
-Backuping your device, Unlocking the bootloader, Restoring the backup, Rooting the device. Prerequisites Here is the list of prerequisites :</description></item><item><title>Using Eclipse Templates to Ease Android Logging</title><link>http://mrtn.me/posts/2012/03/24/using-eclipse-templates-to-ease-android-logging/</link><pubDate>Sat, 24 Mar 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/03/24/using-eclipse-templates-to-ease-android-logging/</guid><description><![CDATA[Adding logs to your Android source code is sometimes the only way to really understand what happens , especially in asynchronous situations.
-If you are lazy like me, you may insert lazy logs like this one:
-1 Log.v(&#34;#LOOK#&#34;, &#34;onStart()&#34;); Instead of having less lazy code like:
-1 2 3 4 5 6 7 8 9 10 public class SomeActivity extends Activity { private static final String LOG_TAG = SomeActivity.class .getSimpleName(); private static final int LOG_LEVEL = Log.]]></description></item><item><title>Start a Virtualenv Django Shell From the Linux Desktop</title><link>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</link><pubDate>Tue, 13 Mar 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</guid><description>If you are tired to fire a terminal window, cd to your project directory and activate your python virtualenv to get to your Django project, you will find here some tips to improve things a little bit.
-This tip is divided in two parts :
-First we create a shell startup script that activates the virtualenv, bash completion and cd in the project directory. Then we create a Linux Desktop Entry file That spawns a console in our environment.</description></item><item><title>Checking Google Play Signatures With Django</title><link>http://mrtn.me/posts/2012/03/12/checking-google-play-signatures-with-django/</link><pubDate>Mon, 12 Mar 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/03/12/checking-google-play-signatures-with-django/</guid><description>Google play, formerly known as the Android Market, provides in-app billing in several countries. In the Security and Design page, Google states the following:
-If practical, you should perform signature verification on a remote server and not on a device. Implementing the verification process on a server makes it difficult for attackers to break the verification process by reverse engineering your .apk file. If you do offload security processing to a remote server, be sure that the device-server handshake is secure.</description></item></channel></rss>
+you&amp;rsquo;re doing some background work in your service, relying for example on
+&lt;a href="http://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="noopener noreffer ">AsyncTask&lt;/a>
+for it.&lt;/p>
+&lt;p>Read on if you want to understand why it doesn&amp;rsquo;t work and find a solution for
+it.&lt;/p></description></item><item><title>Unlock and Root a Nexus Device</title><link>http://mrtn.me/posts/2012/10/25/unlock-and-root-a-nexus-device/</link><pubDate>Thu, 25 Oct 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/10/25/unlock-and-root-a-nexus-device/</guid><description>&lt;p>Having an unlocked and rooted device provides several advantages :&lt;/p>
+&lt;ul>
+&lt;li>Easy backup and restore with Nandroid backup,&lt;/li>
+&lt;li>Easy firmware replacement and updates installation,&lt;/li>
+&lt;li>Advanced debugging capabilities.&lt;/li>
+&lt;/ul>
+&lt;p>The following instructions allow unlocking and rooting a Nexus device (Galaxy
+Nexus, Nexus 7) from the command line on a Linux machine. It involves:&lt;/p>
+&lt;ul>
+&lt;li>Backuping your device,&lt;/li>
+&lt;li>Unlocking the bootloader,&lt;/li>
+&lt;li>Restoring the backup,&lt;/li>
+&lt;li>Rooting the device.&lt;/li>
+&lt;/ul>
+&lt;!-- More -->
+&lt;h3 id="prerequisites">Prerequisites&lt;/h3>
+&lt;p>Here is the list of prerequisites :&lt;/p></description></item><item><title>Using Eclipse Templates to Ease Android Logging</title><link>http://mrtn.me/posts/2012/03/24/using-eclipse-templates-to-ease-android-logging/</link><pubDate>Sat, 24 Mar 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/03/24/using-eclipse-templates-to-ease-android-logging/</guid><description>&lt;p>Adding logs to your Android source code is sometimes the only way to really
+understand what happens , especially in asynchronous situations.&lt;/p>
+&lt;p>If you are lazy like me, you may insert &lt;em>lazy logs&lt;/em> like this one:&lt;/p>
+&lt;div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+ &lt;div class="code-header language-java">
+ &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">v&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;#LOOK#&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;onStart()&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>Instead of having less lazy code like:&lt;/p>
+&lt;div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+ &lt;div class="code-header language-java">
+ &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">class&lt;/span> &lt;span class="nc">SomeActivity&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">extends&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Activity&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">private&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">LOG_TAG&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">SomeActivity&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">getSimpleName&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">private&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">static&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kd">final&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">LOG_LEVEL&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">VERBOSE&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">...&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nd">@Override&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">public&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">void&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nf">onStart&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">LOG_LEVEL&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">VERBOSE&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">Log&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="na">v&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">LOG_TAG&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s">&amp;#34;onStart()&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>But Eclipse can easily help you to avoid this and then the need to clean up your
+code after debbuging.&lt;/p></description></item><item><title>Start a Virtualenv Django Shell From the Linux Desktop</title><link>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</link><pubDate>Tue, 13 Mar 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</guid><description>&lt;p>If you are tired to fire a terminal window, &lt;code>cd&lt;/code> to your project directory and
+activate your python &lt;code>virtualenv&lt;/code> to get to your Django project, you will find
+here some tips to improve things a little bit.&lt;/p>
+&lt;!-- more -->
+&lt;p>This tip is divided in two parts :&lt;/p>
+&lt;ol>
+&lt;li>First we create a shell startup script that &lt;em>activates&lt;/em> the &lt;code>virtualenv&lt;/code>,
+bash completion and &lt;code>cd&lt;/code> in the project directory.&lt;/li>
+&lt;li>Then we create a
+&lt;a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank" rel="noopener noreffer ">Linux Desktop Entry&lt;/a>
+file That spawns a console in our environment.&lt;/li>
+&lt;/ol>
+&lt;p>Here you have the startup script:&lt;/p></description></item><item><title>Checking Google Play Signatures With Django</title><link>http://mrtn.me/posts/2012/03/12/checking-google-play-signatures-with-django/</link><pubDate>Mon, 12 Mar 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/03/12/checking-google-play-signatures-with-django/</guid><description>&lt;p>Google play, formerly known as the Android Market, provides in-app billing in
+several countries. In the
+&lt;a href="http://developer.android.com/guide/market/billing/billing_best_practices.html" target="_blank" rel="noopener noreffer ">Security and Design&lt;/a>
+page, Google states the following:&lt;/p>
+&lt;blockquote>
+&lt;p>If practical, you should perform signature verification on a remote server and
+not on a device. Implementing the verification process on a server makes it
+difficult for attackers to break the verification process by reverse
+engineering your .apk file. If you do offload security processing to a remote
+server, be sure that the device-server handshake is secure.&lt;/p></description></item></channel></rss>

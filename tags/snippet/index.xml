@@ -1,3 +1,13 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>snippet - Tag - mrtn.me</title><link>http://mrtn.me/tags/snippet/</link><description>snippet - Tag - mrtn.me</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Tue, 13 Mar 2012 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/tags/snippet/" rel="self" type="application/rss+xml"/><item><title>Start a Virtualenv Django Shell From the Linux Desktop</title><link>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</link><pubDate>Tue, 13 Mar 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</guid><description>If you are tired to fire a terminal window, cd to your project directory and activate your python virtualenv to get to your Django project, you will find here some tips to improve things a little bit.
-This tip is divided in two parts :
-First we create a shell startup script that activates the virtualenv, bash completion and cd in the project directory. Then we create a Linux Desktop Entry file That spawns a console in our environment.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Snippet on mrtn.me</title><link>http://mrtn.me/tags/snippet/</link><description>Recent content in Snippet on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Mon, 02 May 2022 21:50:20 +0200</lastBuildDate><atom:link href="http://mrtn.me/tags/snippet/index.xml" rel="self" type="application/rss+xml"/><item><title>Start a Virtualenv Django Shell From the Linux Desktop</title><link>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</link><pubDate>Tue, 13 Mar 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/03/13/start-a-virtualenv-django-shell-from-the-linux-desktop/</guid><description>&lt;p>If you are tired to fire a terminal window, &lt;code>cd&lt;/code> to your project directory and
+activate your python &lt;code>virtualenv&lt;/code> to get to your Django project, you will find
+here some tips to improve things a little bit.&lt;/p>
+&lt;!-- more -->
+&lt;p>This tip is divided in two parts :&lt;/p>
+&lt;ol>
+&lt;li>First we create a shell startup script that &lt;em>activates&lt;/em> the &lt;code>virtualenv&lt;/code>,
+bash completion and &lt;code>cd&lt;/code> in the project directory.&lt;/li>
+&lt;li>Then we create a
+&lt;a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank" rel="noopener noreffer ">Linux Desktop Entry&lt;/a>
+file That spawns a console in our environment.&lt;/li>
+&lt;/ol>
+&lt;p>Here you have the startup script:&lt;/p></description></item></channel></rss>

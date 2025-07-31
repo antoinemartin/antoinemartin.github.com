@@ -1,4 +1,26 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>wsl - Tag - mrtn.me</title><link>http://mrtn.me/tags/wsl/</link><description>wsl - Tag - mrtn.me</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Fri, 13 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/tags/wsl/" rel="self" type="application/rss+xml"/><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description>The problem On my alpine-openstack-vm project, There is a CI process producing a VM image for OpenStack. The process involves testing that the machine boots. The test fails, but the machine is actually booted. What doesn’t work is the ssh access. As the machine can only be reached via SSH with a private key for obvious security reasons, not having access prevents proper debug.
-The objective The objective is to be able to run the produced VM locally to assess the issue.</description></item><item><title>Multiple Docker environments on Windows</title><link>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</link><pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</guid><description>On Windows and docker platforms, your docker enviornment tends to get messy as time goes by.
-You can start over from a clean sheet with docker system prune --all but sometimes you would like to keep some images around. This post shows how to set up multiple docker environments on Windows with the help of WSL2 (Windows Subsystem For Linux) and Alpine.
-How it works The idea is to run docker on WSL and use a docker alias on the windows side to invoke the docker command in the WSL distribution.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wsl on mrtn.me</title><link>http://mrtn.me/tags/wsl/</link><description>Recent content in Wsl on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Wed, 30 Jul 2025 18:39:54 +0200</lastBuildDate><atom:link href="http://mrtn.me/tags/wsl/index.xml" rel="self" type="application/rss+xml"/><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description>&lt;h2 id="the-problem">The problem&lt;/h2>
+&lt;p>On my
+&lt;a href="https://github.com/antoinemartin/alpine-openstack-vm" target="_blank" rel="noopener noreffer ">alpine-openstack-vm&lt;/a>
+project, There is a CI process producing a VM image for OpenStack. The process
+involves testing that the machine boots.
+&lt;a href="https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713" target="_blank" rel="noopener noreffer ">The test fails&lt;/a>,
+but the machine is actually booted. What doesn’t work is the ssh access. As the
+machine can only be reached via SSH with a private key for obvious security
+reasons, not having access prevents proper debug.&lt;/p>
+&lt;h2 id="the-objective">The objective&lt;/h2>
+&lt;p>The objective is to be able to run the produced VM locally to assess the issue.
+As the image in its current form doesn’t work, the VM image needs to be slightly
+modified in order to allow access. If the VM is run locally, adding a root
+password should be sufficient.&lt;/p></description></item><item><title>Multiple Docker environments on Windows</title><link>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</link><pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2022/05/11/multiple-docker-environments-on-windows/</guid><description>&lt;p>On Windows and docker platforms, your docker environment tends to get messy as
+time goes by.&lt;/p>
+&lt;p>You can start over from a clean sheet with &lt;code>docker system prune --all&lt;/code> but
+sometimes you would like to keep some images around. This post shows how to set
+up multiple docker environments on Windows with the help of WSL2 (Windows
+Subsystem For Linux) and Alpine.&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="how-it-works">How it works&lt;/h2>
+&lt;p>The idea is to run docker on WSL and use a &lt;code>docker&lt;/code> alias on the windows side to
+invoke the docker command in the WSL distribution. This is a well-known usage
+pattern &lt;a href="https://docs.docker.com/desktop/windows/wsl/" target="_blank" rel="noopener noreffer ">with&lt;/a> or
+&lt;a href="https://dev.to/bowmanjd/install-docker-on-windows-wsl-without-docker-desktop-34m9" target="_blank" rel="noopener noreffer ">without&lt;/a>
+Docker desktop.&lt;/p></description></item></channel></rss>

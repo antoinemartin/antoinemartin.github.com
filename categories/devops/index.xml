@@ -1,10 +1,103 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Devops - Category - mrtn.me</title><link>http://mrtn.me/categories/devops/</link><description>Devops - Category - mrtn.me</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Fri, 13 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/categories/devops/" rel="self" type="application/rss+xml"/><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description>The problem On my alpine-openstack-vm project, There is a CI process producing a VM image for OpenStack. The process involves testing that the machine boots. The test fails, but the machine is actually booted. What doesn’t work is the ssh access. As the machine can only be reached via SSH with a private key for obvious security reasons, not having access prevents proper debug.
-The objective The objective is to be able to run the produced VM locally to assess the issue.</description></item><item><title>Mirror a Git Repository Through Ssh</title><link>http://mrtn.me/posts/2012/11/15/mirror-a-git-repository-through-ssh/</link><pubDate>Thu, 15 Nov 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/11/15/mirror-a-git-repository-through-ssh/</guid><description>Redmine can show the timeline of a Git repository but this repository needs to be local (see here). When you host your repository externally (on GitHub, for instance), you need to synchronize your remote repository on your Redmine server.
-The following shell script is an All in one command that can be easily put in the crontab to mirror the repository on your Redmine server :
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 #!</description></item><item><title>Quickly Deploy a Git Project on a Server With Ssh</title><link>http://mrtn.me/posts/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/</link><pubDate>Wed, 24 Oct 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/</guid><description>So you have this brand new project my_project of yours with your local Git repository set up and you want to quickly make it available for others to clone on your repository server.
-All your projects are located in your server git.mycompany.com under /srv/git. You&amp;rsquo;re using the user named git to connect to your server with the SSH private key located in ~/.ssh/git.
-Here is the quickiest way to deploy your projet:</description></item><item><title>Installing Redmine on Centos 6 Dot 2 Wiht Mysql and Apache</title><link>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/</link><pubDate>Fri, 06 Jul 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-wiht-mysql-and-apache/</guid><description>I needed recently to install the excellent project management tool Redmine on a CentOS 6.2 machine. There are some tutorials on the Web (here or here) but they are a little bit outdated. The following is a method that works as of today.
-Pre-requisites Logged as root, install the following packages:
-1 yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel And then install the bundle ruby gem:</description></item><item><title>Django on Windows: Run Celery as a Windows Service</title><link>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</link><pubDate>Wed, 04 Jul 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</guid><description>In my previous post, I showed how to set up a Django project on a Windows Server to be served behind IIS. After setting up the server, the next thing we want with a Django application is to be able to run background and scheduled tasks, and Celery is the perfect tool for that.
-On Windows, background processes are mostly run as Windows Services. Fortunately, Python for Windows Extensions (a.k.a pywin32) provides facilities to create a Windows Service.</description></item><item><title>Running Django Under Windows With Iis Using Fcgi</title><link>http://mrtn.me/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/</link><pubDate>Wed, 27 Jun 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/</guid><description>Update: The configuration process described in this post can be achieved with only one management command if you install the django-windows-tools application.
-Windows is probably not the best production environment for Django but sometimes one doesn&amp;rsquo;t have the choice. In that case, a few options aleardy exist, most notably the one developed by helicontech that relies on Microsoft&amp;rsquo;s Web Platform Installer. This solution, which is described here, relies on the installation of a specific native Handler developed by Helicontech.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps on mrtn.me</title><link>http://mrtn.me/categories/devops/</link><description>Recent content in DevOps on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Wed, 30 Jul 2025 18:39:54 +0200</lastBuildDate><atom:link href="http://mrtn.me/categories/devops/index.xml" rel="self" type="application/rss+xml"/><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description>&lt;h2 id="the-problem">The problem&lt;/h2>
+&lt;p>On my
+&lt;a href="https://github.com/antoinemartin/alpine-openstack-vm" target="_blank" rel="noopener noreffer ">alpine-openstack-vm&lt;/a>
+project, There is a CI process producing a VM image for OpenStack. The process
+involves testing that the machine boots.
+&lt;a href="https://github.com/antoinemartin/alpine-openstack-vm/actions/runs/3909412713" target="_blank" rel="noopener noreffer ">The test fails&lt;/a>,
+but the machine is actually booted. What doesn’t work is the ssh access. As the
+machine can only be reached via SSH with a private key for obvious security
+reasons, not having access prevents proper debug.&lt;/p>
+&lt;h2 id="the-objective">The objective&lt;/h2>
+&lt;p>The objective is to be able to run the produced VM locally to assess the issue.
+As the image in its current form doesn’t work, the VM image needs to be slightly
+modified in order to allow access. If the VM is run locally, adding a root
+password should be sufficient.&lt;/p></description></item><item><title>Mirror a Git Repository Through Ssh</title><link>http://mrtn.me/posts/2012/11/15/mirror-a-git-repository-through-ssh/</link><pubDate>Thu, 15 Nov 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/11/15/mirror-a-git-repository-through-ssh/</guid><description>&lt;p>Redmine can show the timeline of a Git repository but this repository needs to
+be local (see &lt;a href="http://www.redmine.org/boards/2/topics/3487" target="_blank" rel="noopener noreffer ">here&lt;/a>). When you
+host your repository externally (on GitHub, for instance), you need to
+synchronize your remote repository on your Redmine server.&lt;/p>
+&lt;p>The following shell script is an &lt;em>All in one&lt;/em> command that can be easily put in
+the crontab to mirror the repository on your Redmine server :&lt;/p>
+&lt;!-- More -->
+&lt;div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+ &lt;div class="code-header language-sh">
+ &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#!/bin/sh
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="s2">&amp;#34;run&amp;#34;&lt;/span> !&lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$1&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">exec&lt;/span> ssh -i &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$GIT_KEY&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> -o &lt;span class="s2">&amp;#34;StrictHostKeyChecking no&amp;#34;&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$@&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">remote&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">local&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;Mirroring from &lt;/span>&lt;span class="nv">$remote&lt;/span>&lt;span class="s2"> to &lt;/span>&lt;span class="nv">$local&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="k">$(&lt;/span>basename &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$local&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">GIT_KEY&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;`mktemp /tmp/git.XXXXXX`&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">GIT_SSH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cat &amp;gt;&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$GIT_KEY&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">-----BEGIN DSA PRIVATE KEY-----
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">### Put here your private key ###
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">-----END DSA PRIVATE KEY-----
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="o">[&lt;/span> -d &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$local&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="k">then&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> git &lt;span class="s2">&amp;#34;--git-dir=&lt;/span>&lt;span class="nv">$local&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> remote update
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> git clone --mirror &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$remote&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$local&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rm -f &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$GIT_KEY&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">exit&lt;/span> &lt;span class="m">0&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>You need to copy the private key in the script (line 20). You can then use the
+script with the following syntax&lt;/p></description></item><item><title>Quickly Deploy a Git Project on a Server With Ssh</title><link>http://mrtn.me/posts/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/</link><pubDate>Wed, 24 Oct 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/10/24/quickly-deploy-a-git-project-on-a-server-with-ssh/</guid><description>&lt;p>So you have this brand new project &lt;code>my_project&lt;/code> of yours with your local Git
+repository set up and you want to quickly make it available for others to clone
+on your repository server.&lt;/p>
+&lt;p>All your projects are located in your server &lt;code>git.mycompany.com&lt;/code> under
+&lt;code>/srv/git&lt;/code>. You&amp;rsquo;re using the user named &lt;code>git&lt;/code> to connect to your server with the
+SSH private key located in &lt;code>~/.ssh/git&lt;/code>.&lt;/p>
+&lt;p>Here is the quickest way to deploy your project:&lt;/p></description></item><item><title>Installing Redmine on Centos 6 Dot 2 With Mysql and Apache</title><link>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-with-mysql-and-apache/</link><pubDate>Fri, 06 Jul 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-with-mysql-and-apache/</guid><description>&lt;p>I needed recently to install the excellent project management tool
+&lt;a href="http://www.redmine.org/" target="_blank" rel="noopener noreffer ">Redmine&lt;/a> on a &lt;a href="http://www.centos.org/" target="_blank" rel="noopener noreffer ">CentOS&lt;/a> 6.2
+machine. There are some tutorials on the Web
+(&lt;a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29" target="_blank" rel="noopener noreffer ">here&lt;/a>
+or
+&lt;a href="http://luzem.dyndns.org/2011/04/14/install-redmine-in-rhel6-and-rh-based-distributions/" target="_blank" rel="noopener noreffer ">here&lt;/a>)
+but they are a little bit outdated. The following is a method that works as of
+today.&lt;/p>
+&lt;!-- More -->
+&lt;h2 id="pre-requisites">Pre-requisites&lt;/h2>
+&lt;p>Logged as root, install the following packages:&lt;/p>
+&lt;div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+ &lt;div class="code-header language-sh">
+ &lt;span class="code-title">&lt;i class="arrow fas fa-angle-right fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="ellipses">&lt;i class="fas fa-ellipsis-h fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;span class="copy" title="Copy to clipboard">&lt;i class="far fa-copy fa-fw" aria-hidden="true">&lt;/i>&lt;/span>
+ &lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sh" data-lang="sh">&lt;span class="line">&lt;span class="cl">yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/div>
+&lt;p>And then install the &lt;code>bundle&lt;/code> ruby gem:&lt;/p></description></item><item><title>Django on Windows: Run Celery as a Windows Service</title><link>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</link><pubDate>Wed, 04 Jul 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</guid><description>&lt;p>In my
+&lt;a href="http://mrtn.me/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/" rel="">previous post&lt;/a>,
+I showed how to set up a Django project on a Windows Server to be served behind
+IIS. After setting up the server, the next thing we want with a Django
+application is to be able to run background and scheduled tasks, and
+&lt;a href="http://celeryproject.org/" target="_blank" rel="noopener noreffer ">Celery&lt;/a> is the perfect tool for that.&lt;/p>
+&lt;!-- more -->
+&lt;p>On Windows, background processes are mostly run as Windows Services.
+Fortunately,
+&lt;a href="http://sourceforge.net/projects/pywin32/" target="_blank" rel="noopener noreffer ">Python for Windows Extensions&lt;/a> (a.k.a
+pywin32) provides facilities to create a Windows Service.&lt;/p></description></item><item><title>Running Django Under Windows With Iis Using Fcgi</title><link>http://mrtn.me/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/</link><pubDate>Wed, 27 Jun 2012 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/</guid><description>&lt;p>&lt;strong>Update&lt;/strong>: The configuration process described in this post can be achieved
+with only one management command if you install the
+&lt;a href="https://github.com/antoinemartin/django-windows-tools" target="_blank" rel="noopener noreffer ">django-windows-tools application&lt;/a>.&lt;/p>
+&lt;p>Windows is probably not the best production environment for
+&lt;a href="https://www.djangoproject.com/" target="_blank" rel="noopener noreffer ">Django&lt;/a> but sometimes one doesn&amp;rsquo;t have the
+choice. In that case, a few options aleardy exist, most notably the one
+developed by &lt;a href="http://www.helicontech.com/" target="_blank" rel="noopener noreffer ">helicontech&lt;/a> that relies on
+Microsoft&amp;rsquo;s
+&lt;a href="http://www.microsoft.com/web/downloads/platform.aspx" target="_blank" rel="noopener noreffer ">Web Platform Installer&lt;/a>.
+This solution, which is described
+&lt;a href="http://www.microsoft.com/web/downloads/platform.aspx" target="_blank" rel="noopener noreffer ">here&lt;/a>, relies on the
+installation of a specific native Handler developed by Helicontech.&lt;/p></description></item></channel></rss>
