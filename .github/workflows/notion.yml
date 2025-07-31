@@ -1,8 +1,8 @@
 name: notion-blog
 on:
   # On pull requests commits
-  pull_request:
-    branches: [main]
+  # pull_request:
+  #   branches: [main]
   # Automatic trigger at 00:00 everyday
   # schedule:
   #   - cron: "0 0 * * *" # daily
@@ -20,6 +20,7 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
           persist-credentials: false
+          submodules: recursive
 
       - name: notion-blog
         uses: antoinemartin/notion-blog@feature/hugo_loveit_theme_adaptation
@@ -40,6 +41,20 @@ jobs:
         env:
           # You need to generate an Integration token in Notion API page
           NOTION_SECRET: ${{ secrets.NOTION_SECRET }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: latest
+          extended: true
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
 
       - name: Format documents
         # We need prettier in order to commit the new files, and also it gives a

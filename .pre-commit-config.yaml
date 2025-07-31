@@ -33,25 +33,30 @@ repos:
         types_or: [yaml, json]
         exclude: ^themes/
 
-  # Hugo specific checks
-  - repo: local
-    hooks:
-      - id: hugo-build
-        name: Hugo build check
-        entry: hugo
-        args: [--buildDrafts, --buildFuture, --quiet]
-        language: system
-        files: \.(md|toml|yaml|yml|html|scss|css|js)$
-        exclude: ^themes/
-        pass_filenames: false
-
   # Spell checking for content
   - repo: https://github.com/crate-ci/typos
     rev: v1.23.6
     hooks:
       - id: typos
         args: [--format=brief]
-        exclude: ^(themes/|public/|resources/)
+        exclude: |
+          (?x)^(
+            .*_es\.html|
+            .*_fr\.html|
+          )$
+        pass_filenames: false
+
+  # Hugo specific checks
+  - repo: local
+    hooks:
+      - id: hugo-build
+        name: Hugo build check
+        entry: hugo
+        args: [--buildDrafts, --buildFuture]
+        language: system
+        files: \.(md|toml|yaml|yml|html|scss|css|js)$
+        exclude: ^themes/
+        pass_filenames: false
 
 # Configuration for specific hooks
 # default_language_version:
