@@ -1,0 +1,1301 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
+		<title>Antoine Martin</title>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+		body {
+  background: #E5DED4;
+  font: 15px Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  color: #929292;
+}
+
+.container {
+  margin: 0 auto;
+  /* padding: 10%; */
+}
+
+#resume {
+  border-radius: 5px;
+  border: 1px solid #C7C7C7;
+  overflow: hidden;
+}
+
+section {
+  margin-bottom: 5rem;
+}
+
+[class^="section-"] > .title {
+  text-transform: uppercase;
+  padding: 15px 0;
+  margin: 0;
+}
+
+[class^="section-"] > .title .title-icon,
+[class^="section-"] > .title span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+[class^="section-"] > .title span {
+  margin-left: 2px;
+}
+
+[class^="section-"] > .title .title-icon {
+  background-color: whitesmoke;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.4rem 0.45rem;
+}
+
+/* Sidebar */
+.sidebar {
+  padding: 2rem;
+  background: #333438 !important;
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+}
+
+.sidebar, .sidebar h1, .sidebar h2 {
+  color: #ffffff !important;
+}
+
+.sidebar h2 {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+  margin-top: 5rem;
+}
+
+.avatar {
+  margin: 5rem 0;
+  text-align: center;
+}
+
+.avatar img {
+  width: 90%;
+}
+
+.section-education .item {
+  margin-bottom: 3rem;
+}
+
+.section-education .studyTitle {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.section-education .courses {
+  font-size: 1.2rem;
+}
+.section-education ul.courses {
+  list-style-type: none;
+  margin: 0.5rem 0 0.5rem 0;
+  padding: 0;
+}
+
+.section-education ul.courses li {
+  margin:0;
+}
+
+.section-education .institution {
+  font-size: 1.2rem;
+}
+
+.section-education .date {
+  font-size: 1.2rem;
+}
+
+.sidebar a:link, .sidebar a:hover, .sidebar a:visited {
+  text-decoration: none;
+  color: #ffffff !important;
+}
+
+/* Content */
+.content {
+  padding: 5rem;
+  background: #FFFFFF;
+  margin-bottom: -99999px;
+  padding-bottom: 99999px;
+}
+
+.content h1 {
+  color: #3C3C3C;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 4rem;
+  letter-spacing: 1.0rem;
+  font-weight: bold;
+}
+
+.content h2 {
+  color: #6D6D6D;
+  text-transform: uppercase;
+  text-align: left;
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+  margin-top: 5rem;
+}
+
+.content a:link, .content a:hover, .content a:visited {
+  text-decoration: none;
+  color: #6D6D6D;
+}
+
+/* Sections */
+.section-name {
+  margin: 5rem 0 10rem 0;
+}
+
+.section-name h2 {
+  color: #6D6D6D;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  font-weight: bold;
+  margin-top: 5rem;
+}
+
+.section-summary {
+  text-align: justify;
+}
+
+.section-work .item {
+  margin-bottom: 2.5rem;
+}
+
+.section-work .item .position {
+  font-weight: bold;
+  color: #333438;
+  text-transform: uppercase;
+}
+
+.section-work .item .company {
+    padding: 0.5rem 0 0.5rem 0;
+    color: #6D6D6D;
+    font-weight: bold;
+}
+
+.section-work .item .summary, .section-work .item .highlights {
+    font-style: italic;
+    text-align: justify;
+}
+
+.section-volunteer .item {
+  margin-bottom: 2.5rem;
+}
+
+.section-volunteer .item .position {
+  font-weight: bold;
+  color: #333438;
+  text-transform: uppercase;
+}
+
+.section-volunteer .item .company {
+    padding: 0.5rem 0 0.5rem 0;
+    color: #6D6D6D;
+    font-weight: bold;
+}
+
+.section-volunteer .item .summary, .section-volunteer .item .highlights {
+    font-style: italic;
+    text-align: justify;
+}
+
+
+.section-publications .item {
+  margin-bottom: 2.5rem;
+}
+
+.section-publications .item .name {
+  font-weight: bold;
+  color: #333438;
+  text-transform: uppercase;
+}
+
+.section-publications .item .publication {
+    padding: 0.5rem 0 0.5rem 0;
+    color: #6D6D6D;
+    font-weight: bold;
+}
+
+.section-publications .item .summary, .section-publications .item .highlights {
+    font-style: italic;
+    text-align: justify;
+}
+
+
+.section-awards .item .title {
+  font-weight: bold;
+  color: #333438;
+}
+
+.section-awards .item .date, .section-awards .item .awarder {
+  font-weight: normal;
+  color: #929292;
+}
+
+.section-awards .item .summary {
+  font-weight: normal;
+  font-style: italic;
+  text-align: justify;
+}
+
+.section-languages .item {
+  margin-bottom: 1rem;
+}
+
+.section-languages .item .language{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-languages .item .language .tongue {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+  /* color: #333438; */
+}
+
+.section-languages .item .fluency {
+  font-weight: normal;
+  color: #929292;
+  align-self: flex-end;
+}
+
+.section-interests .title {
+  font-weight: bold;
+}
+
+.section-interests .item {
+  margin: 0.8rem 0 0.8rem 0;
+  line-height: 1.9rem;
+}
+
+.section-skills .item {
+  margin-bottom: 1rem;
+}
+
+
+.section-contact .fa {
+  padding: 0.8rem 0 0 0;
+  background: #fff;
+  color: #333438;
+  border-radius: 100rem;
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  margin: -0.4rem 0.8rem 0.8rem 0.5rem;
+  float: left;
+}
+
+.section-contact ul.contact {
+  list-style-type: none;
+  margin: 0.5rem 0 0.5rem 0;
+  padding: 0;
+}
+
+.section-contact ul.contact li {
+  margin: 1rem 0 1rem 0;
+}
+
+.section-contact ul.profiles {
+  list-style-type: none;
+  margin: 4rem 0 0.5rem 0;
+  padding: 0;
+}
+
+.section-contact ul.profiles li {
+  margin: 1rem 0 1rem 0;
+}
+
+.level {
+  padding-left: 1rem;
+}
+
+.level-beginner:before {
+  content: "\f243";
+  color: #8e928f !important;
+}
+
+.level-intermediate:before {
+  content: "\f242";
+  color: #f7dba8 !important;
+}
+
+.level-advanced:before {
+  content: "\f241";
+  color: #a8cdf7 !important;
+}
+
+.level-master:before {
+  content: "\f240";
+  color: #a8f7bc !important;
+}
+
+/* Print */
+@media print {
+  body {
+    font: 10px Arial, Helvetica, sans-serif;
+    line-height: 1.4;
+    color: #929292 !important;
+  }
+
+  .col-xs-4 {
+    width: 35% !important;
+  }
+
+  .col-xs-8 {
+    width: 65% !important;
+  }
+
+  .container {
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  #resume {
+    overflow: hidden;
+	  border: 1px solid white;
+    /* border: none !important; */
+  }
+
+  section {
+    margin-bottom: 2.5rem;
+  }
+
+  [class^="section-"] > .title {
+    text-transform: uppercase;
+    padding: 0.7rem 0;
+    margin: 0;
+  }
+
+  [class^="section-"] > .title .title-icon,
+  [class^="section-"] > .title span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  [class^="section-"] > .title span {
+    margin-left: 2px;
+  }
+
+  [class^="section-"] > .title .title-icon {
+    background-color: whitesmoke;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.4rem 0.45rem;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    padding: 1rem;
+    background: #333438 !important;
+    /* margin-bottom: -99999px;
+    padding-bottom: 99999px; */
+    margin-bottom: 0px;
+    padding-bottom: 400px;
+		color: #ffffff !important;
+  }
+
+  .sidebar, .sidebar h1, .sidebar h2 {
+    color: #ffffff !important;
+  }
+
+  .sidebar h2 {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+    margin-top: 5rem;
+		color: #ffffff !important;
+  }
+
+  .sidebar h2.title span {
+    color: #ffffff !important;
+}
+
+  .avatar {
+    margin: 2rem 0 2rem 1rem;
+    text-align: center;
+  }
+
+  .avatar img {
+    width: 85%;
+  }
+
+  .section-education .item {
+    margin-bottom: 3rem;
+		color: #ffffff !important;
+  }
+
+  .section-education .studyTitle {
+    /* display: flex; */
+  }
+
+  .section-education .studyTitle span{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.1rem;
+		color: #ffffff !important;
+  }
+
+  .section-education .studyTitle span.badge{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8rem;
+		color: #ffffff !important;
+    background: #939393 !important;
+  }
+
+  .section-education .courses {
+    font-size: 1.1rem;
+		color: #ffffff !important;
+  }
+
+  .section-education ul.courses {
+    list-style-type: none;
+    margin: 0.5rem 0 0.5rem 0;
+    padding: 0;
+  }
+
+  .section-education ul.courses li {
+      margin:0;
+      color: #ffffff !important;
+    }
+
+  .section-education .institution {
+    font-size: 1.0rem;
+		color: #ffffff !important;
+  }
+
+  .section-education .date span{
+    font-size: 1.0rem;
+		color: #ffffff !important;
+  }
+
+  .sidebar a:link, .sidebar a:hover, .sidebar a:visited {
+    text-decoration: none;
+		color: #ffffff !important;
+  }
+
+  /* Content */
+  .content {
+    padding: 3rem 5rem 3rem 2rem;
+    background: #FFFFFF !important;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    /* margin-bottom: -99999px;
+    padding-bottom: 99999px; */
+  }
+
+  .content h1 {
+    color: #3C3C3C !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 1.0rem;
+    font-weight: bold;
+  }
+
+  .content h2 {
+    color: #6D6D6D !important;
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+  }
+
+  .content a:link, .content a:hover, .content a:visited {
+    text-decoration: none;
+    color: #6D6D6D !important;
+  }
+
+  /* Bootstrap prints links in print */
+  a[href]:after {
+    content: "" !important
+  }
+
+  /* Sections */
+  .section-name {
+    margin: 1rem 0 5rem 0;
+  }
+
+  .section-name h2 {
+    color: #6D6D6D !important;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    font-weight: bold;
+    margin-top: 3rem;
+  }
+
+  .section-summary {
+    text-align: justify;
+  }
+
+  .section-work .item {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-work .item .position {
+    font-weight: bold;
+    color: #333438 !important;
+    text-transform: uppercase;
+  }
+
+  .section-work .item .company {
+      padding: 0.5rem 0 0.5rem 0;
+      color: #6D6D6D !important;
+      font-weight: bold;
+  }
+
+  .section-work .item .summary, .section-work .item .highlights {
+      font-style: italic;
+      text-align: justify;
+  }
+
+  .section-volunteer .item {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-volunteer .item .position {
+    font-weight: bold;
+    color: #333438 !important;
+    text-transform: uppercase;
+  }
+
+  .section-volunteer .item .company {
+      padding: 0.5rem 0 0.5rem 0;
+      color: #6D6D6D !important;
+      font-weight: bold;
+  }
+
+  .section-volunteer .item .summary, .section-volunteer .item .highlights {
+      font-style: italic;
+      text-align: justify;
+  }
+
+
+  .section-publications .item {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-publications .item .name {
+    font-weight: bold;
+    color: #333438 !important;
+    text-transform: uppercase;
+  }
+
+  .section-publications .item .publication {
+      padding: 0.5rem 0 0.5rem 0;
+      color: #6D6D6D !important;
+      font-weight: bold;
+  }
+
+  .section-publications .item .summary, .section-publications .item .highlights {
+      font-style: italic;
+      text-align: justify;
+  }
+
+
+  .section-awards .item .title {
+    font-weight: bold;
+    color: #333438 !important;
+  }
+
+  .section-awards .item .date, .section-awards .item .awarder {
+    font-weight: normal;
+    color: #929292 !important;
+  }
+
+  .section-awards .item .summary {
+    font-weight: normal;
+    font-style: italic;
+    text-align: justify;
+  }
+
+  .section-languages .item {
+    margin-bottom: 1rem;
+  }
+
+  .section-languages .item .language .tongue {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff !important;
+    font-size: 1.0rem;
+  }
+
+  .section-languages .item .language .fluency {
+    font-weight: normal;
+  }
+
+  .section-languages .item .language .fluency em {
+      color: #929292 !important;
+  }
+
+  .section-interests .title {
+    font-weight: bold;
+  }
+
+  .section-interests .item {
+    margin: 0.2rem 0 0.0rem 0;
+    line-height: 1.4rem;
+  }
+
+  .section-skills .item {
+    margin-bottom: 1rem;
+  }
+
+  .section-skills .item .name {
+    color: #ffffff !important;
+  }
+
+  .section-skills .item .keywords span {
+    color: #ffffff !important;
+    background: #929292 !important;
+  }
+
+  .section-skills .keywords span.label {
+      color: #000 !important;
+      background: #929292 !important;
+      line-height: 1.7rem;
+  }
+
+
+  .section-contact .fa {
+    padding: 0.5rem 0 0 0;
+    background: #ffffff  !important;
+    color: #333438 !important;
+    border-radius: 100rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    text-align: center;
+    margin: -0.4rem 0.8rem 0.8rem 0.5rem;
+    float: left;
+  }
+
+  .section-contact ul.contact {
+    list-style-type: none;
+    margin: 0.2rem 0 0.2rem 0;
+    padding: 0;
+  }
+
+  .section-contact ul.contact li {
+    margin: 0.5rem 0 0.5rem 0;
+		color: #ffffff !important;
+  }
+
+  .section-contact ul.profiles {
+    list-style-type: none;
+    margin: 4rem 0 0.5rem 0;
+    padding: 0;
+  }
+
+  .section-contact ul.profiles li {
+    margin: 0.5rem 0 0.5rem 0;
+		color: #ffffff !important;
+  }
+
+  .section-contact ul.contact li span,.section-contact ul.profiles li span {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      color: #ffffff !important;
+  }
+
+}
+
+		</style>
+	</head>
+	<body>
+
+		<div class="container">
+			<div class="row" id="resume">
+				<div class="col-xs-4 sidebar">
+					    <section class="section-basic">
+					            <div class="avatar">
+					                <img src="https://avatars.githubusercontent.com/u/226308?v&#x3D;4" alt="Antoine Martin" class="img-circle">
+					            </div>
+					    </section>
+					    <section class="section-contact">
+					        <h2 class="title">
+					            <span class="">Contact</span>
+					        </h2>
+					        <ul class="contact">
+					                <li class="icon-item clearfix">
+					                    <i class="fa fa-map-marker"></i>
+					                        Cormeilles-en-Parisis (95240)
+					                        / Paris
+					                        / France
+					                </li>
+					                <li class="icon-item clearfix">
+					                    <i class="fa fa-envelope "></i>
+					                    <a href="mailto:antoine@openance.com" target="_blank">antoine@openance.com</a>
+					                </li>
+					                <li class="icon-item clearfix">
+					                    <i class="fa fa-phone "></i>
+					                    <a href="tel:+33688054143" target="_blank">+33688054143</a>
+					                </li>
+					                <li class="icon-item clearfix">
+					                    <i class="fa fa-link "></i>
+					                    <a href="https://mrtn.me/about/" target="_blank">https://mrtn.me/about/</a>
+					                </li>
+					        </ul>
+					            <ul class="profiles">
+					                    <li class="icon-item clearfix">
+					                        <i class="fa fa-github "></i>
+					                        <a href="https://github.com/antoinemartin" target="_blank"><span>https://github.com/ antoinemartin</span></a>
+					                    </li>
+					                    <li class="icon-item clearfix">
+					                        <i class="fa fa-linkedin "></i>
+					                        <a href="https://www.linkedin.com/in/antoinemartin" target="_blank"><span>https://www.linkedin.com/ in/ antoinemartin</span></a>
+					                    </li>
+					                    <li class="icon-item clearfix">
+					                        <i class="fa fa-twitter "></i>
+					                        <a href="https://twitter.com/antoinemartin" target="_blank"><span>https://twitter.com/ antoinemartin</span></a>
+					                    </li>
+					            </ul>
+					    </section>
+					<section class="section-education">
+						<h2 class="title">
+						    <span class="">Education</span>
+						</h2>
+						<div class="item">
+							<div class="studyTitle">
+								<span class="studyType">
+									Master of Sciences
+								</span>
+								<span class="area">
+									Microelectronics
+								</span>
+								<span class="gpa">
+									<span class="badge"> Honors </span>
+								</span>
+							</div>
+							<div class="institution">
+									<a href="https://www.sorbonne-universite.fr" target="_blank">Pierre and Marie Curie University</a>
+							</div>
+							<div class="date">
+								<span class="startDate">
+									1991
+								</span>
+								<span class="endDate">
+									- 1992
+								</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="studyTitle">
+								<span class="studyType">
+									Bachelor of Sciences
+								</span>
+								<span class="area">
+									Computer Science
+								</span>
+								<span class="gpa">
+									<span class="badge"> Honors </span>
+								</span>
+							</div>
+							<div class="institution">
+									<a href="https://www.sorbonne-universite.fr" target="_blank">Pierre and Marie Curie University</a>
+							</div>
+							<div class="date">
+								<span class="startDate">
+									1987
+								</span>
+								<span class="endDate">
+									- 1991
+								</span>
+							</div>
+						</div>
+					</section>
+					<section class="section-languages">
+						<h2 class="title">
+						    <span class="">Languages</span>
+						</h2>
+						<div class="item">
+							<div class="language">
+								<div class="tongue">French</div>
+								<div class="fluency"><em>Native</em></div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="language">
+								<div class="tongue">English</div>
+								<div class="fluency"><em>C1 (Advanced)</em></div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="language">
+								<div class="tongue">Spanish</div>
+								<div class="fluency"><em>C2 (Fluent)</em></div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="language">
+								<div class="tongue">Portuguese</div>
+								<div class="fluency"><em>B1 (Intermediate)</em></div>
+							</div>
+						</div>
+					</section>
+					<section class="section-skills">
+						<h2 class="title">
+						    <span class="">Skills</span>
+						</h2>
+						<div class="item">
+							<div class="name">
+								Software Engineering Management<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Talent acquisition &amp; development</span>
+								<span class="label label-default">Innovation</span>
+								<span class="label label-default">Roadmap</span>
+								<span class="label label-default">Mentoring</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Software Architecture &amp; Technical strategy<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Digital Transformation</span>
+								<span class="label label-default">Technology migration</span>
+								<span class="label label-default">Software Factory</span>
+								<span class="label label-default">Teams topologies</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Agile Methodologies<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Scrum</span>
+								<span class="label label-default">Kanban</span>
+								<span class="label label-default">SAFe</span>
+								<span class="label label-default">Lean</span>
+								<span class="label label-default">OKRs</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Frontend Development<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">TypeScript</span>
+								<span class="label label-default">React</span>
+								<span class="label label-default">Angular</span>
+								<span class="label label-default">RxJs</span>
+								<span class="label label-default">Apollo GraphQL</span>
+								<span class="label label-default">Webpack</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Android Development<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Java</span>
+								<span class="label label-default">Kotlin</span>
+								<span class="label label-default">Gradle</span>
+								<span class="label label-default">Koin</span>
+								<span class="label label-default">Retrofit</span>
+								<span class="label label-default">Gson</span>
+								<span class="label label-default">RxJava</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								iOS Development<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Swift</span>
+								<span class="label label-default">Objective-C</span>
+								<span class="label label-default">Alamofire</span>
+								<span class="label label-default">CocoaPods</span>
+								<span class="label label-default">Carthage</span>
+								<span class="label label-default">RxSwift</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Backend Development<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Django</span>
+								<span class="label label-default">Flask</span>
+								<span class="label label-default">FastAPI</span>
+								<span class="label label-default">NodeJS</span>
+								<span class="label label-default">Express</span>
+								<span class="label label-default">NestJS</span>
+								<span class="label label-default">Ruby on Rails</span>
+								<span class="label label-default">Java</span>
+								<span class="label label-default">Spring</span>
+								<span class="label label-default">.Net Core</span>
+								<span class="label label-default">Go</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Backend Architecture<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Kubernetes</span>
+								<span class="label label-default">Docker</span>
+								<span class="label label-default">Hasura</span>
+								<span class="label label-default">PostgreSQL</span>
+								<span class="label label-default">Redis</span>
+								<span class="label label-default">Keycloak</span>
+								<span class="label label-default">Grafana</span>
+								<span class="label label-default">Prometheus</span>
+								<span class="label label-default">Loki</span>
+								<span class="label label-default">Mosquitto/EMQX</span>
+								<span class="label label-default">EventStore</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Cloud Platforms<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">AWS</span>
+								<span class="label label-default">Azure</span>
+								<span class="label label-default">GCP</span>
+								<span class="label label-default">OVHCloud</span>
+								<span class="label label-default">Scaleway</span>
+								<span class="label label-default">OpenStack</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Collaborative development<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Git</span>
+								<span class="label label-default">Github</span>
+								<span class="label label-default">Gitlab</span>
+								<span class="label label-default">Jira</span>
+								<span class="label label-default">Notion</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								CI/CD<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Github Actions</span>
+								<span class="label label-default">Gitlab-CI</span>
+								<span class="label label-default">Jenkins</span>
+								<span class="label label-default">Argo CD</span>
+								<span class="label label-default">Argo Workflow</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Devops<i title="Master" class="fa level level-master"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">Terraform</span>
+								<span class="label label-default">Terragrunt</span>
+								<span class="label label-default">Ansible</span>
+								<span class="label label-default">Vault</span>
+								<span class="label label-default">Packer</span>
+							</div>
+						</div>
+						<div class="item">
+							<div class="name">
+								Embedded Development<i title="Advanced" class="fa level level-advanced"></i>
+							</div>
+							<div class="keywords">
+								<span class="label label-default">C++</span>
+								<span class="label label-default">Linux</span>
+								<span class="label label-default">Arduino</span>
+								<span class="label label-default">Nucleus</span>
+								<span class="label label-default">BLE</span>
+							</div>
+						</div>
+					</section>
+				</div>
+				<div class="col-xs-8 content">
+						<section class="section-name">
+							<h1>Antoine Martin</h1>
+							<h2>CTO / VP Engineering</h2>
+						</section>
+						<section class="section-summary">
+							<h2 class="title">
+							    <span class="">Summary</span>
+							</h2>
+							Technology executive with over 12 years of CTO/VP Engineering experience, leading teams of up to 50 across 3 continents. Drove cloud/mobile transformations and delivered solutions adopted by millions. Specialized in software architecture, tech migration, and complex project management. Seeking a CTO or Head of Engineering position to accelerate growth in an innovative company.
+						</section>
+					<section class="section-work">
+						<h2 class="title">
+						    <span class="">Experience</span>
+						</h2>
+						<div class="item">
+							<div class="position">
+								Chief Technical Officer
+							</div>
+							<div class="company">
+								<span class="name">
+									Octave
+								</span>
+								<span class="website">
+									| <a href="https://octave.biz" target="_blank">https://octave.biz</a>
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Feb 2023
+									</span>
+									<span class="endDate">
+										- May 2025
+									</span>
+									<span class="diffDate">
+										(2 years 3 months)
+									</span>
+								</span>
+							</div>
+							<div class="summary">
+								<p>Managing the R&amp;D and Product Organization (30 people) on 3 Locations: Angers, Fatima (PT) and Beirut (LB) in the context of a challenging acquisition and reboot of the offering</p>
+							</div>
+							<ul class="highlights">
+								<li>Maintained operations in the context of C-Level transition and organizational changes</li>
+								<li>Rebuilt the R&amp;D organization and the product roadmap</li>
+								<li>Rebooted the software factory and the hosting platform (Github, Github Actions, Azure)</li>
+								<li>Designed an innovative, scalable architecture for our SaaS evolution, maintaining full continuity with the existing ecosystem (Self Contained Systems, Event Sourcing, Kubernetes, GraphQL APIs, CI/CD, Data as a Product, Continuous Data Migration)</li>
+								<li>Developed partnerships with key technology providers</li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								VP Engineering
+							</div>
+							<div class="company">
+								<span class="name">
+									Unowhy
+								</span>
+								<span class="website">
+									| <a href="https://unowhy.com" target="_blank">https://unowhy.com</a>
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Mar 2018
+									</span>
+									<span class="endDate">
+										- Dec 2021
+									</span>
+									<span class="diffDate">
+										(3 years 9 months)
+									</span>
+								</span>
+							</div>
+							<div class="summary">
+								<p>Managed the development and successful massive deployment of a new offering on a completely new technical stack while maintaining and migrating the existing one.</p>
+							</div>
+							<ul class="highlights">
+								<li>Rebuilt the software factory around Gitlab/Gitlab-CI/Kubernetes/Ansible</li>
+								<li>Migrated from a « bare metal » monolith architecture to an asynchronous (event sourced) micro-services-based architecture hosted on a public cloud (OVH managed Kubernetes)</li>
+								<li>Developed  the HiSqool Mobile Device Management (MdM) solution for the French Ile-de-France region (Paris Area) allowing the real-time management of 500K+ devices (Windows based laptops, Android tablets)</li>
+								<li>Developed  an inventory tracking web-based solution (React, GraphQL) for the devices.</li>
+								<li>📈 the team from 1 Feature team &amp; 1 QA Team to 3 Feature Teams, 1 QA Team &amp; 1 Devops Team.</li>
+								<li>While maintaining the solution and developing new software, managed the needed technology transitions: Angular ↣ React, Ruby ↣ Python/Typescript, Rails/Django/Flask ↣ FastAPI, MySQL ↣ PostgreSQL, REST ↣ GraphQL, Pull ↣ Reactive, Custom Auth ↣ OAuth/OIDC, Java ↣ Kotlin, Docker compose ↣ Kubernetes, ...</li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								Mobile &amp; Cloud Freelance Expert
+							</div>
+							<div class="company">
+								<span class="name">
+									Eurosport,  Microsoft, TF1, Accor &amp; Others
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Aug 2010
+									</span>
+									<span class="endDate">
+										- Feb 2018
+									</span>
+									<span class="diffDate">
+										(7 years 6 months)
+									</span>
+								</span>
+							</div>
+							<div class="summary">
+								<p>Helping big organizations master mobile technologies and the cloud: • Technical leading, Mentoring and training
+					• Software Architecture &amp; Technical specs writing (Mobile Application &amp; Cloud)
+					• Mobile applications development and refactoring
+					• CI/CD and Application submission management
+					• Hiring interviews &amp; Technical Assessment
+					• Subcontractors management
+					• Agile processes coaching</p>
+							</div>
+							<ul class="highlights">
+								<li>Retro-documented, performed technical analysis and proposed architecture and processes evolution: TF1, Microsoft,  Accor, ...</li>
+								<li>Implemented mobile CI/CD and managed dozens of application submissions: Eurosport, MyTF1, Accor All, ...</li>
+								<li>Handled the refactoring and modularization of All In One applications: MyTF1, Accor All.</li>
+								<li>Internalized development teams while maintaining the development flow with subcontractors: TF1, Accor All.</li>
+								<li>Developed &amp; launched new Mobile Applications: Livescore (Eurosport), Eurosport Player for Android, WAT (TF1), TFou Max (TF1), Xbox Music (Microsoft), Jo&amp;Joe (Accor)</li>
+								<li>Eased the technology transitions: Java to Kotlin, Objective-C to Swift, Hybrid to Native, ...</li>
+								<li>Improved dramatically application performance by optimizing application/backend dialog: Eurosport, MyTF1, Microsoft, Accor. </li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								Vice President of Engineering
+							</div>
+							<div class="company">
+								<span class="name">
+									Realeyes3D
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Sep 2003
+									</span>
+									<span class="endDate">
+										- Jul 2010
+									</span>
+									<span class="diffDate">
+										(6 years 10 months)
+									</span>
+								</span>
+							</div>
+							<div class="summary">
+								<p>• Product portfolio and lifecycle management
+					• Design, architecture and development of the embedded apps and technologies
+					• Professional services management (pre-sales and client support)
+					• Talent acquisition and management</p>
+							</div>
+							<ul class="highlights">
+								<li>Built the engineering team (12 people) with very low turn-over (2 people in 3.5 years)</li>
+								<li>Designed &amp; built the development, QA/Release &amp; support environment &amp; processes</li>
+								<li>Developed &amp; maintained a recognized level of technical credibility with clients &amp; partners (Samsung, Nokia, Kyocera, ..)</li>
+								<li>Shipped more than 100 millions phones worldwide with Realeyes3D&#x27;s applications</li>
+								<li>Actively participated in the 2nd round of financing (7,5M€ or 9M$)</li>
+								<li>Successfully developed and launched the subscription based document scanning site www.qipit.com</li>
+								<li>Participated in the development of 2 Patents</li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								Development Manager - Mobility Applications
+							</div>
+							<div class="company">
+								<span class="name">
+									Webraska  (now Masternaut)
+								</span>
+								<span class="website">
+									| <a href="https://www.masternaut.com" target="_blank">https://www.masternaut.com</a>
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Feb 2001
+									</span>
+									<span class="endDate">
+										- Aug 2003
+									</span>
+									<span class="diffDate">
+										(2 years 6 months)
+									</span>
+								</span>
+							</div>
+							<ul class="highlights">
+								<li>Developed a multi platform (Windows Mobile, Symbian, Linux) off-board navigation SDK used in several Fleet Management applications (C++).</li>
+								<li>Developed embedded off-board navigation applications deployed by Orange France, O2 Germany &amp; Vodafone Italy (Windows Mobile, Symbian)</li>
+								<li>Managed Web based LBS Call center applications for Telstra (Australia) &amp; Vodafone Italy (J2EE, ActiveX)</li>
+								<li>Developed and maintained a Navigation server including provisioning, AAA, logging and billing</li>
+								<li>Built and Managed a team of talented embedded applications developers (6-12 people)</li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								E-Business Project Manager
+							</div>
+							<div class="company">
+								<span class="name">
+									Pfizer
+								</span>
+								<span class="website">
+									| <a href="https://www.pfizer.fr" target="_blank">https://www.pfizer.fr</a>
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Dec 1998
+									</span>
+									<span class="endDate">
+										- Feb 2001
+									</span>
+									<span class="diffDate">
+										(2 years 2 months)
+									</span>
+								</span>
+							</div>
+							<ul class="highlights">
+								<li>Designed developed and managed the french subsidiary Intranet</li>
+								<li>Developed several knowledge sharing intranet applications (ASP/SQL Server)</li>
+								<li>Participated in pan-European workgroups defining the corporate extranet architecture and selecting Knowledge Management tools</li>
+								<li>Managed and internal study to identify best Intranet/Extranet/Internet initiatives leading to the definition of the affiliate e-Business strategy</li>
+								<li>Supported stakeholders in the development of their Websites projects (corporate website, community websites)</li>
+								<li>Deployed a connected Salesforce Automation PC based application</li>
+							</ul>
+						</div>
+						<div class="item">
+							<div class="position">
+								Project Manager
+							</div>
+							<div class="company">
+								<span class="name">
+									Atos Multimedia
+								</span>
+								<span class="website">
+									| <a href="https://atos.net" target="_blank">https://atos.net</a>
+								</span>
+								<span class="date">
+									|
+									<span class="startDate">
+										Jul 1993
+									</span>
+									<span class="endDate">
+										- Nov 1998
+									</span>
+									<span class="diffDate">
+										(5 years 4 months)
+									</span>
+								</span>
+							</div>
+							<div class="summary">
+								<p>• Team management (6-8 engineers)
+					• Client portfolio management (1.5 M€ / Year)
+					• Pre-sales support &amp; Project management
+					• Websites development, deployment &amp; Production management</p>
+							</div>
+							<ul class="highlights">
+								<li>Successfully helped clients transition from “French Minitel” applications to internet while securing the existing revenue stream (www.leparisien.fr, www.liberation.fr, www.mieuxvivre.fr, www.cadresonline.com)</li>
+							</ul>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
