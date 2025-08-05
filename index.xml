@@ -1,4 +1,14 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>mrtn.me</title><link>http://mrtn.me/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Wed, 30 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description><![CDATA[<h2 id="the-problem">The problem</h2>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>mrtn.me</title><link>http://mrtn.me/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Tue, 05 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Azure VM Disks and Extensions with Terraform: Handling Dependency and State Removal</title><link>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</guid><description><![CDATA[<p>When managing Azure Virtual Machines (VMs) with Terraform, especially Windows
+VMs with extensions and attached data disks, it’s common to encounter challenges
+around the order of resource destruction and avoiding unnecessary delays. This
+post summarizes practical solutions to these issues, with example commands and
+configuration snippets derived from a real-world scenario.</p>
+<h2 id="the-problem-terraform-deletes-extensions-and-disks-before-the-vm">The Problem: Terraform Deletes Extensions and Disks Before the VM</h2>
+<p>By default, Terraform tracks each Azure VM extension
+(<code>azurerm_virtual_machine_extension</code>) and each data disk attachment
+(<code>azurerm_virtual_machine_data_disk_attachment</code>) as independent resources. When
+running <code>terraform destroy</code>, Terraform deletes these extensions and disk
+attachments one by one <strong>before</strong> deleting the VM.</p>]]></description></item><item><title>Debugging a failing OpenStack image</title><link>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</link><pubDate>Fri, 13 Jan 2023 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2023/01/13/debugging-a-failing-openstack-image/</guid><description><![CDATA[<h2 id="the-problem">The problem</h2>
 <p>On my
 <a href="https://github.com/antoinemartin/alpine-openstack-vm" target="_blank" rel="noopener noreffer ">alpine-openstack-vm</a>
 project, There is a CI process producing a VM image for OpenStack. The process
@@ -139,14 +149,4 @@ today.</p>
         <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
         <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
     </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel</span></span></code></pre></div></div>
-<p>And then install the <code>bundle</code> ruby gem:</p>]]></description></item><item><title>Django on Windows: Run Celery as a Windows Service</title><link>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</link><pubDate>Wed, 04 Jul 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/07/04/django-on-windows-run-celery-as-a-windows-service/</guid><description><![CDATA[<p>In my
-<a href="/posts/2012/06/27/running-django-under-windows-with-iis-using-fcgi/" rel="">previous post</a>,
-I showed how to set up a Django project on a Windows Server to be served behind
-IIS. After setting up the server, the next thing we want with a Django
-application is to be able to run background and scheduled tasks, and
-<a href="http://celeryproject.org/" target="_blank" rel="noopener noreffer ">Celery</a> is the perfect tool for that.</p>
-<!-- more -->
-<p>On Windows, background processes are mostly run as Windows Services.
-Fortunately,
-<a href="http://sourceforge.net/projects/pywin32/" target="_blank" rel="noopener noreffer ">Python for Windows Extensions</a> (a.k.a
-pywin32) provides facilities to create a Windows Service.</p>]]></description></item></channel></rss>
+<p>And then install the <code>bundle</code> ruby gem:</p>]]></description></item></channel></rss>

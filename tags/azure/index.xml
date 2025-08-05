@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Azure on mrtn.me</title><link>http://mrtn.me/tags/azure/</link><description>Recent content in Azure on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Tue, 05 Aug 2025 22:34:07 +0200</lastBuildDate><atom:link href="http://mrtn.me/tags/azure/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Azure VM Disks and Extensions with Terraform: Handling Dependency and State Removal</title><link>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</guid><description>&lt;p>When managing Azure Virtual Machines (VMs) with Terraform, especially Windows
+VMs with extensions and attached data disks, it’s common to encounter challenges
+around the order of resource destruction and avoiding unnecessary delays. This
+post summarizes practical solutions to these issues, with example commands and
+configuration snippets derived from a real-world scenario.&lt;/p>
+&lt;h2 id="the-problem-terraform-deletes-extensions-and-disks-before-the-vm">The Problem: Terraform Deletes Extensions and Disks Before the VM&lt;/h2>
+&lt;p>By default, Terraform tracks each Azure VM extension
+(&lt;code>azurerm_virtual_machine_extension&lt;/code>) and each data disk attachment
+(&lt;code>azurerm_virtual_machine_data_disk_attachment&lt;/code>) as independent resources. When
+running &lt;code>terraform destroy&lt;/code>, Terraform deletes these extensions and disk
+attachments one by one &lt;strong>before&lt;/strong> deleting the VM.&lt;/p></description></item></channel></rss>
