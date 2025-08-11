@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rsync on mrtn.me</title><link>http://mrtn.me/tags/rsync/</link><description>Recent content in Rsync on mrtn.me</description><generator>Hugo</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Mon, 11 Aug 2025 12:54:45 +0200</lastBuildDate><atom:link href="http://mrtn.me/tags/rsync/index.xml" rel="self" type="application/rss+xml"/><item><title>Transferring WSL Home Directories Between Distributions</title><link>http://mrtn.me/posts/2025/08/11/transferring-wsl-home-directories-between-distributions/</link><pubDate>Mon, 11 Aug 2025 00:00:00 +0000</pubDate><author>antoine@mrtn.me (Antoine Martin)</author><guid>http://mrtn.me/posts/2025/08/11/transferring-wsl-home-directories-between-distributions/</guid><description>&lt;p>When upgrading to a new version of a Linux distribution in WSL or switching
+between different distributions, transferring your carefully configured home
+directory can be a challenge. This post presents a practical solution using
+rsync and WSL&amp;rsquo;s inter-distribution mounting capabilities to seamlessly transfer
+your development environment.&lt;/p>
+&lt;!-- more -->
+&lt;h2 id="the-challenge">The Challenge&lt;/h2>
+&lt;p>WSL distributions are isolated from each other, making it difficult to transfer
+files directly. Traditional backup and restore approaches using tar archives
+work but have limitations:&lt;/p></description></item></channel></rss>

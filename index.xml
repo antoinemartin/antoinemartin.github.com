@@ -1,4 +1,13 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>mrtn.me</title><link>http://mrtn.me/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Tue, 05 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Azure VM Disks and Extensions with Terraform: Handling Dependency and State Removal</title><link>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</guid><description><![CDATA[<p>When managing Azure Virtual Machines (VMs) with Terraform, especially Windows
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>mrtn.me</title><link>http://mrtn.me/</link><description>This is my cool site</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><managingEditor>antoine@mrtn.me (Antoine Martin)</managingEditor><webMaster>antoine@mrtn.me (Antoine Martin)</webMaster><lastBuildDate>Mon, 11 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://mrtn.me/index.xml" rel="self" type="application/rss+xml"/><item><title>Transferring WSL Home Directories Between Distributions</title><link>http://mrtn.me/posts/2025/08/11/transferring-wsl-home-directories-between-distributions/</link><pubDate>Mon, 11 Aug 2025 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2025/08/11/transferring-wsl-home-directories-between-distributions/</guid><description><![CDATA[<p>When upgrading to a new version of a Linux distribution in WSL or switching
+between different distributions, transferring your carefully configured home
+directory can be a challenge. This post presents a practical solution using
+rsync and WSL&rsquo;s inter-distribution mounting capabilities to seamlessly transfer
+your development environment.</p>
+<!-- more -->
+<h2 id="the-challenge">The Challenge</h2>
+<p>WSL distributions are isolated from each other, making it difficult to transfer
+files directly. Traditional backup and restore approaches using tar archives
+work but have limitations:</p>]]></description></item><item><title>Managing Azure VM Disks and Extensions with Terraform: Handling Dependency and State Removal</title><link>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/managing-azure-vm-disks-and-extensions-with-terraform-handling-dependency-and-state-removal/</guid><description><![CDATA[<p>When managing Azure Virtual Machines (VMs) with Terraform, especially Windows
 VMs with extensions and attached data disks, it’s common to encounter challenges
 around the order of resource destruction and avoiding unnecessary delays. This
 post summarizes practical solutions to these issues, with example commands and
@@ -132,21 +141,4 @@ on your repository server.</p>
 <p>All your projects are located in your server <code>git.mycompany.com</code> under
 <code>/srv/git</code>. You&rsquo;re using the user named <code>git</code> to connect to your server with the
 SSH private key located in <code>~/.ssh/git</code>.</p>
-<p>Here is the quickest way to deploy your project:</p>]]></description></item><item><title>Installing Redmine on Centos 6 Dot 2 With Mysql and Apache</title><link>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-with-mysql-and-apache/</link><pubDate>Fri, 06 Jul 2012 00:00:00 +0000</pubDate><author>Antoine Martin</author><guid>http://mrtn.me/posts/2012/07/06/installing-redmine-on-centos-6-dot-2-with-mysql-and-apache/</guid><description><![CDATA[<p>I needed recently to install the excellent project management tool
-<a href="http://www.redmine.org/" target="_blank" rel="noopener noreffer ">Redmine</a> on a <a href="http://www.centos.org/" target="_blank" rel="noopener noreffer ">CentOS</a> 6.2
-machine. There are some tutorials on the Web
-(<a href="http://www.redmine.org/projects/redmine/wiki/How_to_Install_Redmine_on_CentOS_%28Detailed%29" target="_blank" rel="noopener noreffer ">here</a>
-or
-<a href="http://luzem.dyndns.org/2011/04/14/install-redmine-in-rhel6-and-rh-based-distributions/" target="_blank" rel="noopener noreffer ">here</a>)
-but they are a little bit outdated. The following is a method that works as of
-today.</p>
-<!-- More -->
-<h2 id="pre-requisites">Pre-requisites</h2>
-<p>Logged as root, install the following packages:</p>
-<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
-    <div class="code-header language-sh">
-        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
-        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
-        <span class="copy" title="Copy to clipboard"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
-    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">yum install make gcc gcc-c++ zlib-devel ruby-devel rubygems ruby-libs apr-devel apr-util-devel httpd-devel mysql-devel mysql-server automake autoconf ImageMagick ImageMagick-devel curl-devel</span></span></code></pre></div></div>
-<p>And then install the <code>bundle</code> ruby gem:</p>]]></description></item></channel></rss>
+<p>Here is the quickest way to deploy your project:</p>]]></description></item></channel></rss>
